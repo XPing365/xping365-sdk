@@ -1,12 +1,14 @@
 <div id="top"></div>
 
+![Build Status](https://github.com/XPing365/xping365-sdk/actions/workflows/dotnet.yml/badge.svg)
+
 
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
   <h2 align="center">XPing365 SDK</h3>
   <p align="center">
-    XPing365 SDK is a free and open-source .NET library written in C# for testing web applications.
+    XPing365 SDK is a free and open-source .NET library written in C# to help automate web applications testing.
     <br />
     <br />
     <a href="https://github.com/XPing365/xping365-sdk/issues">Report Bug</a>
@@ -38,7 +40,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-XPing365 SDK is designed to make eXternal Ping(s) to web applications to verify its availability and monitor its content by scraping data from the web pages. It allows users to parametrize URLs and generate hundrets of different queries. 
+XPing365 SDK helps you automate web application testing. It is designed to make eXternal Ping(s) to web applications to verify its availability and monitor its content by scraping data from the web pages. It allows users to parametrize URLs and generate hundrets of different queries. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -62,7 +64,7 @@ XPing365 SDK is designed to make eXternal Ping(s) to web applications to verify 
 
 In this section you will find 5 steps to start working with XPing 365 SDK. It is a small subset of what's possible with XPing 365 SDK. 
 
--  Setup program initialization with the [Dependency injection in .NET](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection).
+-  Setup library with the [Dependency injection in .NET](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection).
 ```c#
 var host = Host.CreateDefaultBuilder(args)
                .ConfigureServices(services =>
@@ -77,7 +79,7 @@ var host = Host.CreateDefaultBuilder(args)
                .Build();
 ```
 
-- Declare your page you're going to test
+- Define your page you're going to test
 ```c#
 class BasicPage : HtmlSource
 {

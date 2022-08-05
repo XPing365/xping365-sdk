@@ -7,9 +7,9 @@
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
     <repository type="git" url="https://github.com/XPing365/xping365-sdk" branch="main" />
-    <description>XPing365 SDK is a free and open-source .NET library written in C# for testing web applications.</description>
+    <description>XPing365 SDK is a free and open-source .NET library written in C# to help automate web applications testing.</description>
     <releaseNotes>Initial beta release of the first XPing365.Core package.</releaseNotes>
-    <tags>Testing Scraping</tags>
+    <tags>webtesting scraping-websites automated-testing</tags>
     <dependencies>
       <group targetFramework="net6.0">
         <dependency id="HtmlAgilityPack" version="1.11.43" />
