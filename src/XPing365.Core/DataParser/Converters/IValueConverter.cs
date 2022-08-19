@@ -1,4 +1,4 @@
-﻿namespace XPing365.Core.Parser.Converters
+﻿namespace XPing365.Core.DataParser.Converters
 {
     public interface IValueConverter 
     {

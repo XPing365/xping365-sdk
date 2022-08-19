@@ -1,10 +1,10 @@
 ﻿using System.Collections;
 using HtmlAgilityPack;
-using XPing365.Core.Source;
+using XPing365.Core.DataSource;
 
-namespace XPing365.Core.Parser.Internals
+namespace XPing365.Core.DataParser.Internal
 {
-    internal class DefaultParser<T> : IParser<T> where T : HtmlSource
+    internal class DefaultDataParser<T> : IDataParser<T> where T : HtmlSource
     {
         public T Parse(ref T dataSource)
         {
@@ -74,7 +74,7 @@ namespace XPing365.Core.Parser.Internals
                             }
                         }
                     }
-                    catch (InvalidOperationException)
+                    catch (NodeNotFoundException)
                     {
                         // Currently we treat all XPathAttributes as optional and skip if cannot retrieve from the Html.
                         // The plan is to be able to decorate properties as [Required] so the DataParser won't continue

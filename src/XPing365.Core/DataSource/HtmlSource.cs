@@ -2,7 +2,7 @@
 using HtmlAgilityPack;
 using XPing365.Shared;
 
-namespace XPing365.Core.Source
+namespace XPing365.Core.DataSource
 {
     public class HtmlSource : IDataSource
     {
@@ -20,7 +20,7 @@ namespace XPing365.Core.Source
 
         public string? Html { get; set; }
 
-        public HtmlDocument GetHtmlDocument()
+        internal HtmlDocument GetHtmlDocument()
         {
             HtmlDocument document = new();
             document.LoadHtml(this.Html.RequireNotNull(nameof(Html)));

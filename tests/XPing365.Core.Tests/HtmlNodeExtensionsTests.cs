@@ -1,6 +1,6 @@
 ﻿using HtmlAgilityPack;
 using Moq;
-using XPing365.Core.Parser.Internals;
+using XPing365.Core.DataParser.Internal;
 
 namespace XPing365.Core.Tests
 {

@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace XPing365.Core.Source
+namespace XPing365.Core.DataSource
 {
     /// <summary>
     /// This interface represents data retrieved from the web.

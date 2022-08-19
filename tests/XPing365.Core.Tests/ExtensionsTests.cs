@@ -1,7 +1,7 @@
 ﻿using HtmlAgilityPack;
-using XPing365.Core.Parser.Converters;
-using XPing365.Core.Parser.Internals;
-using XPing365.Core.Source;
+using XPing365.Core.DataParser.Converters;
+using XPing365.Core.DataParser.Internal;
+using XPing365.Core.DataSource;
 
 namespace XPing365.Core.Tests
 {

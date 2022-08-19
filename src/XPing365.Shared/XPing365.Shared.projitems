@@ -11,5 +11,6 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentValidation.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)InstrumentationLog.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Retry.cs" />
   </ItemGroup>
 </Project>

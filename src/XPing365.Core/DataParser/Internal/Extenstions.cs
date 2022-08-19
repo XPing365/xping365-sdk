@@ -2,10 +2,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using HtmlAgilityPack;
-using XPing365.Core.Parser.Converters;
-using XPing365.Core.Source;
+using XPing365.Core.DataParser.Converters;
+using XPing365.Core.DataSource;
 
-namespace XPing365.Core.Parser.Internals
+namespace XPing365.Core.DataParser.Internal
 {
     internal static class Extenstions
     {

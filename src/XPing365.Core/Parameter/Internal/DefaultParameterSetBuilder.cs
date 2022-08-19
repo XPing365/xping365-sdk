@@ -1,9 +1,9 @@
 ﻿using System.Text.RegularExpressions;
 using XPing365.Shared;
 
-namespace XPing365.Core.Parameter
+namespace XPing365.Core.Parameter.Internal
 {
-    public class DefaultParameterSetBuilder : IParameterSetBuilder
+    internal class DefaultParameterSetBuilder : IParameterSetBuilder
     {
         private const string Pattern = "\\{[a-zA-Z]+\\}";
         private readonly string url;

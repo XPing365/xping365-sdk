@@ -1,4 +1,4 @@
-using XPing365.Core.Parser.Converters;
+using XPing365.Core.DataParser.Converters;
 
 namespace XPing365.Core.Tests
 {

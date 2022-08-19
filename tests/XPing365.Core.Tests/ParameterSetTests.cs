@@ -1,4 +1,5 @@
 ﻿using XPing365.Core.Parameter;
+using XPing365.Core.Parameter.Internal;
 
 namespace XPing365.Core.Tests
 {
@@ -49,7 +50,7 @@ namespace XPing365.Core.Tests
         [Test]
         public void UrlIsNullWhileCreatingParameterBuilderTest()
         {
-            ParameterSet parameter = new(name: "name", rawValues: new string[] { "param_value" });
+            IParameterSet parameter = new ParameterSet(name: "name", rawValues: new string[] { "param_value" });
 
             Assert.That(() => parameter.CreateBuilder(url: null!), Throws.ArgumentNullException);
         }
@@ -57,7 +58,7 @@ namespace XPing365.Core.Tests
         [Test]
         public void CreatingParameterBuilderSuccessTest()
         {
-            ParameterSet parameter = new(name: "name", rawValues: new string[] { "param_value" });
+            IParameterSet parameter = new ParameterSet(name: "name", rawValues: new string[] { "param_value" });
 
             Assert.That(() => parameter.CreateBuilder(url: "example.com"), Is.TypeOf<DefaultParameterSetBuilder>());
         }

@@ -1,4 +1,5 @@
 ﻿using XPing365.Core.Parameter;
+using XPing365.Core.Parameter.Internal;
 
 namespace XPing365.Core.Tests
 {

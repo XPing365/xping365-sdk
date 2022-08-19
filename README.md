@@ -2,7 +2,6 @@
 
 ![Build Status](https://github.com/XPing365/xping365-sdk/actions/workflows/dotnet.yml/badge.svg)
 
-
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
@@ -40,7 +39,7 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-XPing365 SDK helps you automate web application testing. It is designed to make eXternal Ping(s) to web applications to verify its availability and monitor its content by scraping data from the web pages. It allows users to parametrize URLs and generate hundrets of different queries. 
+XPing365 SDK helps you automate web applications testing. It is designed to make eXternal Ping(s) to web applications to verify its availability and monitor its content by scraping data from the web pages. It allows users to parametrize URLs and generate hundrets of different queries. 
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -48,7 +47,7 @@ XPing365 SDK helps you automate web application testing. It is designed to make 
 <!-- GETTING STARTED -->
 ## Getting Started
 
-[XPing365 SDK](https://nuget.org) can be installed via the [NuGet](https://docs.nuget.org/consume/Package-Manager-Dialog) package manager or [.NET CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/). If you need help, please open an [issue](https://github.com/XPing365/xping365-sdk/issues).
+[XPing365 SDK](https://www.nuget.org/packages/XPing365.Core) can be installed via the [NuGet](https://docs.nuget.org/consume/Package-Manager-Dialog) package manager or [.NET CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/). If you need help, please open an [issue](https://github.com/XPing365/xping365-sdk/issues).
 
 ### Installation using .NET CLI
 
@@ -73,7 +72,7 @@ var host = Host.CreateDefaultBuilder(args)
                    {
                        client.BaseAddress = new Uri("http://example.com/");
                    });
-                   services.AddTransient<IDataParserFactory, DataParserFactory>();
+                   services.AddTransient<IParserFactory, ParserFactory>();
                    services.AddTransient<IWebDataRetriever, WebDataRetriever>();
                })
                .Build();
@@ -124,6 +123,7 @@ _For more examples, please refer to the `Samples` folder in this repository._
 
 - [ ] Support fetching data into json format with a given set of XPath(s).
 - [ ] Support XPath expressions.
+- [ ] Support fetching web-pages through headless web browser.
 
 See the [open issues](https://github.com/XPing365/xping365-sdk/issues) for a full list of proposed features (and known issues).
 

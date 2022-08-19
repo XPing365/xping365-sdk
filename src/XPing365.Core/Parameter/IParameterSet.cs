@@ -6,6 +6,6 @@
 
         IList<string> RawValues { get; }
 
-        IParameterSetBuilder CreateBuilder(string url);
+        internal IParameterSetBuilder CreateBuilder(string url);
     }
 }

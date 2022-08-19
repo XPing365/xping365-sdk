@@ -1,4 +1,5 @@
-﻿using XPing365.Shared;
+﻿using XPing365.Core.Parameter.Internal;
+using XPing365.Shared;
 
 namespace XPing365.Core.Parameter
 {
@@ -16,7 +17,7 @@ namespace XPing365.Core.Parameter
                                       .RequireCondition(l => l.Count > 0, nameof(rawValues), $"Parameter {nameof(rawValues)} is empty");
         }
 
-        public IParameterSetBuilder CreateBuilder(string url)
+        IParameterSetBuilder IParameterSet.CreateBuilder(string url)
         {
             return new DefaultParameterSetBuilder(url.RequireNotNull(nameof(url)), this);
         }

@@ -1,7 +1,7 @@
 ﻿using HtmlAgilityPack;
 using XPing365.Shared;
 
-namespace XPing365.Core.Parser.Internals
+namespace XPing365.Core.DataParser.Internal
 {
     internal static class HtmlNodeExtensions
     {
