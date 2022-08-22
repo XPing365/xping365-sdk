@@ -68,12 +68,14 @@ In this section you will find 5 steps to start working with XPing 365 SDK. It is
 var host = Host.CreateDefaultBuilder(args)
                .ConfigureServices(services =>
                {
-                   services.AddHttpClient<IWebDataRetriever, WebDataRetriever>("httpClient", client => 
+                   services.AddHttpClient<IWebDataRetrieval, WebRequestRetrieval>("httpClient", client =>
                    {
-                       client.BaseAddress = new Uri("http://example.com/");
+                       client.BaseAddress = new Uri("https://www.demoblaze.com/");
                    });
-                   services.AddTransient<IParserFactory, ParserFactory>();
-                   services.AddTransient<IWebDataRetriever, WebDataRetriever>();
+                   services.AddTransient<IWebDataRetrieval, WebRequestRetrieval>();
+                   services.AddTransient<IDataParserFactory, DataParserFactory>();
+                   services.AddTransient<ServiceConfigurator>();
+                   services.AddTransient<WebDataCapture>();
                })
                .Build();
 ```
@@ -93,14 +95,14 @@ class BasicPage : HtmlSource
 }
 ```
 
-- Get the `WebDataRetriever` object
+- Get the `WebDataCapture` object
 ```c#
-var webDataRetriever = host.Services.GetRequiredService<IWebDataRetriever>();
+var webDataCapture = host.Services.GetRequiredService<WebDataCapture>();
 ```
 
 - Fetch the web page content
 ```c#
-BasicPage? basicPage = await webDataRetriever.GetFromHtmlAsync<BasicPage>("/basic_page.html");
+BasicPage? basicPage = await webDataCapture.GetFromHtmlAsync<BasicPage>("/");
 ```
 
 - Assert your web page
@@ -123,7 +125,7 @@ _For more examples, please refer to the `Samples` folder in this repository._
 
 - [ ] Support fetching data into json format with a given set of XPath(s).
 - [ ] Support XPath expressions.
-- [ ] Support fetching web-pages through headless web browser.
+- [X] Support fetching web-pages through headless web browser.
 
 See the [open issues](https://github.com/XPing365/xping365-sdk/issues) for a full list of proposed features (and known issues).
 
