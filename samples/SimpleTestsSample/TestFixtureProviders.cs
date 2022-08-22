@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using XPing365.Core;
-using XPing365.Core.Parser;
+using XPing365.Core.DataRetrieval;
+using XPing365.Core.DataParser;
 
 namespace SimpleTestsSample
 {
@@ -19,12 +20,14 @@ namespace SimpleTestsSample
             var host = Host.CreateDefaultBuilder()
                            .ConfigureServices(services =>
                            {
-                               services.AddHttpClient<IWebDataRetriever, WebDataRetriever>("httpClient", client =>
+                               services.AddHttpClient<IWebDataRetrieval, WebRequestRetrieval>("httpClient", client =>
                                {
                                    client.BaseAddress = new Uri("https://www.demoblaze.com/");
                                });
-                               services.AddTransient<IParserFactory, ParserFactory>();
-                               services.AddTransient<IWebDataRetriever, WebDataRetriever>();
+                               services.AddTransient<IWebDataRetrieval, WebRequestRetrieval>();
+                               services.AddTransient<IDataParserFactory, DataParserFactory>();
+                               services.AddTransient<ServiceConfigurator>();
+                               services.AddTransient<WebDataCapture>();
                            })
                            .Build();
             return host;

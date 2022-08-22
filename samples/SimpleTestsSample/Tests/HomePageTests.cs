@@ -31,9 +31,9 @@ namespace SimpleTestsSample.Tests
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
-            var webDataRetriever = this.serviceProvider.GetRequiredService<IWebDataRetriever>();
-            this.homePage = webDataRetriever.GetFromHtmlAsync<HomePage>("/").Result;
-        }
+            var webDataCapture = this.serviceProvider.GetRequiredService<WebDataCapture>();
+            this.homePage = webDataCapture.GetFromHtmlAsync<HomePage>("/").Result;
+        } 
 
         [Test]
         public void ResponseStatusTest()

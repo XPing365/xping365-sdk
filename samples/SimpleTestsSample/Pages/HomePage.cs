@@ -1,6 +1,6 @@
 ﻿using SimpleTestsSample.Pages.Components;
 using HtmlAgilityPack;
-using XPing365.Core.Source;
+using XPing365.Core.DataSource;
 
 namespace SimpleTestsSample.Pages
 {
