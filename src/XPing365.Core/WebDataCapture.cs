@@ -32,11 +32,11 @@ namespace XPing365.Core
             {
                 T html = await Retry.DoAsync(
                     () => {
-                        return this.webDataRetrieval.GetFromHtmlAsync<T>(url, configurator.WebRequestRetrievalSection.Timeout);
+                        return this.webDataRetrieval.GetFromHtmlAsync<T>(url, configurator.HttpRequestSection.Timeout);
                     }, 
-                    this.configurator.WebRequestRetrievalSection.RetryDelay, 
-                    this.configurator.WebRequestRetrievalSection.RetryOnFailure ?
-                        this.configurator.WebRequestRetrievalSection.RetryCount : 1);
+                    this.configurator.HttpRequestSection.RetryDelay, 
+                    this.configurator.HttpRequestSection.RetryOnFailure ?
+                        this.configurator.HttpRequestSection.RetryCount : 1);
 
                 IDataParser<T> dataParser = this.dataParserFactory.Create<T>();
                 T parsedData = dataParser.Parse(ref html);
@@ -45,7 +45,7 @@ namespace XPing365.Core
             }
             catch (Exception ex)
             {
-                this.logger?.LogError("WebDataCapture encountered an issue: {Message}", ex.Message);
+                this.logger?.LogError(nameof(WebDataCapture) + " encountered an issue: {Message}", ex.Message);
                 this.ThrowOnErrorIfConfigured(ex);
             }
 
@@ -63,7 +63,7 @@ namespace XPing365.Core
 
         private void ThrowOnErrorIfConfigured(Exception ex)
         {
-            if (this.configurator.WebRequestRetrievalSection.ThrowOnError)
+            if (this.configurator.ThrowOnError)
             {
                 // Bubble up exception 
                 throw ex;

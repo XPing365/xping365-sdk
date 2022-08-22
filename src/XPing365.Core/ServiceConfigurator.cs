@@ -1,5 +1,4 @@
-﻿using System.Collections.Specialized;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace XPing365.Core
 {
@@ -7,11 +6,9 @@ namespace XPing365.Core
     {
         private readonly IConfiguration configuration;
 
-        public class WebRequestRetrievalSettings
+        public class HttpRequestSettings
         {
             public string? HttpClientName { get; set; } = string.Empty;
-
-            public bool ThrowOnError { get; set; } = false;
 
             public bool RetryOnFailure { get; set; } = true;
 
@@ -21,11 +18,16 @@ namespace XPing365.Core
 
             public int TimeoutInSeconds { get; set; } = 10;
 
-            public NameValueCollection? Headers { get; set; }
+            public Dictionary<string, string>? Headers { get; set; }
 
             public TimeSpan Timeout => TimeSpan.FromSeconds(this.TimeoutInSeconds);
 
             public TimeSpan RetryDelay => TimeSpan.FromSeconds(this.RetryDelayInSeconds);
+        }
+
+        public class WebBrowserSettings
+        {
+            public string Path { get; set; } = string.Empty;
         }
 
         public class DataParserSettings
@@ -33,8 +35,13 @@ namespace XPing365.Core
             public bool ThrowOnError { get; set; } = false;
         }
 
-        public WebRequestRetrievalSettings WebRequestRetrievalSection => 
-            this.configuration.GetSection(nameof(WebRequestRetrievalSettings)).Get<WebRequestRetrievalSettings>();
+        public bool ThrowOnError => this.configuration.GetValue<bool>("ThrowOnError");
+
+        public HttpRequestSettings HttpRequestSection => 
+            this.configuration.GetSection(nameof(HttpRequestSettings)).Get<HttpRequestSettings>();
+
+        public WebBrowserSettings WebBrowserSection =>
+            this.configuration.GetSection(nameof(WebBrowserSettings)).Get<WebBrowserSettings>();
 
         public DataParserSettings DataParserSection => 
             this.configuration.GetSection(nameof(DataParserSettings)).Get<DataParserSettings>();
