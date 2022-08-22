@@ -80,7 +80,7 @@ namespace XPing365.Core.DataRetrieval
             {
                 if (this.configurator.HttpRequestSection.Headers.ContainsKey("UserAgent"))
                 {
-                    var userAgent = this.configurator.HttpRequestSection.Headers["UserAgent"];
+                    var userAgent = this.configurator.HttpRequestSection.Headers["UserAgent"].RequireNotNullOrWhiteSpace("UserAgent");
                     httpClient.DefaultRequestHeaders.UserAgent.Clear();
                     httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(userAgent));
                 }
