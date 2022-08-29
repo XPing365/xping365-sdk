@@ -4,6 +4,6 @@ namespace XPing365.Core.DataParser
 {
     public interface IDataParserFactory
     {
-        IDataParser<T> Create<T>() where T : HtmlSource;
+        IDataParser<T> Create<T>(T data) where T : HtmlSource;
     }
 }

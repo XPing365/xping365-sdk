@@ -5,7 +5,7 @@ using XPing365.Core.DataSource;
 
 namespace XPing365.Core.Tests
 {
-    public class DefaultParserTests
+    public class ClassTypeTraversalParserTests
     {
         class SingleNodePage : HtmlSource
         {
@@ -105,7 +105,7 @@ namespace XPing365.Core.Tests
         {
             SingleNodePage page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
 
-            DefaultDataParser<SingleNodePage> defaultParser = new();
+            ClassTypeTraversalParser<SingleNodePage> defaultParser = new();
             Assert.Multiple(() =>
             {
                 Assert.That(() => defaultParser.Parse(ref page).Title, Is.EqualTo("Title"));
@@ -118,7 +118,7 @@ namespace XPing365.Core.Tests
         public void CollectionOfNodesTest()
         {
             CollectionOfNodesPage page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
-            DefaultDataParser<CollectionOfNodesPage> defaultParser = new();
+            ClassTypeTraversalParser<CollectionOfNodesPage> defaultParser = new();
             Assert.Multiple(() =>
             {
                 Assert.That(() => defaultParser.Parse(ref page).Cars?.Count, Is.EqualTo(3));
@@ -149,7 +149,7 @@ namespace XPing365.Core.Tests
         public void OptionalItemHasDefaultValueFromCtorTest()
         {
             OptionalItemHasDefaultFromCtorPage page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
-            DefaultDataParser<OptionalItemHasDefaultFromCtorPage> defaultParser = new();
+            ClassTypeTraversalParser<OptionalItemHasDefaultFromCtorPage> defaultParser = new();
             Assert.Multiple(() =>
             {
                 Assert.That(() => defaultParser.Parse(ref page).Cars?[0].Mileage, Is.EqualTo("n/a"));
@@ -162,7 +162,7 @@ namespace XPing365.Core.Tests
         public void NestedClassPageTest()
         {
             NestedClassPage page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
-            DefaultDataParser<NestedClassPage> defaultParser = new();
+            ClassTypeTraversalParser<NestedClassPage> defaultParser = new();
 
             Assert.That(() => defaultParser.Parse(ref page).CarItem?.Name, Is.EqualTo("Toyota"));
         }
@@ -171,7 +171,7 @@ namespace XPing365.Core.Tests
         public void NodeNotFoundTest()
         {
             NodeNotFoundPage page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
-            DefaultDataParser<NodeNotFoundPage> defaultParser = new();
+            ClassTypeTraversalParser<NodeNotFoundPage> defaultParser = new();
 
             Assert.That(() => defaultParser.Parse(ref page).Title, Is.Null);
         }
@@ -180,7 +180,7 @@ namespace XPing365.Core.Tests
         public void SingleNodeXPathMisplacedForCollectionTypeTest()
         {
             SingleNodeForCollection page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
-            DefaultDataParser<SingleNodeForCollection> defaultParser = new();
+            ClassTypeTraversalParser<SingleNodeForCollection> defaultParser = new();
 
             Assert.That(() => defaultParser.Parse(ref page), Throws.Nothing);
         }
@@ -189,7 +189,7 @@ namespace XPing365.Core.Tests
         public void MultipleNodesXPathMisplacedForStringTest()
         {
             MultipleNodesForString page = new() { Html = File.ReadAllText("./Feeds/Parser.html") };
-            DefaultDataParser<MultipleNodesForString> defaultParser = new();
+            ClassTypeTraversalParser<MultipleNodesForString> defaultParser = new();
 
             Assert.That(() => defaultParser.Parse(ref page), Throws.Nothing);
         }

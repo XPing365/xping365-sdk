@@ -4,7 +4,7 @@ using XPing365.Core.DataSource;
 
 namespace XPing365.Core.DataParser.Internal
 {
-    internal class DefaultDataParser<T> : IDataParser<T> where T : HtmlSource
+    internal class ClassTypeTraversalParser<T> : IDataParser<T> where T : HtmlSource
     {
         public T Parse(ref T dataSource)
         {

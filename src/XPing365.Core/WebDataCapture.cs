@@ -4,6 +4,7 @@ using XPing365.Core.Parameter;
 using XPing365.Core.DataSource;
 using XPing365.Shared;
 using XPing365.Core.DataRetrieval;
+using XPing365.Core.DataSource.Internal;
 
 namespace XPing365.Core
 {
@@ -38,7 +39,7 @@ namespace XPing365.Core
                     this.configurator.HttpRequestSection.RetryOnFailure ?
                         this.configurator.HttpRequestSection.RetryCount : 1);
 
-                IDataParser<T> dataParser = this.dataParserFactory.Create<T>();
+                IDataParser<T> dataParser = this.dataParserFactory.Create(html);
                 T parsedData = dataParser.Parse(ref html);
                 
                 return parsedData;
@@ -61,8 +62,36 @@ namespace XPing365.Core
             }
         }
 
-        private void ThrowOnErrorIfConfigured(Exception ex)
+        public async Task<string?> GetFromHtmlAsync(string url, string xmlConfig)
         {
+            try
+            {
+                XPathDefinitionWithXmlConfig html = await Retry.DoAsync(
+                    () => {
+                        return this.webDataRetrieval.GetFromHtmlAsync<XPathDefinitionWithXmlConfig>(url, configurator.HttpRequestSection.Timeout);
+                    },
+                    this.configurator.HttpRequestSection.RetryDelay,
+                    this.configurator.HttpRequestSection.RetryOnFailure ?
+                        this.configurator.HttpRequestSection.RetryCount : 1);
+                
+                html.XmlConfig = xmlConfig.RequireNotNullOrWhiteSpace(nameof(xmlConfig));
+                
+                IDataParser<XPathDefinitionWithXmlConfig> dataParser = this.dataParserFactory.Create(html);
+                XPathDefinitionWithXmlConfig parsedData = dataParser.Parse(ref html);
+
+                return parsedData.Json;
+            }
+            catch (Exception ex)
+            {
+                this.logger?.LogError(nameof(WebDataCapture) + " encountered an issue: {Message}", ex.Message);
+                this.ThrowOnErrorIfConfigured(ex);
+            }
+
+            return null;
+        }
+
+        private void ThrowOnErrorIfConfigured(Exception ex)
+         {
             if (this.configurator.ThrowOnError)
             {
                 // Bubble up exception 

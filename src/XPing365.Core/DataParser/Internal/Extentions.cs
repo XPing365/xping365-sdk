@@ -7,7 +7,7 @@ using XPing365.Core.DataSource;
 
 namespace XPing365.Core.DataParser.Internal
 {
-    internal static class Extenstions
+    internal static class Extentions
     {
         private static readonly Lazy<IValueConverter> defaultConverter = new(() => new DefaultValueConverter());
 

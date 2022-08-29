@@ -14,7 +14,7 @@ namespace XPing365.Shared
         /// <param name="obj">The parameter instance to verify</param>
         /// <param name="parameterName">The parameter name to verify</param>
         /// <returns>The instance that was passed to verify</returns>
-        public static T RequireNotNull<T>(this T obj, string parameterName, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
+        public static T RequireNotNull<T>(this T? obj, string parameterName, [CallerMemberName] string memberName = "", [CallerFilePath] string sourceFilePath = "", [CallerLineNumber] int sourceLineNumber = 0)
         {
             if (parameterName == null)
             {
