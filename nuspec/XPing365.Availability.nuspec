@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <package >
   <metadata>
-    <id>XPing365.Core</id>
+    <id>XPing365.Availability</id>
     <version>$version$</version>
     <authors>XPing365</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -12,12 +12,14 @@
     <tags>web api testing, web application testing, .net, open source, automation, monitoring, external pings, server availability, network connectivity</tags>
     <dependencies>
       <group targetFramework="net8.0">
-        <dependency id="Microsoft.Net.Http.Headers" version="8.0.0" />
+        <dependency id="XPing365.Core" version="1.0.0-rc2" />
+        <dependency id="Microsoft.Extensions.Http" version="8.0.0" />
+        <dependency id="Microsoft.Extensions.Http.Polly" Version="8.0.0" />
       </group>
     </dependencies>
   </metadata>
   <files>
     <file src="..\LICENSE" target="LICENSE" />
-    <file src="..\src\XPing365.Core\bin\Release\net8.0\XPing365.Core.dll" target="lib\net8.0\XPing365.Core.dll" />
+    <file src="..\src\XPing365.Availability\bin\Release\net8.0\XPing365.Availability.dll" target="lib\net8.0\XPing365.Availability.dll" />
   </files>
 </package>

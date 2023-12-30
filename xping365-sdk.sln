@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{464CE18C-1C75-473C-812A-E958172BC048}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Core", "src\XPing365.Core\XPing365.Core.csproj", "{1B07FD5E-D8BF-49F6-A6B0-7AD346F96297}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Availability", "src\XPing365.Availability\XPing365.Availability.csproj", "{5B0C861F-3961-471E-A8BA-78BC60F0A668}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{035C3BB1-D7FE-46D6-8DA7-A2F20FBA2518}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		Directory.Build.props = Directory.Build.props
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.IntegrationTests", "tests\XPing365.IntegrationTests\XPing365.IntegrationTests.csproj", "{51404E81-C47E-4D1B-A393-38C025DE451E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1B07FD5E-D8BF-49F6-A6B0-7AD346F96297}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1B07FD5E-D8BF-49F6-A6B0-7AD346F96297}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1B07FD5E-D8BF-49F6-A6B0-7AD346F96297}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1B07FD5E-D8BF-49F6-A6B0-7AD346F96297}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5B0C861F-3961-471E-A8BA-78BC60F0A668}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B0C861F-3961-471E-A8BA-78BC60F0A668}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B0C861F-3961-471E-A8BA-78BC60F0A668}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B0C861F-3961-471E-A8BA-78BC60F0A668}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51404E81-C47E-4D1B-A393-38C025DE451E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51404E81-C47E-4D1B-A393-38C025DE451E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51404E81-C47E-4D1B-A393-38C025DE451E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51404E81-C47E-4D1B-A393-38C025DE451E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1B07FD5E-D8BF-49F6-A6B0-7AD346F96297} = {464CE18C-1C75-473C-812A-E958172BC048}
+		{5B0C861F-3961-471E-A8BA-78BC60F0A668} = {464CE18C-1C75-473C-812A-E958172BC048}
+		{51404E81-C47E-4D1B-A393-38C025DE451E} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1EAD876E-2071-435E-AEC4-D3DEF2F4A328}
+	EndGlobalSection
+EndGlobal

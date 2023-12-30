@@ -7,7 +7,7 @@
 <div align="center">
   <h2 align="center">XPing365 SDK</h3>
   <p align="center">
-    XPing365 SDK is a free and open-source .NET library written in C# to help automate web applications testing.
+    XPing365 SDK is a free and open-source .NET library written in C# to help automate Web Applications or Web API testing.
     <br />
     <br />
     <a href="https://github.com/XPing365/xping365-sdk/issues">Report Bug</a>
@@ -39,7 +39,11 @@
 <!-- ABOUT THE PROJECT -->
 ## About The Project
 
-XPing365 SDK helps you automate web applications testing. It is designed to make eXternal Ping(s) to web applications to verify its availability and monitor its content by scraping data from the web pages. It allows users to parametrize URLs and generate hundrets of different queries. 
+<b>XPing365 SDK</b> provides a set of tools to make it easy to write automated tests for Web Application and Web API, as well as troubleshoot issues that may arise during testing. The library provides a number of features to verify that the Web Application is functioning correctly, such as checking that the correct data is displayed on a page or that the correct error messages are displayed when an error occurs.
+
+The library is called <b>XPing365</b>, which stands for eXternal Pings, and is used to verify the availability of a server and monitor its content. 
+
+You can find more information about the library, including documentation and examples, on the official website <a href="https://www.xping365.com">xping365.com</a>.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -47,13 +51,43 @@ XPing365 SDK helps you automate web applications testing. It is designed to make
 <!-- GETTING STARTED -->
 ## Getting Started
 
-[XPing365 SDK](https://www.nuget.org/packages/XPing365.Core) can be installed via the [NuGet](https://docs.nuget.org/consume/Package-Manager-Dialog) package manager or [.NET CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/). If you need help, please open an [issue](https://github.com/XPing365/xping365-sdk/issues).
+The library is distributed as a [NuGet packages](https://www.nuget.org/profiles/XPing365), which can be installed using the [.NET CLI](https://docs.microsoft.com/en-us/dotnet/core/tools/) command `dotnet add package`. Here are the steps to get started:
 
 ### Installation using .NET CLI
 
+1. Open a command prompt or terminal window.
+
+2. Navigate to the directory where your project is located.
+
+3. Run the following command to install the XPing365 NuGet package:
+
    ```
-   dotnet add package XPing365.Core
+   dotnet add package XPing365.Availability
    ```
+
+4. Once the package is installed, you can start using the <b>XPing365</b> library in your project.
+
+```c#
+using XPing365.Availability;
+
+Host.CreateDefaultBuilder()
+    .ConfigureServices(services =>
+    {
+        services.AddAvailabilityTestAgent();
+    });
+
+(...)
+
+var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
+
+TestSession session = await testAgent
+    .RunAsync(
+        new Uri("www.demoblaze.com"),
+        TestSettings.DefaultForAvailability)
+    .ConfigureAwait(false);
+```
+
+That’s it! You’re now ready to start automating your web application tests and monitoring your server’s content using <b>XPing365</b>.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -65,19 +99,12 @@ In this section you will find 5 steps to start working with XPing 365 SDK. It is
 
 -  Setup library with the [Dependency injection in .NET](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection).
 ```c#
-var host = Host.CreateDefaultBuilder(args)
-               .ConfigureServices(services =>
-               {
-                   services.AddHttpClient<IWebDataRetrieval, WebRequestRetrieval>("httpClient", client =>
-                   {
-                       client.BaseAddress = new Uri("https://www.demoblaze.com/");
-                   });
-                   services.AddTransient<IWebDataRetrieval, WebRequestRetrieval>();
-                   services.AddTransient<IDataParserFactory, DataParserFactory>();
-                   services.AddTransient<ServiceConfigurator>();
-                   services.AddTransient<WebDataCapture>();
-               })
-               .Build();
+var host = Host
+    .CreateDefaultBuilder()
+    .ConfigureServices(services =>
+    {
+        services.AddAvailabilityTestAgent();
+    });
 ```
 
 - Define your page you're going to test
@@ -123,9 +150,8 @@ _For more examples, please refer to the `Samples` folder in this repository._
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Support fetching data into json format with a given set of XPath(s).
-- [ ] Support XPath expressions.
-- [X] Support fetching web-pages through headless web browser.
+- [ ] Support fetching web-pages through headless web browser.
+- [ ] Support content validation through XPath expressions.
 
 See the [open issues](https://github.com/XPing365/xping365-sdk/issues) for a full list of proposed features (and known issues).
 
@@ -156,13 +182,6 @@ Distributed under the MIT License. See `LICENSE` file for more information.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
-
-<!-- ACKNOWLEDGMENTS -->
-## Acknowledgments
-
-* [Html Agility Pack](https://github.com/zzzprojects/html-agility-pack) XPing 365 SDK leverages the great work provided by the HAP team.
-
-<p align="right">(<a href="#top">back to top</a>)</p>
 
 <!-- MARKDOWN LINKS & IMAGES -->
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
