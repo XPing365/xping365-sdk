@@ -20,6 +20,6 @@
   </metadata>
   <files>
     <file src="..\LICENSE" target="LICENSE" />
-    <file src="..\src\XPing365.Availability\bin\Release\net8.0\XPing365.Availability.dll" target="lib\net8.0\XPing365.Availability.dll" />
+    <file src="..\src\XPing365.Sdk.Availability\bin\Release\net8.0\XPing365.Sdk.Availability.dll" target="lib\net8.0\XPing365.Sdk.Availability.dll" />
   </files>
 </package>

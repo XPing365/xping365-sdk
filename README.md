@@ -7,7 +7,7 @@
 <div align="center">
   <h2 align="center">XPing365 SDK</h3>
   <p align="center">
-    XPing365 SDK is a free and open-source .NET library written in C# to help automate Web Applications or Web API testing.
+    <b>XPing365 SDK</b> is a free and open-source .NET library written in C# to help automate Web Application or Web API testing.
     <br />
     <br />
     <a href="https://github.com/XPing365/xping365-sdk/issues">Report Bug</a>
@@ -31,7 +31,6 @@
     <li><a href="#roadmap">Roadmap</a></li>
     <li><a href="#contributing">Contributing</a></li>
     <li><a href="#license">License</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
   </ol>
 </details> 
 
@@ -59,7 +58,7 @@ The library is distributed as a [NuGet packages](https://www.nuget.org/profiles/
 
 2. Navigate to the directory where your project is located.
 
-3. Run the following command to install the XPing365 NuGet package:
+3. Run the following command to install the <b>XPing365</b> NuGet package:
 
    ```
    dotnet add package XPing365.Availability
@@ -68,15 +67,17 @@ The library is distributed as a [NuGet packages](https://www.nuget.org/profiles/
 4. Once the package is installed, you can start using the <b>XPing365</b> library in your project.
 
 ```c#
-using XPing365.Availability;
+using XPing365.Availability.Extensions;
 
 Host.CreateDefaultBuilder()
     .ConfigureServices(services =>
     {
         services.AddAvailabilityTestAgent();
     });
+```
 
-(...)
+```c#
+using XPing365.Availability
 
 var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
 
@@ -95,52 +96,7 @@ That’s it! You’re now ready to start automating your web application tests a
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-In this section you will find 5 steps to start working with XPing 365 SDK. It is a small subset of what's possible with XPing 365 SDK. 
 
--  Setup library with the [Dependency injection in .NET](https://docs.microsoft.com/en-us/dotnet/core/extensions/dependency-injection).
-```c#
-var host = Host
-    .CreateDefaultBuilder()
-    .ConfigureServices(services =>
-    {
-        services.AddAvailabilityTestAgent();
-    });
-```
-
-- Define your page you're going to test
-```c#
-class BasicPage : HtmlSource
-{
-    [XPath("//head/title")]
-    public string? Title { get; set; }
-
-    [XPath("//body/h1")]
-    public string? Header { get; set; }
-
-    [XPath("//body/p")]
-    public string? Paragraph { get; set; }
-}
-```
-
-- Get the `WebDataCapture` object
-```c#
-var webDataCapture = host.Services.GetRequiredService<WebDataCapture>();
-```
-
-- Fetch the web page content
-```c#
-BasicPage? basicPage = await webDataCapture.GetFromHtmlAsync<BasicPage>("/");
-```
-
-- Assert your web page
-```c#
-Assert.AreEqaul(HttpStatusCode.OK, basicPage.ResponseCode); // or alternatively check property IsSuccessResponseCode
-Assert.IsTrue(basicPage.ResponseSizeInBytes < 150000);
-Assert.IsTrue(basicPage.RequestEndTime - basicPage.RequestStartTime <= TimeSpan.FromSeconds(5));
-Assert.AreEqual("ExampleTile", basicPage.Title);
-Assert.AreEqual("ExampleHeader", basicPage.Header);
-Assert.AreEqual("ExampleParagraph", basicPage.Paragraph);
-```
 
 _For more examples, please refer to the `Samples` folder in this repository._
 
