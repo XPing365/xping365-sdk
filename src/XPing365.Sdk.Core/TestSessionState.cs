@@ -2,6 +2,9 @@
 
 namespace XPing365.Sdk.Core;
 
+/// <summary>
+/// Represents the state of the <see cref="TestSession"/>.
+/// </summary>
 public enum TestSessionState
 {
     /// <summary>

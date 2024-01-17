@@ -3,9 +3,13 @@
 /// <summary>
 /// This class is used to store settings for a test execution. It provides a set of properties that can be used to 
 /// configure the behavior of the test run, such as the timeout duration, retry behavior, and HTTP redirection behavior.
+/// It also includes <see cref="PropertyBag"/> property to store custom settings as a key-value pairs. 
 /// </summary>
 public sealed class TestSettings
 {
+    /// <summary>
+    /// Default Http request timeout in seconds. 
+    /// </summary>
     public const int DefaultHttpRequestTimeoutInSeconds = 30;
 
     /// <summary>
@@ -14,20 +18,22 @@ public sealed class TestSettings
     public PropertyBag PropertyBag { get; } = new();
 
      /// <summary>
-    /// Gets or sets a boolean value which determines whether to retry HTTP requests when they fail.
+    /// Gets or sets a boolean value which determines whether to retry HTTP requests when they fail. Default is true, 
+    /// unless specified differently in <see cref="DefaultForAvailability"/>.
     /// </summary>
     public bool RetryHttpRequestWhenFailed { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a boolean value which determines whether to follow HTTP redirection responses.
+    /// Gets or sets a boolean value which determines whether to follow HTTP redirection responses. Default is true, 
+    /// unless specified differently in <see cref="DefaultForAvailability"/>.
     /// </summary>
     public bool FollowHttpRedirectionResponses { get; set; } = true;
 
     /// <summary>
     /// Gets a TestSettings object with default settings for server availability testing.
-    /// The returned object has PingDontFragmetOption property set to true and the PingTTLOption set property to 64.
-    /// <see cref="PropertyBagKeys.PingDontFragmetOption"/> and <see cref="PropertyBagKeys.PingTTLOption"/> for more 
-    /// information.
+    /// The returned object has PingDontFragmetOption property set to true and the PingTTLOption property set to 64.
+    /// See <see cref="PropertyBagKeys.PingDontFragmetOption"/> and <see cref="PropertyBagKeys.PingTTLOption"/> for more 
+    /// information. It also has Http request timeout set to <see cref="DefaultHttpRequestTimeoutInSeconds"/> value.
     /// </summary>
     public static TestSettings DefaultForAvailability
     {
@@ -48,8 +54,10 @@ public sealed class TestSettings
     /// <summary>
     /// Returns HTTP method stored in the current test settings instance.
     /// </summary>
-    /// <returns>HTTP method stored in the current test settings. Default is HttpMethod.Get.</returns>
-    public HttpMethod GetHttpMethodOrDefault()
+    /// <returns>HTTP method stored in the current test settings. <see cref="HttpMethod.Get"/> is returned
+    /// if not specified.
+    /// </returns>
+    public HttpMethod GetHttpMethod()
     {
         if (PropertyBag.TryGetProperty(PropertyBagKeys.HttpMethod, out object? value) &&
             value is HttpMethod httpMethod)
@@ -63,8 +71,10 @@ public sealed class TestSettings
     /// <summary>
     /// Returns HTTP content stored in the current test settings instance.
     /// </summary>
-    /// <returns>HttpContent stored in the current test settings. Default is null.</returns>
-    public HttpContent? GetHttpContentOrDefault()
+    /// <returns>HttpContent stored in the current test settings. Null is returned if on <see cref="HttpContent"/> 
+    /// defined.
+    /// </returns>
+    public HttpContent? GetHttpContent()
     {
         if (PropertyBag.TryGetProperty(PropertyBagKeys.HttpContent, out HttpContent? httpContent))
         {
@@ -77,7 +87,7 @@ public sealed class TestSettings
     /// <summary>
     /// Returns HTTP request headers stored in the current test settings instance.
     /// </summary>
-    /// <returns>HTTP request headers. Default is empty dictionary.</returns>
+    /// <returns>HTTP request headers or empty dictionary if none specified.</returns>
     public IDictionary<string, IEnumerable<string>> GetHttpRequestHeadersOrEmpty()
     {
         if (PropertyBag.TryGetProperty(

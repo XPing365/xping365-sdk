@@ -29,7 +29,7 @@ public class TestSession(DateTime startDate, Uri url)
     public TimeSpan Duration => _steps.Aggregate(TimeSpan.Zero, (elapsedTime, step) => elapsedTime + step.Duration);
 
     /// <summary>
-    /// Gets the URL of the server under tests.
+    /// A Uri object that represents the URL of the page being validated.
     /// </summary>
     public Uri Url { get; } = url.RequireNotNull(nameof(url));
 

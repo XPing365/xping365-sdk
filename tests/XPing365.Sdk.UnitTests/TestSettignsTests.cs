@@ -24,7 +24,7 @@ public sealed class TestSettignsTests
         var testSettings = new TestSettings();
 
         // Assert
-        Assert.That(testSettings.GetHttpMethodOrDefault(), Is.EqualTo(HttpMethod.Get));
+        Assert.That(testSettings.GetHttpMethod(), Is.EqualTo(HttpMethod.Get));
     }
 
     [Test]
@@ -38,7 +38,7 @@ public sealed class TestSettignsTests
         testSettings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpMethod, specifiedHttpMethod);        
 
         // Assert
-        Assert.That(testSettings.GetHttpMethodOrDefault(), Is.EqualTo(specifiedHttpMethod));
+        Assert.That(testSettings.GetHttpMethod(), Is.EqualTo(specifiedHttpMethod));
     }
 
     [Test]
@@ -48,7 +48,7 @@ public sealed class TestSettignsTests
         var testSettings = new TestSettings();
 
         // Assert
-        Assert.That(testSettings.GetHttpContentOrDefault(), Is.Null);
+        Assert.That(testSettings.GetHttpContent(), Is.Null);
     }
 
     [Test]
@@ -62,7 +62,7 @@ public sealed class TestSettignsTests
         testSettings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpContent, httpContent);
 
         // Assert
-        Assert.That(testSettings.GetHttpContentOrDefault(), Is.EqualTo(httpContent));
+        Assert.That(testSettings.GetHttpContent(), Is.EqualTo(httpContent));
     }
 
     [Test]

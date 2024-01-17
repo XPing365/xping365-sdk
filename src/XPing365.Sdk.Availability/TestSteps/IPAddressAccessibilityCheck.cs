@@ -7,19 +7,37 @@ using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Availability.TestSteps;
 
-internal sealed class IPAddressAccessibilityCheck() : TestStepHandler(StepName, TestStepType.ActionStep)
+/// <summary>
+/// The IPAddressAccessibilityCheck class is a concrete implementation of the <see cref="TestStepHandler"/> class that 
+/// is used to check the accessibility of an IP address. It uses the mechanisms provided by the operating system to 
+/// check the accessibility of an IP address.
+/// </summary>
+public sealed class IPAddressAccessibilityCheck() : TestStepHandler(StepName, TestStepType.ActionStep)
 {
     // A buffer of 32 bytes of data to be transmitted during test.
     private readonly byte[] _buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
 
     public const string StepName = "IPAddress accessibility check";
 
+    /// <summary>
+    /// This method performs the test step operation asynchronously.
+    /// </summary>
+    /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
+    /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
+    /// <param name="session">A <see cref="TestSession"/> object that represents the test session.</param>
+    /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
+    /// this operation.</param>
+    /// <returns><see cref="TestStep"/> object.</returns>
     public override Task<TestStep> HandleStepAsync(
-        Uri uri,
+        Uri url,
         TestSettings settings,
         TestSession session,
         CancellationToken cancellationToken = default)
     {
+        ArgumentNullException.ThrowIfNull(url, nameof(url));
+        ArgumentNullException.ThrowIfNull(settings, nameof(settings));
+        ArgumentNullException.ThrowIfNull(session, nameof(session));
+
         IPAddress[]? addresses = GetIPAddresses(session);
 
         if (addresses == null || addresses.Length == 0)

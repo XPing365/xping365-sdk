@@ -7,6 +7,13 @@ namespace XPing365.Sdk.Availability.Extensions;
 
 public static class DependencyInjectionExtension
 {
+    /// <summary>
+    /// This extension method adds the AvailabilityTestAgent service and related services to your application’s service 
+    /// collection and configures a named <see cref="HttpClient"/> clients.
+    /// </summary>
+    /// <param name="services">The <see cref="IServiceCollection"/>.</param>
+    /// <param name="configuration">The <see cref="HttpClientConfiguration"/>.</param>
+    /// <returns><see cref="IServiceCollection"/> object.</returns>
     public static IServiceCollection AddAvailabilityTestAgent(
         this IServiceCollection services,
         Action<IServiceProvider, HttpClientConfiguration>? configuration = null)

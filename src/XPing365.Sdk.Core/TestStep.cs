@@ -23,10 +23,27 @@ public sealed record TestStep(
     PropertyBag PropertyBag,
     string? ErrorMessage = null)
 {
+    /// <summary>
+    /// Gets the name of the test step.
+    /// </summary>
     public string Name { get; } = Name.RequireNotNullOrEmpty(nameof(Name));
 
+    /// <summary>
+    /// Gets the start date of the test step.
+    /// </summary>
+    public DateTime StartDate { get; } = StartDate.RequireCondition(
+        condition: date => date >= DateTime.Today, 
+        parameterName: nameof(StartDate), 
+        message: Errors.IncorrectStartDate);
+
+    /// <summary>
+    /// Gets the property bag which stores custom key-value pairs from test step.
+    /// </summary>
     public PropertyBag PropertyBag { get; } = PropertyBag.RequireNotNull(nameof(PropertyBag));
 
+    /// <summary>
+    /// Gets the error message if result is <see cref="TestStepResult.Failed"/>; otherwise null;
+    /// </summary>
     public string? ErrorMessage { get; } = Result == TestStepResult.Failed ? 
         ErrorMessage.RequireNotNullOrEmpty(nameof(ErrorMessage)) : null;
 

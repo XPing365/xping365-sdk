@@ -5,6 +5,32 @@ namespace XPing365.Sdk.UnitTests;
 public sealed class TestStepTests
 {
     [Test]
+    public void ThrowsArgumentExceptionWhenStartDateIsInThePast()
+    {
+        // Assert
+        Assert.Throws<ArgumentException>(() => new TestStep(
+            Name: "TestStepName",
+            StartDate: DateTime.UtcNow - TimeSpan.FromDays(2),
+            Duration: TimeSpan.Zero,
+            Type: TestStepType.ActionStep,
+            Result: TestStepResult.Succeeded,
+            PropertyBag: new PropertyBag()));
+    }
+
+    [Test]
+    public void DoesNotThrowWhenStartDateIsNotInThePast()
+    {
+        // Assert
+        Assert.DoesNotThrow(() => new TestStep(
+            Name: "TestStepName",
+            StartDate: DateTime.Today,
+            Duration: TimeSpan.Zero,
+            Type: TestStepType.ActionStep,
+            Result: TestStepResult.Succeeded,
+            PropertyBag: new PropertyBag()));
+    }
+
+    [Test]
     public void ThrowsArgumentExceptionWhenNameIsNullOrEmpty()
     {
         // Assert
@@ -15,7 +41,7 @@ public sealed class TestStepTests
             Type: TestStepType.ActionStep,
             Result: TestStepResult.Succeeded,
             PropertyBag: new PropertyBag(),
-            "err msg"));
+            ErrorMessage: "err msg"));
     }
 
     [Test]
@@ -29,7 +55,7 @@ public sealed class TestStepTests
             Type: TestStepType.ActionStep,
             Result: TestStepResult.Succeeded,
             PropertyBag: null!,
-            "err msg"));
+            ErrorMessage: "err msg"));
     }
 
     [Test]
