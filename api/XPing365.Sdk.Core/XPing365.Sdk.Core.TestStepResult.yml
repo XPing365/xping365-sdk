@@ -1,0 +1,156 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Core.TestStepResult
+  commentId: T:XPing365.Sdk.Core.TestStepResult
+  id: TestStepResult
+  parent: XPing365.Sdk.Core
+  children:
+  - XPing365.Sdk.Core.TestStepResult.Failed
+  - XPing365.Sdk.Core.TestStepResult.Succeeded
+  langs:
+  - csharp
+  - vb
+  name: TestStepResult
+  nameWithType: TestStepResult
+  fullName: XPing365.Sdk.Core.TestStepResult
+  type: Enum
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestStepResult.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: TestStepResult
+    path: src/XPing365.Sdk.Core/TestStepResult.cs
+    startLine: 7
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Represents a test step result.
+  example: []
+  syntax:
+    content: public enum TestStepResult
+    content.vb: Public Enum TestStepResult
+- uid: XPing365.Sdk.Core.TestStepResult.Succeeded
+  commentId: F:XPing365.Sdk.Core.TestStepResult.Succeeded
+  id: Succeeded
+  parent: XPing365.Sdk.Core.TestStepResult
+  langs:
+  - csharp
+  - vb
+  name: Succeeded
+  nameWithType: TestStepResult.Succeeded
+  fullName: XPing365.Sdk.Core.TestStepResult.Succeeded
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestStepResult.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Succeeded
+    path: src/XPing365.Sdk.Core/TestStepResult.cs
+    startLine: 12
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Represents a successful test result.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "succeeded")]
+
+      Succeeded = 0
+    return:
+      type: XPing365.Sdk.Core.TestStepResult
+    content.vb: >-
+      <Display(Name:="succeeded")>
+
+      Succeeded = 0
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: succeeded
+- uid: XPing365.Sdk.Core.TestStepResult.Failed
+  commentId: F:XPing365.Sdk.Core.TestStepResult.Failed
+  id: Failed
+  parent: XPing365.Sdk.Core.TestStepResult
+  langs:
+  - csharp
+  - vb
+  name: Failed
+  nameWithType: TestStepResult.Failed
+  fullName: XPing365.Sdk.Core.TestStepResult.Failed
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestStepResult.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Failed
+    path: src/XPing365.Sdk.Core/TestStepResult.cs
+    startLine: 17
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Represents a failed test result.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "failed")]
+
+      Failed = 1
+    return:
+      type: XPing365.Sdk.Core.TestStepResult
+    content.vb: >-
+      <Display(Name:="failed")>
+
+      Failed = 1
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: failed
+references:
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  href: XPing365.html
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+- uid: XPing365.Sdk.Core.TestStepResult
+  commentId: T:XPing365.Sdk.Core.TestStepResult
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestStepResult.html
+  name: TestStepResult
+  nameWithType: TestStepResult
+  fullName: XPing365.Sdk.Core.TestStepResult

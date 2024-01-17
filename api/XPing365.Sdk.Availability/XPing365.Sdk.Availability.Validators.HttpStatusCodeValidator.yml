@@ -1,0 +1,840 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+  commentId: T:XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+  id: HttpStatusCodeValidator
+  parent: XPing365.Sdk.Availability.Validators
+  children:
+  - XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.#ctor(System.Func{System.Net.HttpStatusCode,System.Boolean},System.Func{System.Net.HttpStatusCode,System.String})
+  - XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  - XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.StepName
+  langs:
+  - csharp
+  - vb
+  name: HttpStatusCodeValidator
+  nameWithType: HttpStatusCodeValidator
+  fullName: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+  type: Class
+  source:
+    remote:
+      path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: HttpStatusCodeValidator
+    path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+    startLine: 24
+  assemblies:
+  - XPing365.Sdk.Availability
+  namespace: XPing365.Sdk.Availability.Validators
+  summary: >-
+    The HttpStatusCodeValidator class is a concrete implementation of the <xref href="XPing365.Sdk.Core.TestStepHandler" data-throw-if-not-resolved="false"></xref> class that is 
+
+    used to validate the HTTP status code of an HTTP response. It takes a Func&lt;HttpStatusCode, bool&gt; delegate as a
+
+    parameter, which is used to validate the HTTP status code. The errorMessage parameter is an optional error message 
+
+    that can be used to provide additional information about the validation failure.
+  example:
+  - >-
+    <pre><code class="lang-csharp">var statusCodeValidator = new HttpStatusCodeValidator(
+        isValid: (HttpStatusCode code) =&gt; code == HttpStatusCode.OK, 
+        errorMessage: (HttpStatusCode code) =&gt; $"The HTTP request failed with status code {code}"
+    );
+
+    var validator = new Validator(statusCodeValidator);</code></pre>
+  syntax:
+    content: 'public sealed class HttpStatusCodeValidator : TestStepHandler'
+    content.vb: Public NotInheritable Class HttpStatusCodeValidator Inherits TestStepHandler
+  inheritance:
+  - System.Object
+  - XPing365.Sdk.Core.TestStepHandler
+  inheritedMembers:
+  - XPing365.Sdk.Core.TestStepHandler.Name
+  - XPing365.Sdk.Core.TestStepHandler.Type
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.#ctor(System.Func{System.Net.HttpStatusCode,System.Boolean},System.Func{System.Net.HttpStatusCode,System.String})
+  commentId: M:XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.#ctor(System.Func{System.Net.HttpStatusCode,System.Boolean},System.Func{System.Net.HttpStatusCode,System.String})
+  id: '#ctor(System.Func{System.Net.HttpStatusCode,System.Boolean},System.Func{System.Net.HttpStatusCode,System.String})'
+  parent: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+  langs:
+  - csharp
+  - vb
+  name: HttpStatusCodeValidator(Func<HttpStatusCode, bool>, Func<HttpStatusCode, string>?)
+  nameWithType: HttpStatusCodeValidator.HttpStatusCodeValidator(Func<HttpStatusCode, bool>, Func<HttpStatusCode, string>?)
+  fullName: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HttpStatusCodeValidator(System.Func<System.Net.HttpStatusCode, bool>, System.Func<System.Net.HttpStatusCode, string>?)
+  type: Constructor
+  source:
+    remote:
+      path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: .ctor
+    path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+    startLine: 24
+  assemblies:
+  - XPing365.Sdk.Availability
+  namespace: XPing365.Sdk.Availability.Validators
+  summary: >-
+    The HttpStatusCodeValidator class is a concrete implementation of the <xref href="XPing365.Sdk.Core.TestStepHandler" data-throw-if-not-resolved="false"></xref> class that is 
+
+    used to validate the HTTP status code of an HTTP response. It takes a Func&lt;HttpStatusCode, bool&gt; delegate as a
+
+    parameter, which is used to validate the HTTP status code. The errorMessage parameter is an optional error message 
+
+    that can be used to provide additional information about the validation failure.
+  example:
+  - >-
+    <pre><code class="lang-csharp">var statusCodeValidator = new HttpStatusCodeValidator(
+        isValid: (HttpStatusCode code) =&gt; code == HttpStatusCode.OK, 
+        errorMessage: (HttpStatusCode code) =&gt; $"The HTTP request failed with status code {code}"
+    );
+
+    var validator = new Validator(statusCodeValidator);</code></pre>
+  syntax:
+    content: public HttpStatusCodeValidator(Func<HttpStatusCode, bool> isValid, Func<HttpStatusCode, string>? errorMessage = null)
+    parameters:
+    - id: isValid
+      type: System.Func{System.Net.HttpStatusCode,System.Boolean}
+      description: Func&lt;HttpStatusCode, bool&gt; delegate to validate the HTTP status code.
+    - id: errorMessage
+      type: System.Func{System.Net.HttpStatusCode,System.String}
+      description: Optional information about the validation failure.
+    content.vb: Public Sub New(isValid As Func(Of HttpStatusCode, Boolean), errorMessage As Func(Of HttpStatusCode, String) = Nothing)
+  overload: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.#ctor*
+  nameWithType.vb: HttpStatusCodeValidator.New(Func(Of HttpStatusCode, Boolean), Func(Of HttpStatusCode, String))
+  fullName.vb: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.New(System.Func(Of System.Net.HttpStatusCode, Boolean), System.Func(Of System.Net.HttpStatusCode, String))
+  name.vb: New(Func(Of HttpStatusCode, Boolean), Func(Of HttpStatusCode, String))
+- uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.StepName
+  commentId: F:XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.StepName
+  id: StepName
+  parent: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+  langs:
+  - csharp
+  - vb
+  name: StepName
+  nameWithType: HttpStatusCodeValidator.StepName
+  fullName: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.StepName
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: StepName
+    path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+    startLine: 28
+  assemblies:
+  - XPing365.Sdk.Availability
+  namespace: XPing365.Sdk.Availability.Validators
+  syntax:
+    content: public const string StepName = "Http status code validation"
+    return:
+      type: System.String
+    content.vb: Public Const StepName As String = "Http status code validation"
+- uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  commentId: M:XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  id: HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  parent: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+  langs:
+  - csharp
+  - vb
+  name: HandleStepAsync(Uri, TestSettings, TestSession, CancellationToken)
+  nameWithType: HttpStatusCodeValidator.HandleStepAsync(Uri, TestSettings, TestSession, CancellationToken)
+  fullName: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync(System.Uri, XPing365.Sdk.Core.TestSettings, XPing365.Sdk.Core.TestSession, System.Threading.CancellationToken)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: HandleStepAsync
+    path: src/XPing365.Sdk.Availability/Validators/HttpStatusCodeValidator.cs
+    startLine: 42
+  assemblies:
+  - XPing365.Sdk.Availability
+  namespace: XPing365.Sdk.Availability.Validators
+  summary: This method performs the test step operation asynchronously.
+  example: []
+  syntax:
+    content: public override Task<TestStep> HandleStepAsync(Uri url, TestSettings settings, TestSession session, CancellationToken cancellationToken = default)
+    parameters:
+    - id: url
+      type: System.Uri
+      description: A Uri object that represents the URL of the page being validated.
+    - id: settings
+      type: XPing365.Sdk.Core.TestSettings
+      description: A <xref href="XPing365.Sdk.Core.TestSettings" data-throw-if-not-resolved="false"></xref> object that contains the settings for the test.
+    - id: session
+      type: XPing365.Sdk.Core.TestSession
+      description: A <xref href="XPing365.Sdk.Core.TestSession" data-throw-if-not-resolved="false"></xref> object that represents the test session.
+    - id: cancellationToken
+      type: System.Threading.CancellationToken
+      description: An optional CancellationToken object that can be used to cancel this operation.
+    return:
+      type: System.Threading.Tasks.Task{XPing365.Sdk.Core.TestStep}
+      description: <xref href="XPing365.Sdk.Core.TestStep" data-throw-if-not-resolved="false"></xref> object.
+    content.vb: Public Overrides Function HandleStepAsync(url As Uri, settings As TestSettings, session As TestSession, cancellationToken As CancellationToken = Nothing) As Task(Of TestStep)
+  overridden: XPing365.Sdk.Core.TestStepHandler.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  overload: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync*
+references:
+- uid: XPing365.Sdk.Core.TestStepHandler
+  commentId: T:XPing365.Sdk.Core.TestStepHandler
+  parent: XPing365.Sdk.Core
+  name: TestStepHandler
+  nameWithType: TestStepHandler
+  fullName: XPing365.Sdk.Core.TestStepHandler
+- uid: XPing365.Sdk.Availability.Validators
+  commentId: N:XPing365.Sdk.Availability.Validators
+  href: XPing365.html
+  name: XPing365.Sdk.Availability.Validators
+  nameWithType: XPing365.Sdk.Availability.Validators
+  fullName: XPing365.Sdk.Availability.Validators
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Availability
+    name: Availability
+    href: XPing365.Sdk.Availability.html
+  - name: .
+  - uid: XPing365.Sdk.Availability.Validators
+    name: Validators
+    href: XPing365.Sdk.Availability.Validators.html
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Availability
+    name: Availability
+    href: XPing365.Sdk.Availability.html
+  - name: .
+  - uid: XPing365.Sdk.Availability.Validators
+    name: Validators
+    href: XPing365.Sdk.Availability.Validators.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: XPing365.Sdk.Core.TestStepHandler.Name
+  commentId: P:XPing365.Sdk.Core.TestStepHandler.Name
+  parent: XPing365.Sdk.Core.TestStepHandler
+  name: Name
+  nameWithType: TestStepHandler.Name
+  fullName: XPing365.Sdk.Core.TestStepHandler.Name
+- uid: XPing365.Sdk.Core.TestStepHandler.Type
+  commentId: P:XPing365.Sdk.Core.TestStepHandler.Type
+  parent: XPing365.Sdk.Core.TestStepHandler
+  name: Type
+  nameWithType: TestStepHandler.Type
+  fullName: XPing365.Sdk.Core.TestStepHandler.Type
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.#ctor*
+  commentId: Overload:XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.#ctor
+  href: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.html#XPing365_Sdk_Availability_Validators_HttpStatusCodeValidator__ctor_System_Func_System_Net_HttpStatusCode_System_Boolean__System_Func_System_Net_HttpStatusCode_System_String__
+  name: HttpStatusCodeValidator
+  nameWithType: HttpStatusCodeValidator.HttpStatusCodeValidator
+  fullName: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HttpStatusCodeValidator
+  nameWithType.vb: HttpStatusCodeValidator.New
+  fullName.vb: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.New
+  name.vb: New
+- uid: System.Func{System.Net.HttpStatusCode,System.Boolean}
+  commentId: T:System.Func{System.Net.HttpStatusCode,System.Boolean}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<HttpStatusCode, bool>
+  nameWithType: Func<HttpStatusCode, bool>
+  fullName: System.Func<System.Net.HttpStatusCode, bool>
+  nameWithType.vb: Func(Of HttpStatusCode, Boolean)
+  fullName.vb: System.Func(Of System.Net.HttpStatusCode, Boolean)
+  name.vb: Func(Of HttpStatusCode, Boolean)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Net.HttpStatusCode
+    name: HttpStatusCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net.httpstatuscode
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: bool
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Net.HttpStatusCode
+    name: HttpStatusCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net.httpstatuscode
+  - name: ','
+  - name: " "
+  - uid: System.Boolean
+    name: Boolean
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.boolean
+  - name: )
+- uid: System.Func{System.Net.HttpStatusCode,System.String}
+  commentId: T:System.Func{System.Net.HttpStatusCode,System.String}
+  parent: System
+  definition: System.Func`2
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<HttpStatusCode, string>
+  nameWithType: Func<HttpStatusCode, string>
+  fullName: System.Func<System.Net.HttpStatusCode, string>
+  nameWithType.vb: Func(Of HttpStatusCode, String)
+  fullName.vb: System.Func(Of System.Net.HttpStatusCode, String)
+  name.vb: Func(Of HttpStatusCode, String)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - uid: System.Net.HttpStatusCode
+    name: HttpStatusCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net.httpstatuscode
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: string
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: System.Net.HttpStatusCode
+    name: HttpStatusCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.net.httpstatuscode
+  - name: ','
+  - name: " "
+  - uid: System.String
+    name: String
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.string
+  - name: )
+- uid: System.Func`2
+  commentId: T:System.Func`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.func-2
+  name: Func<T, TResult>
+  nameWithType: Func<T, TResult>
+  fullName: System.Func<T, TResult>
+  nameWithType.vb: Func(Of T, TResult)
+  fullName.vb: System.Func(Of T, TResult)
+  name.vb: Func(Of T, TResult)
+  spec.csharp:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: <
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Func`2
+    name: Func
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.func-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: ','
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.String
+  commentId: T:System.String
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.string
+  name: string
+  nameWithType: string
+  fullName: string
+  nameWithType.vb: String
+  fullName.vb: String
+  name.vb: String
+- uid: XPing365.Sdk.Core.TestSettings
+  commentId: T:XPing365.Sdk.Core.TestSettings
+  parent: XPing365.Sdk.Core
+  name: TestSettings
+  nameWithType: TestSettings
+  fullName: XPing365.Sdk.Core.TestSettings
+- uid: XPing365.Sdk.Core.TestSession
+  commentId: T:XPing365.Sdk.Core.TestSession
+  parent: XPing365.Sdk.Core
+  name: TestSession
+  nameWithType: TestSession
+  fullName: XPing365.Sdk.Core.TestSession
+- uid: XPing365.Sdk.Core.TestStep
+  commentId: T:XPing365.Sdk.Core.TestStep
+  name: TestStep
+  nameWithType: TestStep
+  fullName: XPing365.Sdk.Core.TestStep
+- uid: XPing365.Sdk.Core.TestStepHandler.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  commentId: M:XPing365.Sdk.Core.TestStepHandler.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+  parent: XPing365.Sdk.Core.TestStepHandler
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uri
+  name: HandleStepAsync(Uri, TestSettings, TestSession, CancellationToken)
+  nameWithType: TestStepHandler.HandleStepAsync(Uri, TestSettings, TestSession, CancellationToken)
+  fullName: XPing365.Sdk.Core.TestStepHandler.HandleStepAsync(System.Uri, XPing365.Sdk.Core.TestSettings, XPing365.Sdk.Core.TestSession, System.Threading.CancellationToken)
+  spec.csharp:
+  - uid: XPing365.Sdk.Core.TestStepHandler.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+    name: HandleStepAsync
+  - name: (
+  - uid: System.Uri
+    name: Uri
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uri
+  - name: ','
+  - name: " "
+  - uid: XPing365.Sdk.Core.TestSettings
+    name: TestSettings
+  - name: ','
+  - name: " "
+  - uid: XPing365.Sdk.Core.TestSession
+    name: TestSession
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+  spec.vb:
+  - uid: XPing365.Sdk.Core.TestStepHandler.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
+    name: HandleStepAsync
+  - name: (
+  - uid: System.Uri
+    name: Uri
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.uri
+  - name: ','
+  - name: " "
+  - uid: XPing365.Sdk.Core.TestSettings
+    name: TestSettings
+  - name: ','
+  - name: " "
+  - uid: XPing365.Sdk.Core.TestSession
+    name: TestSession
+  - name: ','
+  - name: " "
+  - uid: System.Threading.CancellationToken
+    name: CancellationToken
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  - name: )
+- uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync*
+  commentId: Overload:XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync
+  href: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.html#XPing365_Sdk_Availability_Validators_HttpStatusCodeValidator_HandleStepAsync_System_Uri_XPing365_Sdk_Core_TestSettings_XPing365_Sdk_Core_TestSession_System_Threading_CancellationToken_
+  name: HandleStepAsync
+  nameWithType: HttpStatusCodeValidator.HandleStepAsync
+  fullName: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.HandleStepAsync
+- uid: System.Uri
+  commentId: T:System.Uri
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.uri
+  name: Uri
+  nameWithType: Uri
+  fullName: System.Uri
+- uid: System.Threading.CancellationToken
+  commentId: T:System.Threading.CancellationToken
+  parent: System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.cancellationtoken
+  name: CancellationToken
+  nameWithType: CancellationToken
+  fullName: System.Threading.CancellationToken
+- uid: System.Threading.Tasks.Task{XPing365.Sdk.Core.TestStep}
+  commentId: T:System.Threading.Tasks.Task{XPing365.Sdk.Core.TestStep}
+  parent: System.Threading.Tasks
+  definition: System.Threading.Tasks.Task`1
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TestStep>
+  nameWithType: Task<TestStep>
+  fullName: System.Threading.Tasks.Task<XPing365.Sdk.Core.TestStep>
+  nameWithType.vb: Task(Of TestStep)
+  fullName.vb: System.Threading.Tasks.Task(Of XPing365.Sdk.Core.TestStep)
+  name.vb: Task(Of TestStep)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - uid: XPing365.Sdk.Core.TestStep
+    name: TestStep
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: XPing365.Sdk.Core.TestStep
+    name: TestStep
+  - name: )
+- uid: System.Threading
+  commentId: N:System.Threading
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading
+  nameWithType: System.Threading
+  fullName: System.Threading
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+- uid: System.Threading.Tasks.Task`1
+  commentId: T:System.Threading.Tasks.Task`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  name: Task<TResult>
+  nameWithType: Task<TResult>
+  fullName: System.Threading.Tasks.Task<TResult>
+  nameWithType.vb: Task(Of TResult)
+  fullName.vb: System.Threading.Tasks.Task(Of TResult)
+  name.vb: Task(Of TResult)
+  spec.csharp:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: <
+  - name: TResult
+  - name: '>'
+  spec.vb:
+  - uid: System.Threading.Tasks.Task`1
+    name: Task
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks.task-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TResult
+  - name: )
+- uid: System.Threading.Tasks
+  commentId: N:System.Threading.Tasks
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Threading.Tasks
+  nameWithType: System.Threading.Tasks
+  fullName: System.Threading.Tasks
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Threading
+    name: Threading
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading
+  - name: .
+  - uid: System.Threading.Tasks
+    name: Tasks
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.threading.tasks

@@ -1,0 +1,35 @@
+### YamlMime:TableOfContent
+items:
+- uid: XPing365.Sdk.Core
+  name: XPing365.Sdk.Core
+  items:
+  - uid: XPing365.Sdk.Core.PropertyBag
+    name: PropertyBag
+  - uid: XPing365.Sdk.Core.PropertyBagKey
+    name: PropertyBagKey
+  - uid: XPing365.Sdk.Core.PropertyBagKeys
+    name: PropertyBagKeys
+  - uid: XPing365.Sdk.Core.TestAgent
+    name: TestAgent
+  - uid: XPing365.Sdk.Core.TestSession
+    name: TestSession
+  - uid: XPing365.Sdk.Core.TestSessionState
+    name: TestSessionState
+  - uid: XPing365.Sdk.Core.TestSettings
+    name: TestSettings
+  - uid: XPing365.Sdk.Core.TestStep
+    name: TestStep
+  - uid: XPing365.Sdk.Core.TestStepHandler
+    name: TestStepHandler
+  - uid: XPing365.Sdk.Core.TestStepResult
+    name: TestStepResult
+  - uid: XPing365.Sdk.Core.TestStepType
+    name: TestStepType
+- uid: XPing365.Sdk.Core.Validators
+  name: XPing365.Sdk.Core.Validators
+  items:
+  - uid: XPing365.Sdk.Core.Validators.IValidator
+    name: IValidator
+  - uid: XPing365.Sdk.Core.Validators.Validator
+    name: Validator
+memberLayout: SamePage

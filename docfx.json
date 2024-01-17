@@ -1,0 +1,58 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "src": "./src",
+          "files": [
+            "XPing365.Sdk.Core/XPing365.Sdk.Core.csproj"
+          ]
+        }
+      ],
+      "dest": "api/XPing365.Sdk.Core"
+    },
+    {
+      "src": [
+        {
+          "src": "./src",
+          "files": [
+            "XPing365.Sdk.Availability/XPing365.Sdk.Availability.csproj"
+          ]
+        }
+      ],
+      "dest": "api/XPing365.Sdk.Availability"
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "**/*.{md,yml}"
+        ],
+        "exclude": [
+          "_site/**", "README.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "output": "_site",
+    "template": [
+      "default",
+      "modern"
+    ],
+    "globalMetadata": {
+      "_appName": "XPing365",
+      "_appTitle": "XPing365",
+      "_appLogoPath": "images/logo.svg",
+      "_appFaviconPath": "images/favicon.ico",
+      "_enableSearch": true,
+      "pdf": false
+    }
+  }
+}

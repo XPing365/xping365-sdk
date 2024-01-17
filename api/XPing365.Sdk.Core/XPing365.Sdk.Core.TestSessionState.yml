@@ -1,0 +1,207 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Core.TestSessionState
+  commentId: T:XPing365.Sdk.Core.TestSessionState
+  id: TestSessionState
+  parent: XPing365.Sdk.Core
+  children:
+  - XPing365.Sdk.Core.TestSessionState.Completed
+  - XPing365.Sdk.Core.TestSessionState.Declined
+  - XPing365.Sdk.Core.TestSessionState.NotStarted
+  langs:
+  - csharp
+  - vb
+  name: TestSessionState
+  nameWithType: TestSessionState
+  fullName: XPing365.Sdk.Core.TestSessionState
+  type: Enum
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestSessionState.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: TestSessionState
+    path: src/XPing365.Sdk.Core/TestSessionState.cs
+    startLine: 7
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Represents the state of the <xref href="XPing365.Sdk.Core.TestSession" data-throw-if-not-resolved="false"></xref>.
+  example: []
+  syntax:
+    content: public enum TestSessionState
+    content.vb: Public Enum TestSessionState
+- uid: XPing365.Sdk.Core.TestSessionState.NotStarted
+  commentId: F:XPing365.Sdk.Core.TestSessionState.NotStarted
+  id: NotStarted
+  parent: XPing365.Sdk.Core.TestSessionState
+  langs:
+  - csharp
+  - vb
+  name: NotStarted
+  nameWithType: TestSessionState.NotStarted
+  fullName: XPing365.Sdk.Core.TestSessionState.NotStarted
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestSessionState.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: NotStarted
+    path: src/XPing365.Sdk.Core/TestSessionState.cs
+    startLine: 12
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: The session is still being created.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "not started")]
+
+      NotStarted = 0
+    return:
+      type: XPing365.Sdk.Core.TestSessionState
+    content.vb: >-
+      <Display(Name:="not started")>
+
+      NotStarted = 0
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: not started
+- uid: XPing365.Sdk.Core.TestSessionState.Completed
+  commentId: F:XPing365.Sdk.Core.TestSessionState.Completed
+  id: Completed
+  parent: XPing365.Sdk.Core.TestSessionState
+  langs:
+  - csharp
+  - vb
+  name: Completed
+  nameWithType: TestSessionState.Completed
+  fullName: XPing365.Sdk.Core.TestSessionState.Completed
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestSessionState.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Completed
+    path: src/XPing365.Sdk.Core/TestSessionState.cs
+    startLine: 16
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: The session has been completed.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "completed")]
+
+      Completed = 1
+    return:
+      type: XPing365.Sdk.Core.TestSessionState
+    content.vb: >-
+      <Display(Name:="completed")>
+
+      Completed = 1
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: completed
+- uid: XPing365.Sdk.Core.TestSessionState.Declined
+  commentId: F:XPing365.Sdk.Core.TestSessionState.Declined
+  id: Declined
+  parent: XPing365.Sdk.Core.TestSessionState
+  langs:
+  - csharp
+  - vb
+  name: Declined
+  nameWithType: TestSessionState.Declined
+  fullName: XPing365.Sdk.Core.TestSessionState.Declined
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestSessionState.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Declined
+    path: src/XPing365.Sdk.Core/TestSessionState.cs
+    startLine: 20
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: The session has been declined by test agent.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "declined")]
+
+      Declined = 2
+    return:
+      type: XPing365.Sdk.Core.TestSessionState
+    content.vb: >-
+      <Display(Name:="declined")>
+
+      Declined = 2
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: declined
+references:
+- uid: XPing365.Sdk.Core.TestSession
+  commentId: T:XPing365.Sdk.Core.TestSession
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestSession.html
+  name: TestSession
+  nameWithType: TestSession
+  fullName: XPing365.Sdk.Core.TestSession
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  href: XPing365.html
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+- uid: XPing365.Sdk.Core.TestSessionState
+  commentId: T:XPing365.Sdk.Core.TestSessionState
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestSessionState.html
+  name: TestSessionState
+  nameWithType: TestSessionState
+  fullName: XPing365.Sdk.Core.TestSessionState

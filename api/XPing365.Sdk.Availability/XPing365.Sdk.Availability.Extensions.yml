@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Availability.Extensions
+  commentId: N:XPing365.Sdk.Availability.Extensions
+  id: XPing365.Sdk.Availability.Extensions
+  children:
+  - XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension
+  langs:
+  - csharp
+  - vb
+  name: XPing365.Sdk.Availability.Extensions
+  nameWithType: XPing365.Sdk.Availability.Extensions
+  fullName: XPing365.Sdk.Availability.Extensions
+  type: Namespace
+  assemblies:
+  - XPing365.Sdk.Availability
+references:
+- uid: XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension
+  commentId: T:XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension
+  href: XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension.html
+  name: DependencyInjectionExtension
+  nameWithType: DependencyInjectionExtension
+  fullName: XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension

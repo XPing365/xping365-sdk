@@ -1,0 +1,1090 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Core.PropertyBag
+  commentId: T:XPing365.Sdk.Core.PropertyBag
+  id: PropertyBag
+  parent: XPing365.Sdk.Core
+  children:
+  - XPing365.Sdk.Core.PropertyBag.#ctor(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  - XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  - XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object)
+  - XPing365.Sdk.Core.PropertyBag.Clear
+  - XPing365.Sdk.Core.PropertyBag.ContainsKey(XPing365.Sdk.Core.PropertyBagKey)
+  - XPing365.Sdk.Core.PropertyBag.Count
+  - XPing365.Sdk.Core.PropertyBag.GetProperty(XPing365.Sdk.Core.PropertyBagKey)
+  - XPing365.Sdk.Core.PropertyBag.GetProperty``1(XPing365.Sdk.Core.PropertyBagKey)
+  - XPing365.Sdk.Core.PropertyBag.Keys
+  - XPing365.Sdk.Core.PropertyBag.TryGetProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object@)
+  - XPing365.Sdk.Core.PropertyBag.TryGetProperty``1(XPing365.Sdk.Core.PropertyBagKey,``0@)
+  langs:
+  - csharp
+  - vb
+  name: PropertyBag
+  nameWithType: PropertyBag
+  fullName: XPing365.Sdk.Core.PropertyBag
+  type: Class
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: PropertyBag
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 9
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: >-
+    PropertyBag class represents a collection of key-value pairs that allows to store any object for a given unique key.
+
+    All keys are represented by <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> but values may be of any type. Null values are not 
+
+    permitted, since a null entry represents the absence of the key.
+  example: []
+  syntax:
+    content: public class PropertyBag
+    content.vb: Public Class PropertyBag
+  inheritance:
+  - System.Object
+  inheritedMembers:
+  - System.Object.Equals(System.Object)
+  - System.Object.Equals(System.Object,System.Object)
+  - System.Object.GetHashCode
+  - System.Object.GetType
+  - System.Object.MemberwiseClone
+  - System.Object.ReferenceEquals(System.Object,System.Object)
+  - System.Object.ToString
+- uid: XPing365.Sdk.Core.PropertyBag.#ctor(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  commentId: M:XPing365.Sdk.Core.PropertyBag.#ctor(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  id: '#ctor(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})'
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: PropertyBag(IDictionary<PropertyBagKey, object>?)
+  nameWithType: PropertyBag.PropertyBag(IDictionary<PropertyBagKey, object>?)
+  fullName: XPing365.Sdk.Core.PropertyBag.PropertyBag(System.Collections.Generic.IDictionary<XPing365.Sdk.Core.PropertyBagKey, object>?)
+  type: Constructor
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: .ctor
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 9
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: >-
+    PropertyBag class represents a collection of key-value pairs that allows to store any object for a given unique key.
+
+    All keys are represented by <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> but values may be of any type. Null values are not 
+
+    permitted, since a null entry represents the absence of the key.
+  example: []
+  syntax:
+    content: public PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
+    parameters:
+    - id: properties
+      type: System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object}
+    content.vb: Public Sub New(properties As IDictionary(Of PropertyBagKey, Object) = Nothing)
+  overload: XPing365.Sdk.Core.PropertyBag.#ctor*
+  nameWithType.vb: PropertyBag.New(IDictionary(Of PropertyBagKey, Object))
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.New(System.Collections.Generic.IDictionary(Of XPing365.Sdk.Core.PropertyBagKey, Object))
+  name.vb: New(IDictionary(Of PropertyBagKey, Object))
+- uid: XPing365.Sdk.Core.PropertyBag.Count
+  commentId: P:XPing365.Sdk.Core.PropertyBag.Count
+  id: Count
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: Count
+  nameWithType: PropertyBag.Count
+  fullName: XPing365.Sdk.Core.PropertyBag.Count
+  type: Property
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Count
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 16
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Gets the number of items in the collection.
+  example: []
+  syntax:
+    content: public int Count { get; }
+    parameters: []
+    return:
+      type: System.Int32
+    content.vb: Public ReadOnly Property Count As Integer
+  overload: XPing365.Sdk.Core.PropertyBag.Count*
+- uid: XPing365.Sdk.Core.PropertyBag.Keys
+  commentId: P:XPing365.Sdk.Core.PropertyBag.Keys
+  id: Keys
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: Keys
+  nameWithType: PropertyBag.Keys
+  fullName: XPing365.Sdk.Core.PropertyBag.Keys
+  type: Property
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Keys
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 21
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Gets a read-only collection that contains the keys of the collection.
+  example: []
+  syntax:
+    content: public ReadOnlyCollection<PropertyBagKey> Keys { get; }
+    parameters: []
+    return:
+      type: System.Collections.ObjectModel.ReadOnlyCollection{XPing365.Sdk.Core.PropertyBagKey}
+    content.vb: Public ReadOnly Property Keys As ReadOnlyCollection(Of PropertyBagKey)
+  overload: XPing365.Sdk.Core.PropertyBag.Keys*
+- uid: XPing365.Sdk.Core.PropertyBag.ContainsKey(XPing365.Sdk.Core.PropertyBagKey)
+  commentId: M:XPing365.Sdk.Core.PropertyBag.ContainsKey(XPing365.Sdk.Core.PropertyBagKey)
+  id: ContainsKey(XPing365.Sdk.Core.PropertyBagKey)
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: ContainsKey(PropertyBagKey)
+  nameWithType: PropertyBag.ContainsKey(PropertyBagKey)
+  fullName: XPing365.Sdk.Core.PropertyBag.ContainsKey(XPing365.Sdk.Core.PropertyBagKey)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: ContainsKey
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 28
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Determines whether the collection contains an element that has the specified key.
+  example: []
+  syntax:
+    content: public bool ContainsKey(PropertyBagKey key)
+    parameters:
+    - id: key
+      type: XPing365.Sdk.Core.PropertyBagKey
+      description: A key represented as <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    return:
+      type: System.Boolean
+      description: Boolean value determining whether the key is found in a collection.
+    content.vb: Public Function ContainsKey(key As PropertyBagKey) As Boolean
+  overload: XPing365.Sdk.Core.PropertyBag.ContainsKey*
+- uid: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  commentId: M:XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  id: AddOrUpdateProperties(System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object})
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: AddOrUpdateProperties(IDictionary<PropertyBagKey, object>)
+  nameWithType: PropertyBag.AddOrUpdateProperties(IDictionary<PropertyBagKey, object>)
+  fullName: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties(System.Collections.Generic.IDictionary<XPing365.Sdk.Core.PropertyBagKey, object>)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: AddOrUpdateProperties
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 39
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Adds or updates a collection of key-value pairs to the collection.
+  remarks: >-
+    If a key is not found in the collection, a new key-value pair is created. If a key is already present in the
+
+    collection, the value associated with the key is updated.
+  example: []
+  syntax:
+    content: public void AddOrUpdateProperties(IDictionary<PropertyBagKey, object> properties)
+    parameters:
+    - id: properties
+      type: System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object}
+      description: >-
+        A collection of a key-value pairs, where key is represented as 
+            <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    content.vb: Public Sub AddOrUpdateProperties(properties As IDictionary(Of PropertyBagKey, Object))
+  overload: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties*
+  nameWithType.vb: PropertyBag.AddOrUpdateProperties(IDictionary(Of PropertyBagKey, Object))
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties(System.Collections.Generic.IDictionary(Of XPing365.Sdk.Core.PropertyBagKey, Object))
+  name.vb: AddOrUpdateProperties(IDictionary(Of PropertyBagKey, Object))
+- uid: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object)
+  commentId: M:XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object)
+  id: AddOrUpdateProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object)
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: AddOrUpdateProperty(PropertyBagKey, object)
+  nameWithType: PropertyBag.AddOrUpdateProperty(PropertyBagKey, object)
+  fullName: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty(XPing365.Sdk.Core.PropertyBagKey, object)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: AddOrUpdateProperty
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 58
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Adds or updates a key-value pair to the collection.
+  remarks: >-
+    If a key is not found in the collection, a new key-value pair is created. If a key is already present in the
+
+    collection, the value associated with the key is updated.
+  example: []
+  syntax:
+    content: public void AddOrUpdateProperty(PropertyBagKey key, object value)
+    parameters:
+    - id: key
+      type: XPing365.Sdk.Core.PropertyBagKey
+      description: A key represented as <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    - id: value
+      type: System.Object
+      description: Any value which should be stored in a collection.
+    content.vb: Public Sub AddOrUpdateProperty(key As PropertyBagKey, value As Object)
+  overload: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty*
+  nameWithType.vb: PropertyBag.AddOrUpdateProperty(PropertyBagKey, Object)
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty(XPing365.Sdk.Core.PropertyBagKey, Object)
+  name.vb: AddOrUpdateProperty(PropertyBagKey, Object)
+- uid: XPing365.Sdk.Core.PropertyBag.TryGetProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object@)
+  commentId: M:XPing365.Sdk.Core.PropertyBag.TryGetProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object@)
+  id: TryGetProperty(XPing365.Sdk.Core.PropertyBagKey,System.Object@)
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: TryGetProperty(PropertyBagKey, out object?)
+  nameWithType: PropertyBag.TryGetProperty(PropertyBagKey, out object?)
+  fullName: XPing365.Sdk.Core.PropertyBag.TryGetProperty(XPing365.Sdk.Core.PropertyBagKey, out object?)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: TryGetProperty
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 76
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: This method attempts to get the value associated with the specified key from the collection.
+  example: []
+  syntax:
+    content: public bool TryGetProperty(PropertyBagKey key, out object? value)
+    parameters:
+    - id: key
+      type: XPing365.Sdk.Core.PropertyBagKey
+      description: A key represented as <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    - id: value
+      type: System.Object
+      description: >-
+        When this method returns, contains the object value stored in the collection, if
+            the key is found, or null if the key is not found.
+    return:
+      type: System.Boolean
+      description: true if a key was found successfully; otherwise, false
+    content.vb: Public Function TryGetProperty(key As PropertyBagKey, value As Object) As Boolean
+  overload: XPing365.Sdk.Core.PropertyBag.TryGetProperty*
+  nameWithType.vb: PropertyBag.TryGetProperty(PropertyBagKey, Object)
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.TryGetProperty(XPing365.Sdk.Core.PropertyBagKey, Object)
+  name.vb: TryGetProperty(PropertyBagKey, Object)
+- uid: XPing365.Sdk.Core.PropertyBag.GetProperty(XPing365.Sdk.Core.PropertyBagKey)
+  commentId: M:XPing365.Sdk.Core.PropertyBag.GetProperty(XPing365.Sdk.Core.PropertyBagKey)
+  id: GetProperty(XPing365.Sdk.Core.PropertyBagKey)
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: GetProperty(PropertyBagKey)
+  nameWithType: PropertyBag.GetProperty(PropertyBagKey)
+  fullName: XPing365.Sdk.Core.PropertyBag.GetProperty(XPing365.Sdk.Core.PropertyBagKey)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: GetProperty
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 95
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Gets the value associated with the specified key from the collection.
+  example: []
+  syntax:
+    content: public object GetProperty(PropertyBagKey key)
+    parameters:
+    - id: key
+      type: XPing365.Sdk.Core.PropertyBagKey
+      description: A key represented as <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    return:
+      type: System.Object
+      description: >-
+        The value associated with the specified key. If the specified key is not found, this operation
+            throws a KeyNotFoundException exception.
+    content.vb: Public Function GetProperty(key As PropertyBagKey) As Object
+  overload: XPing365.Sdk.Core.PropertyBag.GetProperty*
+  exceptions:
+  - type: System.Collections.Generic.KeyNotFoundException
+    commentId: T:System.Collections.Generic.KeyNotFoundException
+    description: If the specified key is not found.
+- uid: XPing365.Sdk.Core.PropertyBag.TryGetProperty``1(XPing365.Sdk.Core.PropertyBagKey,``0@)
+  commentId: M:XPing365.Sdk.Core.PropertyBag.TryGetProperty``1(XPing365.Sdk.Core.PropertyBagKey,``0@)
+  id: TryGetProperty``1(XPing365.Sdk.Core.PropertyBagKey,``0@)
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: TryGetProperty<TValue>(PropertyBagKey, out TValue?)
+  nameWithType: PropertyBag.TryGetProperty<TValue>(PropertyBagKey, out TValue?)
+  fullName: XPing365.Sdk.Core.PropertyBag.TryGetProperty<TValue>(XPing365.Sdk.Core.PropertyBagKey, out TValue?)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: TryGetProperty
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 118
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: >-
+    This method attempts to get the value associated with the specified key from the collection and cast it 
+
+    to the specified type T.
+  remarks: >-
+    This method does not throw exception when type of a value associated with a given key does not match 
+        with <code class="typeparamref">TValue</code>.
+  example: []
+  syntax:
+    content: public bool TryGetProperty<TValue>(PropertyBagKey key, out TValue? value)
+    parameters:
+    - id: key
+      type: XPing365.Sdk.Core.PropertyBagKey
+      description: A key represented as <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    - id: value
+      type: '{TValue}'
+      description: >-
+        When this method returns, contains the value of specified <code class="typeparamref">TValue</code> type
+            stored in the collection, if the key is found, or default value of <code class="typeparamref">TValue</code> if the key is
+            not found.
+    typeParameters:
+    - id: TValue
+      description: The value type associated with the specified key.
+    return:
+      type: System.Boolean
+      description: >-
+        true if a key was found successfully and its type matches with <code class="typeparamref">TValue</code>; 
+            otherwise, false
+    content.vb: Public Function TryGetProperty(Of TValue)(key As PropertyBagKey, value As TValue) As Boolean
+  overload: XPing365.Sdk.Core.PropertyBag.TryGetProperty*
+  nameWithType.vb: PropertyBag.TryGetProperty(Of TValue)(PropertyBagKey, TValue)
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.TryGetProperty(Of TValue)(XPing365.Sdk.Core.PropertyBagKey, TValue)
+  name.vb: TryGetProperty(Of TValue)(PropertyBagKey, TValue)
+- uid: XPing365.Sdk.Core.PropertyBag.GetProperty``1(XPing365.Sdk.Core.PropertyBagKey)
+  commentId: M:XPing365.Sdk.Core.PropertyBag.GetProperty``1(XPing365.Sdk.Core.PropertyBagKey)
+  id: GetProperty``1(XPing365.Sdk.Core.PropertyBagKey)
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: GetProperty<TValue>(PropertyBagKey)
+  nameWithType: PropertyBag.GetProperty<TValue>(PropertyBagKey)
+  fullName: XPing365.Sdk.Core.PropertyBag.GetProperty<TValue>(XPing365.Sdk.Core.PropertyBagKey)
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: GetProperty
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 146
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: >-
+    Gets the value associated with the specified key from the collection and casts it to the specified type
+
+    <code class="typeparamref">TValue</code>.
+  example: []
+  syntax:
+    content: public TValue GetProperty<TValue>(PropertyBagKey key)
+    parameters:
+    - id: key
+      type: XPing365.Sdk.Core.PropertyBagKey
+      description: A key represented as <xref href="XPing365.Sdk.Core.PropertyBagKey" data-throw-if-not-resolved="false"></xref> type.
+    typeParameters:
+    - id: TValue
+      description: The value type associated with the specified key.
+    return:
+      type: '{TValue}'
+      description: >-
+        The value associated with the specified key. If the specified key is not found, this operation
+            throws a KeyNotFoundException exception. If the specified key is found, however its type does not match
+            with <code class="typeparamref">TValue</code> it throws InvalidCastException.
+    content.vb: Public Function GetProperty(Of TValue)(key As PropertyBagKey) As TValue
+  overload: XPing365.Sdk.Core.PropertyBag.GetProperty*
+  exceptions:
+  - type: System.Collections.Generic.KeyNotFoundException
+    commentId: T:System.Collections.Generic.KeyNotFoundException
+    description: If the specified key is not found.
+  - type: System.InvalidCastException
+    commentId: T:System.InvalidCastException
+    description: >-
+      If the specified value type <code class="typeparamref">TValue</code> does not match 
+          with a value type stored in the collection.
+  nameWithType.vb: PropertyBag.GetProperty(Of TValue)(PropertyBagKey)
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.GetProperty(Of TValue)(XPing365.Sdk.Core.PropertyBagKey)
+  name.vb: GetProperty(Of TValue)(PropertyBagKey)
+- uid: XPing365.Sdk.Core.PropertyBag.Clear
+  commentId: M:XPing365.Sdk.Core.PropertyBag.Clear
+  id: Clear
+  parent: XPing365.Sdk.Core.PropertyBag
+  langs:
+  - csharp
+  - vb
+  name: Clear()
+  nameWithType: PropertyBag.Clear()
+  fullName: XPing365.Sdk.Core.PropertyBag.Clear()
+  type: Method
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/PropertyBag.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: Clear
+    path: src/XPing365.Sdk.Core/PropertyBag.cs
+    startLine: 155
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Removes all items from the collection.
+  example: []
+  syntax:
+    content: public void Clear()
+    content.vb: Public Sub Clear()
+  overload: XPing365.Sdk.Core.PropertyBag.Clear*
+references:
+- uid: XPing365.Sdk.Core.PropertyBagKey
+  commentId: T:XPing365.Sdk.Core.PropertyBagKey
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.PropertyBagKey.html
+  name: PropertyBagKey
+  nameWithType: PropertyBagKey
+  fullName: XPing365.Sdk.Core.PropertyBagKey
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  href: XPing365.html
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object
+  name: object
+  nameWithType: object
+  fullName: object
+  nameWithType.vb: Object
+  fullName.vb: Object
+  name.vb: Object
+- uid: System.Object.Equals(System.Object)
+  commentId: M:System.Object.Equals(System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  name: Equals(object)
+  nameWithType: object.Equals(object)
+  fullName: object.Equals(object)
+  nameWithType.vb: Object.Equals(Object)
+  fullName.vb: Object.Equals(Object)
+  name.vb: Equals(Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.Equals(System.Object,System.Object)
+  commentId: M:System.Object.Equals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  name: Equals(object, object)
+  nameWithType: object.Equals(object, object)
+  fullName: object.Equals(object, object)
+  nameWithType.vb: Object.Equals(Object, Object)
+  fullName.vb: Object.Equals(Object, Object)
+  name.vb: Equals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.Equals(System.Object,System.Object)
+    name: Equals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.equals#system-object-equals(system-object-system-object)
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.GetHashCode
+  commentId: M:System.Object.GetHashCode
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  name: GetHashCode()
+  nameWithType: object.GetHashCode()
+  fullName: object.GetHashCode()
+  nameWithType.vb: Object.GetHashCode()
+  fullName.vb: Object.GetHashCode()
+  spec.csharp:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetHashCode
+    name: GetHashCode
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gethashcode
+  - name: (
+  - name: )
+- uid: System.Object.GetType
+  commentId: M:System.Object.GetType
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  name: GetType()
+  nameWithType: object.GetType()
+  fullName: object.GetType()
+  nameWithType.vb: Object.GetType()
+  fullName.vb: Object.GetType()
+  spec.csharp:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.GetType
+    name: GetType
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.gettype
+  - name: (
+  - name: )
+- uid: System.Object.MemberwiseClone
+  commentId: M:System.Object.MemberwiseClone
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  name: MemberwiseClone()
+  nameWithType: object.MemberwiseClone()
+  fullName: object.MemberwiseClone()
+  nameWithType.vb: Object.MemberwiseClone()
+  fullName.vb: Object.MemberwiseClone()
+  spec.csharp:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.MemberwiseClone
+    name: MemberwiseClone
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.memberwiseclone
+  - name: (
+  - name: )
+- uid: System.Object.ReferenceEquals(System.Object,System.Object)
+  commentId: M:System.Object.ReferenceEquals(System.Object,System.Object)
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  name: ReferenceEquals(object, object)
+  nameWithType: object.ReferenceEquals(object, object)
+  fullName: object.ReferenceEquals(object, object)
+  nameWithType.vb: Object.ReferenceEquals(Object, Object)
+  fullName.vb: Object.ReferenceEquals(Object, Object)
+  name.vb: ReferenceEquals(Object, Object)
+  spec.csharp:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+  spec.vb:
+  - uid: System.Object.ReferenceEquals(System.Object,System.Object)
+    name: ReferenceEquals
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.referenceequals
+  - name: (
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Object.ToString
+  commentId: M:System.Object.ToString
+  parent: System.Object
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  name: ToString()
+  nameWithType: object.ToString()
+  fullName: object.ToString()
+  nameWithType.vb: Object.ToString()
+  fullName.vb: Object.ToString()
+  spec.csharp:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+  spec.vb:
+  - uid: System.Object.ToString
+    name: ToString
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object.tostring
+  - name: (
+  - name: )
+- uid: System
+  commentId: N:System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: XPing365.Sdk.Core.PropertyBag.#ctor*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.#ctor
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag__ctor_System_Collections_Generic_IDictionary_XPing365_Sdk_Core_PropertyBagKey_System_Object__
+  name: PropertyBag
+  nameWithType: PropertyBag.PropertyBag
+  fullName: XPing365.Sdk.Core.PropertyBag.PropertyBag
+  nameWithType.vb: PropertyBag.New
+  fullName.vb: XPing365.Sdk.Core.PropertyBag.New
+  name.vb: New
+- uid: System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object}
+  commentId: T:System.Collections.Generic.IDictionary{XPing365.Sdk.Core.PropertyBagKey,System.Object}
+  parent: System.Collections.Generic
+  definition: System.Collections.Generic.IDictionary`2
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  name: IDictionary<PropertyBagKey, object>
+  nameWithType: IDictionary<PropertyBagKey, object>
+  fullName: System.Collections.Generic.IDictionary<XPing365.Sdk.Core.PropertyBagKey, object>
+  nameWithType.vb: IDictionary(Of PropertyBagKey, Object)
+  fullName.vb: System.Collections.Generic.IDictionary(Of XPing365.Sdk.Core.PropertyBagKey, Object)
+  name.vb: IDictionary(Of PropertyBagKey, Object)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - uid: XPing365.Sdk.Core.PropertyBagKey
+    name: PropertyBagKey
+    href: XPing365.Sdk.Core.PropertyBagKey.html
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: XPing365.Sdk.Core.PropertyBagKey
+    name: PropertyBagKey
+    href: XPing365.Sdk.Core.PropertyBagKey.html
+  - name: ','
+  - name: " "
+  - uid: System.Object
+    name: Object
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.object
+  - name: )
+- uid: System.Collections.Generic.IDictionary`2
+  commentId: T:System.Collections.Generic.IDictionary`2
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  name: IDictionary<TKey, TValue>
+  nameWithType: IDictionary<TKey, TValue>
+  fullName: System.Collections.Generic.IDictionary<TKey, TValue>
+  nameWithType.vb: IDictionary(Of TKey, TValue)
+  fullName.vb: System.Collections.Generic.IDictionary(Of TKey, TValue)
+  name.vb: IDictionary(Of TKey, TValue)
+  spec.csharp:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: <
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.Generic.IDictionary`2
+    name: IDictionary
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic.idictionary-2
+  - name: (
+  - name: Of
+  - name: " "
+  - name: TKey
+  - name: ','
+  - name: " "
+  - name: TValue
+  - name: )
+- uid: System.Collections.Generic
+  commentId: N:System.Collections.Generic
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.Generic
+  nameWithType: System.Collections.Generic
+  fullName: System.Collections.Generic
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.Generic
+    name: Generic
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.generic
+- uid: XPing365.Sdk.Core.PropertyBag.Count*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.Count
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_Count
+  name: Count
+  nameWithType: PropertyBag.Count
+  fullName: XPing365.Sdk.Core.PropertyBag.Count
+- uid: System.Int32
+  commentId: T:System.Int32
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.int32
+  name: int
+  nameWithType: int
+  fullName: int
+  nameWithType.vb: Integer
+  fullName.vb: Integer
+  name.vb: Integer
+- uid: XPing365.Sdk.Core.PropertyBag.Keys*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.Keys
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_Keys
+  name: Keys
+  nameWithType: PropertyBag.Keys
+  fullName: XPing365.Sdk.Core.PropertyBag.Keys
+- uid: System.Collections.ObjectModel.ReadOnlyCollection{XPing365.Sdk.Core.PropertyBagKey}
+  commentId: T:System.Collections.ObjectModel.ReadOnlyCollection{XPing365.Sdk.Core.PropertyBagKey}
+  parent: System.Collections.ObjectModel
+  definition: System.Collections.ObjectModel.ReadOnlyCollection`1
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  name: ReadOnlyCollection<PropertyBagKey>
+  nameWithType: ReadOnlyCollection<PropertyBagKey>
+  fullName: System.Collections.ObjectModel.ReadOnlyCollection<XPing365.Sdk.Core.PropertyBagKey>
+  nameWithType.vb: ReadOnlyCollection(Of PropertyBagKey)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyCollection(Of XPing365.Sdk.Core.PropertyBagKey)
+  name.vb: ReadOnlyCollection(Of PropertyBagKey)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: <
+  - uid: XPing365.Sdk.Core.PropertyBagKey
+    name: PropertyBagKey
+    href: XPing365.Sdk.Core.PropertyBagKey.html
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - uid: XPing365.Sdk.Core.PropertyBagKey
+    name: PropertyBagKey
+    href: XPing365.Sdk.Core.PropertyBagKey.html
+  - name: )
+- uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+  commentId: T:System.Collections.ObjectModel.ReadOnlyCollection`1
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  name: ReadOnlyCollection<T>
+  nameWithType: ReadOnlyCollection<T>
+  fullName: System.Collections.ObjectModel.ReadOnlyCollection<T>
+  nameWithType.vb: ReadOnlyCollection(Of T)
+  fullName.vb: System.Collections.ObjectModel.ReadOnlyCollection(Of T)
+  name.vb: ReadOnlyCollection(Of T)
+  spec.csharp:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: <
+  - name: T
+  - name: '>'
+  spec.vb:
+  - uid: System.Collections.ObjectModel.ReadOnlyCollection`1
+    name: ReadOnlyCollection
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel.readonlycollection-1
+  - name: (
+  - name: Of
+  - name: " "
+  - name: T
+  - name: )
+- uid: System.Collections.ObjectModel
+  commentId: N:System.Collections.ObjectModel
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system
+  name: System.Collections.ObjectModel
+  nameWithType: System.Collections.ObjectModel
+  fullName: System.Collections.ObjectModel
+  spec.csharp:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+  spec.vb:
+  - uid: System
+    name: System
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system
+  - name: .
+  - uid: System.Collections
+    name: Collections
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections
+  - name: .
+  - uid: System.Collections.ObjectModel
+    name: ObjectModel
+    isExternal: true
+    href: https://learn.microsoft.com/dotnet/api/system.collections.objectmodel
+- uid: XPing365.Sdk.Core.PropertyBag.ContainsKey*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.ContainsKey
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_ContainsKey_XPing365_Sdk_Core_PropertyBagKey_
+  name: ContainsKey
+  nameWithType: PropertyBag.ContainsKey
+  fullName: XPing365.Sdk.Core.PropertyBag.ContainsKey
+- uid: System.Boolean
+  commentId: T:System.Boolean
+  parent: System
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.boolean
+  name: bool
+  nameWithType: bool
+  fullName: bool
+  nameWithType.vb: Boolean
+  fullName.vb: Boolean
+  name.vb: Boolean
+- uid: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_AddOrUpdateProperties_System_Collections_Generic_IDictionary_XPing365_Sdk_Core_PropertyBagKey_System_Object__
+  name: AddOrUpdateProperties
+  nameWithType: PropertyBag.AddOrUpdateProperties
+  fullName: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperties
+- uid: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_AddOrUpdateProperty_XPing365_Sdk_Core_PropertyBagKey_System_Object_
+  name: AddOrUpdateProperty
+  nameWithType: PropertyBag.AddOrUpdateProperty
+  fullName: XPing365.Sdk.Core.PropertyBag.AddOrUpdateProperty
+- uid: XPing365.Sdk.Core.PropertyBag.TryGetProperty*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.TryGetProperty
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_TryGetProperty_XPing365_Sdk_Core_PropertyBagKey_System_Object__
+  name: TryGetProperty
+  nameWithType: PropertyBag.TryGetProperty
+  fullName: XPing365.Sdk.Core.PropertyBag.TryGetProperty
+- uid: System.Collections.Generic.KeyNotFoundException
+  commentId: T:System.Collections.Generic.KeyNotFoundException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.collections.generic.keynotfoundexception
+  name: KeyNotFoundException
+  nameWithType: KeyNotFoundException
+  fullName: System.Collections.Generic.KeyNotFoundException
+- uid: XPing365.Sdk.Core.PropertyBag.GetProperty*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.GetProperty
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_GetProperty_XPing365_Sdk_Core_PropertyBagKey_
+  name: GetProperty
+  nameWithType: PropertyBag.GetProperty
+  fullName: XPing365.Sdk.Core.PropertyBag.GetProperty
+- uid: '{TValue}'
+  commentId: '!:TValue'
+  definition: TValue
+  name: TValue
+  nameWithType: TValue
+  fullName: TValue
+- uid: TValue
+  name: TValue
+  nameWithType: TValue
+  fullName: TValue
+- uid: System.InvalidCastException
+  commentId: T:System.InvalidCastException
+  isExternal: true
+  href: https://learn.microsoft.com/dotnet/api/system.invalidcastexception
+  name: InvalidCastException
+  nameWithType: InvalidCastException
+  fullName: System.InvalidCastException
+- uid: XPing365.Sdk.Core.PropertyBag.Clear*
+  commentId: Overload:XPing365.Sdk.Core.PropertyBag.Clear
+  href: XPing365.Sdk.Core.PropertyBag.html#XPing365_Sdk_Core_PropertyBag_Clear
+  name: Clear
+  nameWithType: PropertyBag.Clear
+  fullName: XPing365.Sdk.Core.PropertyBag.Clear

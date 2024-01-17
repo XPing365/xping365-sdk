@@ -1,0 +1,131 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  id: XPing365.Sdk.Core
+  children:
+  - XPing365.Sdk.Core.PropertyBag
+  - XPing365.Sdk.Core.PropertyBagKey
+  - XPing365.Sdk.Core.PropertyBagKeys
+  - XPing365.Sdk.Core.TestAgent
+  - XPing365.Sdk.Core.TestSession
+  - XPing365.Sdk.Core.TestSessionState
+  - XPing365.Sdk.Core.TestSettings
+  - XPing365.Sdk.Core.TestStep
+  - XPing365.Sdk.Core.TestStepHandler
+  - XPing365.Sdk.Core.TestStepResult
+  - XPing365.Sdk.Core.TestStepType
+  langs:
+  - csharp
+  - vb
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  type: Namespace
+  assemblies:
+  - XPing365.Sdk.Core
+references:
+- uid: XPing365.Sdk.Core.PropertyBag
+  commentId: T:XPing365.Sdk.Core.PropertyBag
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.PropertyBag.html
+  name: PropertyBag
+  nameWithType: PropertyBag
+  fullName: XPing365.Sdk.Core.PropertyBag
+- uid: XPing365.Sdk.Core.PropertyBagKey
+  commentId: T:XPing365.Sdk.Core.PropertyBagKey
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.PropertyBagKey.html
+  name: PropertyBagKey
+  nameWithType: PropertyBagKey
+  fullName: XPing365.Sdk.Core.PropertyBagKey
+- uid: XPing365.Sdk.Core.PropertyBagKeys
+  commentId: T:XPing365.Sdk.Core.PropertyBagKeys
+  href: XPing365.Sdk.Core.PropertyBagKeys.html
+  name: PropertyBagKeys
+  nameWithType: PropertyBagKeys
+  fullName: XPing365.Sdk.Core.PropertyBagKeys
+- uid: XPing365.Sdk.Core.TestAgent
+  commentId: T:XPing365.Sdk.Core.TestAgent
+  href: XPing365.Sdk.Core.TestAgent.html
+  name: TestAgent
+  nameWithType: TestAgent
+  fullName: XPing365.Sdk.Core.TestAgent
+- uid: XPing365.Sdk.Core.TestSession
+  commentId: T:XPing365.Sdk.Core.TestSession
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestSession.html
+  name: TestSession
+  nameWithType: TestSession
+  fullName: XPing365.Sdk.Core.TestSession
+- uid: XPing365.Sdk.Core.TestSessionState
+  commentId: T:XPing365.Sdk.Core.TestSessionState
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestSessionState.html
+  name: TestSessionState
+  nameWithType: TestSessionState
+  fullName: XPing365.Sdk.Core.TestSessionState
+- uid: XPing365.Sdk.Core.TestSettings
+  commentId: T:XPing365.Sdk.Core.TestSettings
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestSettings.html
+  name: TestSettings
+  nameWithType: TestSettings
+  fullName: XPing365.Sdk.Core.TestSettings
+- uid: XPing365.Sdk.Core.TestStep
+  commentId: T:XPing365.Sdk.Core.TestStep
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestStep.html
+  name: TestStep
+  nameWithType: TestStep
+  fullName: XPing365.Sdk.Core.TestStep
+- uid: XPing365.Sdk.Core.TestStepHandler
+  commentId: T:XPing365.Sdk.Core.TestStepHandler
+  href: XPing365.Sdk.Core.TestStepHandler.html
+  name: TestStepHandler
+  nameWithType: TestStepHandler
+  fullName: XPing365.Sdk.Core.TestStepHandler
+- uid: XPing365.Sdk.Core.TestStepResult
+  commentId: T:XPing365.Sdk.Core.TestStepResult
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestStepResult.html
+  name: TestStepResult
+  nameWithType: TestStepResult
+  fullName: XPing365.Sdk.Core.TestStepResult
+- uid: XPing365.Sdk.Core.TestStepType
+  commentId: T:XPing365.Sdk.Core.TestStepType
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestStepType.html
+  name: TestStepType
+  nameWithType: TestStepType
+  fullName: XPing365.Sdk.Core.TestStepType
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  href: XPing365.html
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html

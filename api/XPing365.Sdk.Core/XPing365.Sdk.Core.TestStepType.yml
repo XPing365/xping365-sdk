@@ -1,0 +1,167 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Core.TestStepType
+  commentId: T:XPing365.Sdk.Core.TestStepType
+  id: TestStepType
+  parent: XPing365.Sdk.Core
+  children:
+  - XPing365.Sdk.Core.TestStepType.ActionStep
+  - XPing365.Sdk.Core.TestStepType.ValidateStep
+  langs:
+  - csharp
+  - vb
+  name: TestStepType
+  nameWithType: TestStepType
+  fullName: XPing365.Sdk.Core.TestStepType
+  type: Enum
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestStepType.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: TestStepType
+    path: src/XPing365.Sdk.Core/TestStepType.cs
+    startLine: 9
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: >-
+    The TestStepType enum is used to specify the type of <xref href="XPing365.Sdk.Core.TestStepHandler" data-throw-if-not-resolved="false"></xref>, whether it is an action step or 
+
+    a validation step. An action step is used to create an action for instance retrieve data, while a validation step is 
+
+    used to validate retrieved data for its correctness.
+  example: []
+  syntax:
+    content: public enum TestStepType
+    content.vb: Public Enum TestStepType
+- uid: XPing365.Sdk.Core.TestStepType.ActionStep
+  commentId: F:XPing365.Sdk.Core.TestStepType.ActionStep
+  id: ActionStep
+  parent: XPing365.Sdk.Core.TestStepType
+  langs:
+  - csharp
+  - vb
+  name: ActionStep
+  nameWithType: TestStepType.ActionStep
+  fullName: XPing365.Sdk.Core.TestStepType.ActionStep
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestStepType.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: ActionStep
+    path: src/XPing365.Sdk.Core/TestStepType.cs
+    startLine: 14
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Represents action step.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "action step")]
+
+      ActionStep = 0
+    return:
+      type: XPing365.Sdk.Core.TestStepType
+    content.vb: >-
+      <Display(Name:="action step")>
+
+      ActionStep = 0
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: action step
+- uid: XPing365.Sdk.Core.TestStepType.ValidateStep
+  commentId: F:XPing365.Sdk.Core.TestStepType.ValidateStep
+  id: ValidateStep
+  parent: XPing365.Sdk.Core.TestStepType
+  langs:
+  - csharp
+  - vb
+  name: ValidateStep
+  nameWithType: TestStepType.ValidateStep
+  fullName: XPing365.Sdk.Core.TestStepType.ValidateStep
+  type: Field
+  source:
+    remote:
+      path: src/XPing365.Sdk.Core/TestStepType.cs
+      branch: main
+      repo: https://github.com/XPing365/xping365-sdk.git
+    id: ValidateStep
+    path: src/XPing365.Sdk.Core/TestStepType.cs
+    startLine: 18
+  assemblies:
+  - XPing365.Sdk.Core
+  namespace: XPing365.Sdk.Core
+  summary: Represents validate step.
+  example: []
+  syntax:
+    content: >-
+      [Display(Name = "validate step")]
+
+      ValidateStep = 1
+    return:
+      type: XPing365.Sdk.Core.TestStepType
+    content.vb: >-
+      <Display(Name:="validate step")>
+
+      ValidateStep = 1
+  attributes:
+  - type: System.ComponentModel.DataAnnotations.DisplayAttribute
+    ctor: System.ComponentModel.DataAnnotations.DisplayAttribute.#ctor
+    arguments: []
+    namedArguments:
+    - name: Name
+      type: System.String
+      value: validate step
+references:
+- uid: XPing365.Sdk.Core.TestStepHandler
+  commentId: T:XPing365.Sdk.Core.TestStepHandler
+  href: XPing365.Sdk.Core.TestStepHandler.html
+  name: TestStepHandler
+  nameWithType: TestStepHandler
+  fullName: XPing365.Sdk.Core.TestStepHandler
+- uid: XPing365.Sdk.Core
+  commentId: N:XPing365.Sdk.Core
+  href: XPing365.html
+  name: XPing365.Sdk.Core
+  nameWithType: XPing365.Sdk.Core
+  fullName: XPing365.Sdk.Core
+  spec.csharp:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+  spec.vb:
+  - uid: XPing365
+    name: XPing365
+    href: XPing365.html
+  - name: .
+  - uid: XPing365.Sdk
+    name: Sdk
+    href: XPing365.Sdk.html
+  - name: .
+  - uid: XPing365.Sdk.Core
+    name: Core
+    href: XPing365.Sdk.Core.html
+- uid: XPing365.Sdk.Core.TestStepType
+  commentId: T:XPing365.Sdk.Core.TestStepType
+  parent: XPing365.Sdk.Core
+  href: XPing365.Sdk.Core.TestStepType.html
+  name: TestStepType
+  nameWithType: TestStepType
+  fullName: XPing365.Sdk.Core.TestStepType

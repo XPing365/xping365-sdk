@@ -1,0 +1,34 @@
+### YamlMime:TableOfContent
+items:
+- uid: XPing365.Sdk.Availability
+  name: XPing365.Sdk.Availability
+  items:
+  - uid: XPing365.Sdk.Availability.AvailabilityTestAgent
+    name: AvailabilityTestAgent
+- uid: XPing365.Sdk.Availability.Configurations
+  name: XPing365.Sdk.Availability.Configurations
+  items:
+  - uid: XPing365.Sdk.Availability.Configurations.HttpClientConfiguration
+    name: HttpClientConfiguration
+- uid: XPing365.Sdk.Availability.Extensions
+  name: XPing365.Sdk.Availability.Extensions
+  items:
+  - uid: XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension
+    name: DependencyInjectionExtension
+- uid: XPing365.Sdk.Availability.TestSteps
+  name: XPing365.Sdk.Availability.TestSteps
+  items:
+  - uid: XPing365.Sdk.Availability.TestSteps.DnsLookup
+    name: DnsLookup
+  - uid: XPing365.Sdk.Availability.TestSteps.IPAddressAccessibilityCheck
+    name: IPAddressAccessibilityCheck
+  - uid: XPing365.Sdk.Availability.TestSteps.SendHttpRequest
+    name: SendHttpRequest
+- uid: XPing365.Sdk.Availability.Validators
+  name: XPing365.Sdk.Availability.Validators
+  items:
+  - uid: XPing365.Sdk.Availability.Validators.HttpResponseHeadersValidator
+    name: HttpResponseHeadersValidator
+  - uid: XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator
+    name: HttpStatusCodeValidator
+memberLayout: SamePage

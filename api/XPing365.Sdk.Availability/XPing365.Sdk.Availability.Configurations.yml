@@ -1,0 +1,23 @@
+### YamlMime:ManagedReference
+items:
+- uid: XPing365.Sdk.Availability.Configurations
+  commentId: N:XPing365.Sdk.Availability.Configurations
+  id: XPing365.Sdk.Availability.Configurations
+  children:
+  - XPing365.Sdk.Availability.Configurations.HttpClientConfiguration
+  langs:
+  - csharp
+  - vb
+  name: XPing365.Sdk.Availability.Configurations
+  nameWithType: XPing365.Sdk.Availability.Configurations
+  fullName: XPing365.Sdk.Availability.Configurations
+  type: Namespace
+  assemblies:
+  - XPing365.Sdk.Availability
+references:
+- uid: XPing365.Sdk.Availability.Configurations.HttpClientConfiguration
+  commentId: T:XPing365.Sdk.Availability.Configurations.HttpClientConfiguration
+  href: XPing365.Sdk.Availability.Configurations.HttpClientConfiguration.html
+  name: HttpClientConfiguration
+  nameWithType: HttpClientConfiguration
+  fullName: XPing365.Sdk.Availability.Configurations.HttpClientConfiguration
