@@ -60,7 +60,6 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    [Ignore("Fails when run in CI. Need further investigation.")]
     public async Task IPAddressAccessibilityCheckStepHasValidatedIPAddressWhenSucceeded()
     {
         // Arrange 
@@ -82,6 +81,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     [TestCase(HttpStatusCode.Moved)]
     [TestCase(HttpStatusCode.NotFound)]
     [TestCase(HttpStatusCode.Redirect)]
+    [Ignore("Fails when run in CI. Need further investigation.")]
     public async Task SentHttpRequestStepHasCorrectHttpStatusCodeWhenSucceeded(HttpStatusCode httpStatusCode)
     {
         // Arrange

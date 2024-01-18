@@ -203,7 +203,7 @@ items:
   summary: >-
     Gets a TestSettings object with default settings for server availability testing.
 
-    The returned object has PingDontFragmetOption property set to true and the PingTTLOption set property to 64.
+    The returned object has PingDontFragmetOption property set to true and the PingTTLOption property set to 64.
 
     See <xref href="XPing365.Sdk.Core.PropertyBagKeys.PingDontFragmetOption" data-throw-if-not-resolved="false"></xref> and <xref href="XPing365.Sdk.Core.PropertyBagKeys.PingTTLOption" data-throw-if-not-resolved="false"></xref> for more 
 

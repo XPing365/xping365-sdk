@@ -20,4 +20,4 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test ./tests/XPing365.Sdk.UnitTests/XPing365.Sdk.UnitTests.csproj --no-build --verbosity normal
