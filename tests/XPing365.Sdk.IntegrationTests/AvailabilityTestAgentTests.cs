@@ -1,13 +1,10 @@
 
 using System.Net;
-using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestSteps;
-using XPing365.Sdk.Availability.Validators;
 using XPing365.Sdk.Core;
-using XPing365.Sdk.Core.Validators;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -93,8 +90,13 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             response.Close(); // By closing a response it can be send to client.
         }
 
+        TestSettings testSettings = TestSettings.DefaultForAvailability;
+        testSettings.RetryHttpRequestWhenFailed = false;
+        testSettings.FollowHttpRedirectionResponses = false;
+
         // Act
-        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(ResponseBuilder).ConfigureAwait(false);
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+            ResponseBuilder, settings: testSettings).ConfigureAwait(false);
 
         // Assert
         HttpStatusCode? code = null;
