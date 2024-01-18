@@ -1,0 +1,434 @@
+{
+  "source_base_path": "C:/Users/adyde.ADRIANS-LENOVO/source/github/xping365-sdk",
+  "xrefmap": "xrefmap.yml",
+  "files": [
+    {
+      "type": "Resource",
+      "output": {
+        "resource": {
+          "relative_path": "index.json"
+        }
+      }
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.AvailabilityTestAgent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.AvailabilityTestAgent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Configurations.HttpClientConfiguration.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Configurations.HttpClientConfiguration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Configurations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Configurations.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Extensions.DependencyInjectionExtension.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Extensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Extensions.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.DnsLookup.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.DnsLookup.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.IPAddressAccessibilityCheck.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.IPAddressAccessibilityCheck.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.SendHttpRequest.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.SendHttpRequest.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.TestSteps.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Validators.HttpResponseHeadersValidator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Validators.HttpResponseHeadersValidator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Validators.HttpStatusCodeValidator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Validators.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.Validators.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/XPing365.Sdk.Availability.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/XPing365.Sdk.Availability/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Availability/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/XPing365.Sdk.Availability/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.PropertyBag.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.PropertyBag.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.PropertyBagKey.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.PropertyBagKey.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.PropertyBagKeys.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.PropertyBagKeys.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestAgent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestAgent.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestSession.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestSession.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestSessionState.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestSessionState.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestSettings.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestSettings.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStep.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStep.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStepHandler.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStepHandler.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStepResult.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStepResult.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStepType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.TestStepType.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.Validators.IValidator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.Validators.IValidator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.Validators.Validator.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.Validators.Validator.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.Validators.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.Validators.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/XPing365.Sdk.Core.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/XPing365.Sdk.Core/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/XPing365.Sdk.Core/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/XPing365.Sdk.Core/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "api/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "api/toc.html"
+        },
+        ".json": {
+          "relative_path": "api/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/getting-started.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/getting-started.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/introduction.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/introduction.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "docs/toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "docs/toc.html"
+        },
+        ".json": {
+          "relative_path": "docs/toc.json"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/wiki/Configuration.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/wiki/Configuration.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "docs/wiki/Home.md",
+      "output": {
+        ".html": {
+          "relative_path": "docs/wiki/Home.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/favicon.ico",
+      "output": {
+        "resource": {
+          "relative_path": "images/favicon.ico"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Resource",
+      "source_relative_path": "images/logo.svg",
+      "output": {
+        "resource": {
+          "relative_path": "images/logo.svg"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Conceptual",
+      "source_relative_path": "index.md",
+      "output": {
+        ".html": {
+          "relative_path": "index.html"
+        }
+      },
+      "version": ""
+    },
+    {
+      "type": "Toc",
+      "source_relative_path": "toc.yml",
+      "output": {
+        ".html": {
+          "relative_path": "toc.html"
+        },
+        ".json": {
+          "relative_path": "toc.json"
+        }
+      },
+      "version": ""
+    }
+  ],
+  "groups": [
+    {
+      "xrefmap": "xrefmap.yml"
+    }
+  ]
+}

@@ -111,10 +111,10 @@ items:
   - XPing365.Sdk.Availability
   namespace: XPing365.Sdk.Availability.TestSteps
   syntax:
-    content: public const string StepName = "Sent HTTP Request"
+    content: public const string StepName = "Send HTTP Request"
     return:
       type: System.String
-    content.vb: Public Const StepName As String = "Sent HTTP Request"
+    content.vb: Public Const StepName As String = "Send HTTP Request"
 - uid: XPing365.Sdk.Availability.TestSteps.SendHttpRequest.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
   commentId: M:XPing365.Sdk.Availability.TestSteps.SendHttpRequest.HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
   id: HandleStepAsync(System.Uri,XPing365.Sdk.Core.TestSettings,XPing365.Sdk.Core.TestSession,System.Threading.CancellationToken)
