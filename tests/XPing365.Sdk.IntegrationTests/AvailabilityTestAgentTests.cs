@@ -11,6 +11,7 @@ using XPing365.Sdk.IntegrationTests.TestFixtures;
 namespace XPing365.Sdk.IntegrationTests;
 
 [SetUpFixture]
+[SingleThreaded]
 [TestFixtureSource(typeof(TestFixtureProvider), nameof(TestFixtureProvider.ServiceProvider))]
 public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 {
