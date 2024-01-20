@@ -13,9 +13,9 @@
     <tags>web api testing, web application testing, .net, open source, automation, monitoring, external pings, server availability, network connectivity</tags>
     <dependencies>
       <group targetFramework="net8.0">
-        <dependency id="XPing365.Core" version="1.0.0-rc2" />
+        <dependency id="XPing365.Core" version="$version$" />
         <dependency id="Microsoft.Extensions.Http" version="8.0.0" />
-        <dependency id="Microsoft.Extensions.Http.Polly" Version="8.0.0" />
+        <dependency id="Microsoft.Extensions.Http.Polly" Version="8.0.1" />
       </group>
     </dependencies>
   </metadata>

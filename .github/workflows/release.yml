@@ -47,6 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     # Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
     permissions:
+      actions: read
       pages: write
       id-token: write
     # Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
