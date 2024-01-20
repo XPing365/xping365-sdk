@@ -1,5 +1,6 @@
 <div id="top"></div>
 
+[![NuGet](https://img.shields.io/nuget/v/XPing365.Core)](https://www.nuget.org/profiles/XPing365)
 ![Build Status](https://github.com/XPing365/xping365-sdk/actions/workflows/ci.yml/badge.svg)
 
 <!-- PROJECT LOGO -->
