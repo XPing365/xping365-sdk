@@ -6,8 +6,9 @@
     <authors>XPing365</authors>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <license type="expression">MIT</license>
+    <readme>docs\README.md</readme>
     <repository type="git" url="https://github.com/XPing365/xping365-sdk" branch="main" />
-    <description>XPing is open source .NET library written in C# that provides a set of tools to make it easy to write automated tests for web applications, as well as troubleshoot issues that may arise during testing.</description>
+    <description>XPing365 is open source .NET library written in C# that provides a set of tools to make it easy to write automated tests for web applications, as well as troubleshoot issues that may arise during testing.</description>
     <releaseNotes></releaseNotes>
     <tags>web api testing, web application testing, .net, open source, automation, monitoring, external pings, server availability, network connectivity</tags>
     <dependencies>
@@ -18,6 +19,7 @@
   </metadata>
   <files>
     <file src="..\LICENSE" target="LICENSE" />
+    <file src="..\README.md" target="docs" />
     <file src="..\src\XPing365.Sdk.Core\bin\Release\net8.0\XPing365.Sdk.Core.dll" target="lib\net8.0\XPing365.Sdk.Core.dll" />
   </files>
 </package>
