@@ -32,7 +32,8 @@ jobs:
           path: _build/nuget
       - name: Publish NuGet packages
         run: |
-          dotnet nuget push _build/nuget/*.nupkg --api-key "${{ secrets.NUGET_KEY }}" --skip-duplicate --source https://api.nuget.org/v3/index.json
+          dotnet nuget push _build/nuget/XPing365.Core.${GITHUB_REF_NAME#v}.nupkg --api-key "${{ secrets.NUGET_KEY }}" --skip-duplicate --source https://api.nuget.org/v3/index.json
+          dotnet nuget push _build/nuget/XPing365.Availability.${GITHUB_REF_NAME#v}.nupkg --api-key "${{ secrets.NUGET_KEY }}" --skip-duplicate --source https://api.nuget.org/v3/index.json
       - name: Upload GitHub release
         run: |
           gh release upload --repo XPing365/xping365-sdk ${GITHUB_REF_NAME} _build/nuget/XPing365.Core.${GITHUB_REF_NAME#v}.nupkg
