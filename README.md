@@ -1,6 +1,6 @@
 <div id="top"></div>
 
-![Build Status](https://github.com/XPing365/xping365-sdk/actions/workflows/dotnet.yml/badge.svg)
+![Build Status](https://github.com/XPing365/xping365-sdk/actions/workflows/ci.yml/badge.svg)
 
 <!-- PROJECT LOGO -->
 <br />
