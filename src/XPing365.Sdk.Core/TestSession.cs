@@ -11,7 +11,7 @@ namespace XPing365.Sdk.Core;
 /// information about the test session, such as its start date, duration, URL, state, and steps.
 /// </summary>
 /// <param name="startDate">Represents the start date of the test session.</param>
-/// <param name="url">Represents the URL of the server under tests.</param>
+/// <param name="url">A Uri object that represents the URL of the page being validated.</param>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class TestSession(DateTime startDate, Uri url)
 {

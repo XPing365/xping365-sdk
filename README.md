@@ -107,10 +107,11 @@ _For more examples, please refer to the `Samples` folder in this repository._
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Support fetching web-pages through headless web browser.
-- [ ] Support content validation through XPath expressions.
+We use [Milestones](https://github.com/XPing365/xping365-sdk/milestones) to communicate upcoming changes <b>XPing365</b> SDK:
 
-See the [open issues](https://github.com/XPing365/xping365-sdk/issues) for a full list of proposed features (and known issues).
+- [Working Set](https://github.com/XPing365/xping365-sdk/milestone/1) refers to the features that are currently being actively worked on. While not all of these features will be committed in the next release, they do reflect the top priorities of the maintainers for the upcoming period.
+
+- [Backlog](https://github.com/XPing365/xping365-sdk/milestone/2) is a set of feature candidates for some future releases, but are not being actively worked on.
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
