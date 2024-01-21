@@ -21,7 +21,7 @@
   </metadata>
   <files>
     <file src="..\LICENSE" target="LICENSE" />
-    <file src="..\README.md" target="docs" />
+    <file src="README.md" target="docs" />
     <file src="..\src\XPing365.Sdk.Availability\bin\Release\net8.0\XPing365.Sdk.Availability.dll" target="lib\net8.0\XPing365.Sdk.Availability.dll" />
   </files>
 </package>
