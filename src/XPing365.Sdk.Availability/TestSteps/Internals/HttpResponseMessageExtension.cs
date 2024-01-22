@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using System.Text;
 using XPing365.Sdk.Core;
 
-namespace XPing365.Sdk.Availability.Extensions;
+namespace XPing365.Sdk.Availability.TestSteps.Internals;
 
 internal static class HttpResponseMessageExtension
 {
@@ -17,7 +17,7 @@ internal static class HttpResponseMessageExtension
             { PropertyBagKeys.HttpReasonPhrase, httpResponse.ReasonPhrase ?? string.Empty },
             { PropertyBagKeys.HttpVersion, httpResponse.Version },
             { PropertyBagKeys.HttpResponseHeaders, httpResponse.Headers },
-            { PropertyBagKeys.HttpResponseTrailingHeaders, httpResponse.TrailingHeaders },
+            { PropertyBagKeys.HttpResponseTrailingHeaders, httpResponse.TrailingHeaders }
         };
 
         return properties;
@@ -46,7 +46,7 @@ internal static class HttpResponseMessageExtension
                         {
                             sb.Append(',');
                         }
-                        
+
                         sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", header.Key);
                         sb.Append(": ");
                         sb.AppendFormat(CultureInfo.InvariantCulture, "{0}", headerValue);

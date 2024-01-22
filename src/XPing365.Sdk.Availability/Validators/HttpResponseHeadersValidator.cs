@@ -61,9 +61,6 @@ public class HttpResponseHeadersValidator(
         HttpResponseHeaders responseHeaders = 
             sendHttpRequestStep.PropertyBag.GetProperty<HttpResponseHeaders>(
                 PropertyBagKeys.HttpResponseHeaders);
-        HttpResponseHeaders responseTrailingHeaders =
-            sendHttpRequestStep.PropertyBag.GetProperty<HttpResponseHeaders>(
-                PropertyBagKeys.HttpResponseTrailingHeaders);
 
         using var inst = new InstrumentationLog();
         TestStep testStep = null!;

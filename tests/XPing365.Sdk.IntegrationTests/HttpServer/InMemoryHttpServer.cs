@@ -16,7 +16,7 @@ internal static class InMemoryHttpServer
         Action<HttpListenerRequest> requestReceived,
         CancellationToken cancellationToken = default)
     {
-        return Task.Factory.StartNew(() =>
+        return Task.Run(() =>
         {
             using HttpListener listener = new();
             listener.Prefixes.Add(GetTestServerAddress().AbsoluteUri);
@@ -29,8 +29,8 @@ internal static class InMemoryHttpServer
             responseBuilder(context.Response);
             // Wait for the receiver of the response to read the stream.
             // Cancelled token exits the Task.Delay without having to wait longer than is necessary.
-            Task.Delay(millisecondsDelay: 1000, cancellationToken);
-        }, cancellationToken, TaskCreationOptions.None, TaskScheduler.Default);
+            Task.Delay(millisecondsDelay: 100, cancellationToken);
+        }, cancellationToken);
     }
 
     public static Uri GetTestServerAddress()

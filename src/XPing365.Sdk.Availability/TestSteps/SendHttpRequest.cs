@@ -1,4 +1,4 @@
-﻿using XPing365.Sdk.Availability.Extensions;
+﻿using XPing365.Sdk.Availability.TestSteps.Internals;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Shared;
 
@@ -54,11 +54,13 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
         TestStep testStep = null!;
         try
         {
-            HttpResponseMessage response = await httpClient
+            using HttpResponseMessage response = await httpClient
                 .SendAsync(request, cancellationToken)
                 .ConfigureAwait(false);
 
             var propertyBag = new PropertyBag(response.ToProperties());
+            byte[] buffer = await ReadAsByteArrayAsync(response.Content, cancellationToken).ConfigureAwait(false);
+            propertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpContent, buffer);
             testStep = CreateSuccessTestStep(inst.StartTime, inst.ElapsedTime, propertyBag);
         }
         catch (Exception exception)
@@ -69,10 +71,20 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
         return testStep;
     }
 
+    private static async Task<byte[]> ReadAsByteArrayAsync(HttpContent httpContent, CancellationToken cancellationToken)
+    {
+        // When storing the server response content, it is generally recommended to store it as a byte array
+        // rather than a string. This is because the response content may contain binary data that cannot be represented
+        // as a string.
+
+        // If you need to convert the byte array to a string for display purposes, you can use the Encoding class to
+        // specify the character encoding to use.
+        return await httpContent.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private HttpClient CreateHttpClient(TestSettings settings)
     {
         HttpClient httpClient = null!;
-
         if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == true)
         {
             httpClient = _httpClientFactory.CreateClient(HttpClientWithRetryAndFollowRedirect);

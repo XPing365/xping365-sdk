@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 
-namespace XPing365.Sdk.Availability.Extensions;
+namespace XPing365.Sdk.Availability.TestSteps.Internals;
 
 internal static class IPStatusExtension
 {
@@ -20,7 +20,7 @@ internal static class IPStatusExtension
                 "computer is not reachable.",
             IPStatus.DestinationProhibited => address.IsIPv6() ?
                 "The ICMPv6 echo request failed because contact with the destination " +
-                "computer is administratively prohibited. This value applies only to IPv6. " : 
+                "computer is administratively prohibited. This value applies only to IPv6. " :
                 "The ICMP echo request failed because the destination computer that is specified " +
                 "in an ICMP echo message is not reachable, because it does not support the packet's " +
                 "protocol. This value applies only to IPv4. This value is described in IETF RFC " +
@@ -30,19 +30,19 @@ internal static class IPStatusExtension
             IPStatus.NoResources => "The ICMP echo request failed because of insufficient network resources.",
             IPStatus.BadOption => "The ICMP echo request failed because it contains an invalid option.",
             IPStatus.HardwareError => "The ICMP echo request failed because of a hardware error.",
-            IPStatus.PacketTooBig => 
+            IPStatus.PacketTooBig =>
                 "The ICMP echo request failed because the packet containing the request is larger " +
                 "than the maximum transmission unit (MTU) of a node (router or gateway) located " +
                 "between the source and destination. The MTU defines the maximum size of a transmittable " +
                 "packet.",
             IPStatus.TimedOut => "The ICMP echo Reply was not received within the allotted time.",
-            IPStatus.BadRoute => 
+            IPStatus.BadRoute =>
                 "The ICMP echo request failed because there is no valid route between the source " +
                 "and destination computers.",
-            IPStatus.TtlExpired => 
+            IPStatus.TtlExpired =>
                 "The ICMP echo request failed because its Time to Live (TTL) value reached zero, " +
                 "causing the forwarding node (router or gateway) to discard the packet.",
-            IPStatus.TtlReassemblyTimeExceeded => 
+            IPStatus.TtlReassemblyTimeExceeded =>
                 "The ICMP echo request failed because the packet was divided into fragments for " +
                 "transmission and all of the fragments were not received within the time allotted " +
                 "for reassembly. RFC 2460 specifies 60 seconds as the time limit within which " +
@@ -66,7 +66,7 @@ internal static class IPStatusExtension
                 "The ICMP echo request failed because its Time to Live (TTL) value reached zero, " +
                 "causing the forwarding node (router or gateway) to discard the packet.",
             IPStatus.BadHeader => "The ICMP echo request failed because the header is invalid.",
-            IPStatus.UnrecognizedNextHeader => 
+            IPStatus.UnrecognizedNextHeader =>
                 "The ICMP echo request failed because the Next Header field does not contain a " +
                 "recognized value. The Next Header field indicates the extension header type (if " +
                 "present) or the protocol above the IP layer, for example, TCP or UDP. ",

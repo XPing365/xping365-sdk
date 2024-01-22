@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
-using XPing365.Sdk.Availability.Extensions;
+using XPing365.Sdk.Availability.TestSteps.Internals;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Shared;
 

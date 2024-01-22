@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Net.Sockets;
 
-namespace XPing365.Sdk.Availability.Extensions;
+namespace XPing365.Sdk.Availability.TestSteps.Internals;
 
 internal static class IPAddressExtension
 {

@@ -1,7 +1,7 @@
 ﻿using System.Net.NetworkInformation;
 using XPing365.Sdk.Core;
 
-namespace XPing365.Sdk.Availability.Extensions;
+namespace XPing365.Sdk.Availability.TestSteps.Internals;
 
 internal static class PingReplyExtension
 {
