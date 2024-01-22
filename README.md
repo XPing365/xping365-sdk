@@ -6,6 +6,7 @@
 <!-- PROJECT LOGO -->
 <br />
 <div align="center">
+  <img src="docs/images/logo.svg" />
   <h2 align="center">XPing365 SDK</h3>
   <p align="center">
     <b>XPing365 SDK</b> is a free and open-source .NET library written in C# to help automate Web Application or Web API testing.
