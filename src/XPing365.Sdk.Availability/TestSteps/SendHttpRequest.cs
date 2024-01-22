@@ -88,16 +88,16 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
     }
 
     private HttpClient CreateHttpClient(TestSettings settings)
-{
-    HttpClient httpClient = null!;
-    if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == true)
     {
-        httpClient = _httpClientFactory.CreateClient(HttpClientWithRetryAndFollowRedirect);
-    }
-    else if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == false)
-    {
-        httpClient = _httpClientFactory.CreateClient(HttpClientWithRetryAndNoFollowRedirect);
-    }
+        HttpClient httpClient = null!;
+        if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == true)
+        {
+            httpClient = _httpClientFactory.CreateClient(HttpClientWithRetryAndFollowRedirect);
+        }
+        else if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == false)
+        {
+            httpClient = _httpClientFactory.CreateClient(HttpClientWithRetryAndNoFollowRedirect);
+        }
         else if (settings.RetryHttpRequestWhenFailed == false && settings.FollowHttpRedirectionResponses == false)
         {
             httpClient = _httpClientFactory.CreateClient(HttpClientWithNoRetryAndNoFollowRedirect);
