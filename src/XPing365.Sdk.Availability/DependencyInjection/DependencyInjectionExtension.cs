@@ -3,7 +3,7 @@ using Polly;
 using XPing365.Sdk.Availability.Configurations;
 using XPing365.Sdk.Availability.TestSteps;
 
-namespace XPing365.Sdk.Availability.Extensions;
+namespace XPing365.Sdk.Availability.DependencyInjection;
 
 public static class DependencyInjectionExtension
 {

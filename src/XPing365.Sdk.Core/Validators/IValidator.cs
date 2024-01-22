@@ -5,8 +5,8 @@
 /// validation must implement.
 /// </summary>
 /// <remarks>
-/// The IValidator interface is implemented by the <see cref="Validator"/> class, which is used to execute a collection 
-/// of <see cref="TestStepHandler"/> objects that are used to validate <see cref="TestSession"/> object.
+/// The IValidator interface is implemented by the <see cref="Validator"/> class, which is a helper class aggregating 
+/// collection of <see cref="TestStepHandler"/> objects that are used to validate <see cref="TestSession"/> instance.
 /// </remarks>
 public interface IValidator
 {

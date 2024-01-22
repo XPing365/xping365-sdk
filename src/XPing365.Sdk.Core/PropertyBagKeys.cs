@@ -72,6 +72,11 @@ public static class PropertyBagKeys
     public readonly static PropertyBagKey HttpContent = new(nameof(HttpContent));
 
     /// <summary>
+    /// Represents the HTTP content headers.
+    /// </summary>
+    public readonly static PropertyBagKey HttpContentHeaders = new(nameof(HttpContentHeaders));
+
+    /// <summary>
     /// Represents the boolean value determining whether to retry failing HTTP request.
     /// </summary>
     public readonly static PropertyBagKey HttpRetry = new(nameof(HttpRetry));

@@ -1,10 +1,13 @@
 using System.Net;
+using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestSteps;
+using XPing365.Sdk.Availability.Validators;
 using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Validators;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -197,9 +200,27 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         });
     }
 
+    [Test]
+    public async Task ServerContentResponseValidatorDoesNotThrowWhenResponseDoesNotContainContent()
+    {
+        // Arrange
+        const bool expectedValidityResult = true;
+        var serverContentValidator = new ServerContentResponseValidator(
+            isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => expectedValidityResult);
+        var validator = new Validator(serverContentValidator);
+
+        // Act
+        TestSession session = 
+            await GetTestSessionFromInMemoryHttpTestServer(validator: validator).ConfigureAwait(false);
+
+        // Assert
+        Assert.That(session.IsValid, Is.EqualTo(expectedValidityResult));
+    }
+
     private async Task<TestSession> GetTestSessionFromInMemoryHttpTestServer(
         Action<HttpListenerResponse>? responseBuilder = null,
         Action<HttpListenerRequest>? requestReceived = null,
+        Validator? validator = null,
         TestSettings? settings = null)
     {
         using var tokenSource = new CancellationTokenSource();
@@ -219,8 +240,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         TestSession session = await testAgent
             .RunAsync(
-                InMemoryHttpServer.GetTestServerAddress(),
-                settings ?? TestSettings.DefaultForAvailability)
+                url: InMemoryHttpServer.GetTestServerAddress(),
+                settings: settings ?? TestSettings.DefaultForAvailability,
+                validator: validator)
             .ConfigureAwait(false);
             
         // Notify InMemoryHttpServer to dispose listener.

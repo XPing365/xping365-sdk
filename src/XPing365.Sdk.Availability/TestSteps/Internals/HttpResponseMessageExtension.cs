@@ -17,7 +17,8 @@ internal static class HttpResponseMessageExtension
             { PropertyBagKeys.HttpReasonPhrase, httpResponse.ReasonPhrase ?? string.Empty },
             { PropertyBagKeys.HttpVersion, httpResponse.Version },
             { PropertyBagKeys.HttpResponseHeaders, httpResponse.Headers },
-            { PropertyBagKeys.HttpResponseTrailingHeaders, httpResponse.TrailingHeaders }
+            { PropertyBagKeys.HttpResponseTrailingHeaders, httpResponse.TrailingHeaders },
+            { PropertyBagKeys.HttpContentHeaders, httpResponse.Content.Headers }
         };
 
         return properties;

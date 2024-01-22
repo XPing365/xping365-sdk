@@ -57,14 +57,14 @@ public sealed class HttpStatusCodeValidator(
             return Task.FromResult(CreateFailedTestStep(Errors.InsufficientData(handler: this)));
         }
 
-        HttpStatusCode statusCode = 
-            httpRequestStep.PropertyBag.GetProperty<HttpStatusCode>(PropertyBagKeys.HttpStatus);
-
         using var inst = new InstrumentationLog();
         TestStep testStep = null!;
 
         try
         {
+            HttpStatusCode statusCode =
+                httpRequestStep.PropertyBag.GetProperty<HttpStatusCode>(PropertyBagKeys.HttpStatus);
+
             // Perform test step validation.
             bool isValid = _isValid(statusCode);
 
