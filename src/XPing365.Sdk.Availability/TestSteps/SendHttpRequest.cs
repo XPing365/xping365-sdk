@@ -1,11 +1,6 @@
-﻿using System.Runtime.Intrinsics.X86;
-using System.Text;
-using System;
-using XPing365.Sdk.Availability.Extensions;
-using XPing365.Sdk.Availability.TestSteps.Internals;
+﻿using XPing365.Sdk.Availability.TestSteps.Internals;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Shared;
-using System.Threading;
 
 namespace XPing365.Sdk.Availability.TestSteps;
 
