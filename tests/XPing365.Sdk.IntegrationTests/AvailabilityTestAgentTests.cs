@@ -1,5 +1,9 @@
 
+using System;
+using System.Collections;
 using System.Net;
+using System.Net.Mail;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability;
@@ -81,7 +85,6 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     [TestCase(HttpStatusCode.Moved)]
     [TestCase(HttpStatusCode.NotFound)]
     [TestCase(HttpStatusCode.Redirect)]
-    [Ignore("Fails when run in CI. Need further investigation.")]
     public async Task SentHttpRequestStepHasCorrectHttpStatusCodeWhenSucceeded(HttpStatusCode httpStatusCode)
     {
         // Arrange
@@ -166,6 +169,38 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             requestReceived: ValidateRequest, settings: settings).ConfigureAwait(false);
     }
 
+    [Test]
+    public async Task SendHttpRequestStepAddsHttpResponseContentToPropertyBag()
+    {
+        // Arrange
+        const string responseContent = "Test";
+        static void ResponseBuilder(HttpListenerResponse response)
+        {
+            byte[] byteArray = Encoding.UTF8.GetBytes(responseContent);
+            response.ContentLength64 = byteArray.Length;
+            response.OutputStream.Write(
+                buffer: byteArray,
+                offset: 0, 
+                count: responseContent.Length);
+            
+            response.Close(); // By closing a response it can be send to client.
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(ResponseBuilder).ConfigureAwait(false);
+
+        // Assert
+        byte[]? byteArray = null;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                session.Steps.Any(step =>
+                    step.PropertyBag.TryGetProperty(PropertyBagKeys.HttpContent, out byteArray)), Is.True);
+            Assert.That(byteArray is not null && Encoding.UTF8.GetString(byteArray) == responseContent);
+        });
+    }
+
     private async Task<TestSession> GetTestSessionFromInMemoryHttpTestServer(
         Action<HttpListenerResponse>? responseBuilder = null,
         Action<HttpListenerRequest>? requestReceived = null,
@@ -183,7 +218,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             responseBuilder ?? ResponseBuilder,
             requestReceived ?? RequestReceived,
             tokenSource.Token);
-
+        
         var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
 
         TestSession session = await testAgent
@@ -191,7 +226,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 InMemoryHttpServer.GetTestServerAddress(),
                 settings ?? TestSettings.DefaultForAvailability)
             .ConfigureAwait(false);
-
+            
         // Notify InMemoryHttpServer to dispose listener.
         await tokenSource.CancelAsync().ConfigureAwait(false);
 
