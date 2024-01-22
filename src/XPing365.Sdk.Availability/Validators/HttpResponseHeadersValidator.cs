@@ -58,15 +58,15 @@ public class HttpResponseHeadersValidator(
             return Task.FromResult(CreateFailedTestStep(Errors.InsufficientData(handler: this)));
         }
 
-        HttpResponseHeaders responseHeaders = 
-            sendHttpRequestStep.PropertyBag.GetProperty<HttpResponseHeaders>(
-                PropertyBagKeys.HttpResponseHeaders);
-
         using var inst = new InstrumentationLog();
         TestStep testStep = null!;
 
         try
         {
+            HttpResponseHeaders responseHeaders =
+                sendHttpRequestStep.PropertyBag.GetProperty<HttpResponseHeaders>(
+                    PropertyBagKeys.HttpResponseHeaders);
+
             // Perform test step validation.
             bool isValid = _isValid(responseHeaders);
 

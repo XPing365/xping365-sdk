@@ -57,7 +57,6 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
             using HttpResponseMessage response = await httpClient
                 .SendAsync(request, cancellationToken)
                 .ConfigureAwait(false);
-
             var propertyBag = new PropertyBag(response.ToProperties());
             byte[] buffer = await ReadAsByteArrayAsync(response.Content, cancellationToken).ConfigureAwait(false);
             propertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpContent, buffer);

@@ -68,7 +68,7 @@ The library is distributed as a [NuGet packages](https://www.nuget.org/profiles/
 4. Once the package is installed, you can start using the <b>XPing365</b> library in your project.
 
 ```c#
-using XPing365.Availability.Extensions;
+using XPing365.Availability.DependencyInjection;
 
 Host.CreateDefaultBuilder()
     .ConfigureServices(services =>

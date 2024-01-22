@@ -1,5 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
-using XPing365.Sdk.Availability.Extensions;
+using XPing365.Sdk.Availability.DependencyInjection;
 
 namespace XPing365.Sdk.IntegrationTests.TestFixtures;
 
