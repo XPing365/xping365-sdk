@@ -1,8 +1,4 @@
-
-using System;
-using System.Collections;
 using System.Net;
-using System.Net.Mail;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
