@@ -40,3 +40,10 @@ TestSession session = await testAgent
 ```
 
 That’s it! You’re now ready to start automating your web application tests and monitoring your server’s content using <b>XPing365</b> SDK.
+
+## Next Steps
+
+To get started with XPing365 SDK, see the following resources:
+
+- [Overview: How does it work?](/docs/wiki/overview.md)
+- [Tutorial: Get started with XPing365 SDK](/docs/wiki/tutorial.md)

@@ -1,4 +1,4 @@
-- name: Getting Started
-  href: getting-started.md
-- name: How does it work?
+- name: Overview
   href: overview.md
+- name: Tutorial - Get started with XPing365 SDK
+  href: tutorial.md

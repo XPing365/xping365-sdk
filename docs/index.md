@@ -18,7 +18,7 @@ The library is called <b>XPing365</b>, which stands for eXternal Pings, and is u
 
 To get started with <b>XPing365</b> SDK, please refer to the following resources:
 
-1. [Wiki page](/xping365-sdk/wiki/getting-started.html): The wiki page provides detailed information about how to use <b>XPing365</b> SDK, including installation instructions, usage examples, and more.
+1. [Wiki page](/xping365-sdk/wiki/overview.html): The wiki page provides detailed information about how to use <b>XPing365</b> SDK, including installation instructions, usage examples, and more.
 
 2. [API page](/xping365-sdk/api/XPing365.Sdk.Availability.html): The API page provides detailed information about the <b>XPing365</b> API, including class definitions, method signatures, and more.
 
