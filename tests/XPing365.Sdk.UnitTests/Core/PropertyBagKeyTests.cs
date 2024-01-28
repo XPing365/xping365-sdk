@@ -1,6 +1,6 @@
-﻿using XPing365.Sdk.Core;
+﻿using XPing365.Sdk.Core.Common;
 
-namespace XPing365.Sdk.UnitTests;
+namespace XPing365.Sdk.UnitTests.Core;
 
 public sealed class PropertyBagKeyTests
 {

@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core;
+﻿using XPing365.Sdk.Core.Common;
+
+namespace XPing365.Sdk.Core;
 
 /// <summary>
 /// This class is used to provide a set of predefined keys that can be used with the <see cref="PropertyBag"/> class.

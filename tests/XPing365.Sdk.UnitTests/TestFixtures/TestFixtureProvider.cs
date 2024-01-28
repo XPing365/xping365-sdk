@@ -4,7 +4,7 @@ using Moq;
 using XPing365.Sdk.Availability.DependencyInjection;
 using XPing365.Sdk.Core.Components;
 
-namespace XPing365.Sdk.IntegrationTests.TestFixtures;
+namespace XPing365.Sdk.UnitTests.TestFixtures;
 
 public static class TestFixtureProvider
 {

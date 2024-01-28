@@ -1,9 +1,10 @@
 ﻿using System.Diagnostics;
+using XPing365.Sdk.Common;
 
-namespace XPing365.Sdk.Common;
+namespace XPing365.Sdk.Core.Common;
 
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-internal sealed class Error(string code, string message) : IEquatable<Error>
+public sealed class Error(string code, string message) : IEquatable<Error>
 {
     public static readonly Error None = new(string.Empty, string.Empty);
 
@@ -58,7 +59,7 @@ internal sealed class Error(string code, string message) : IEquatable<Error>
             return !Equals(lhs, rhs);
         }
 
-        return !(lhs.Equals(rhs));
+        return !lhs.Equals(rhs);
     }
 
     public static implicit operator string(Error error) => error.RequireNotNull(nameof(error)).ToString();

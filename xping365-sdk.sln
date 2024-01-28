@@ -21,9 +21,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.UnitTests", "t
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Availability", "src\XPing365.Sdk.Availability\XPing365.Sdk.Availability.csproj", "{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}"
 EndProject
-Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XPing365.Sdk.Shared", "src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.shproj", "{FF10E8A1-4FFC-4C92-B736-166542AF92D7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1313130-03E1-4238-BB93-74BD2E0084C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPing365.Sdk.Shared.UnitTests", "tests\XPing365.Sdk.Shared.UnitTests\XPing365.Sdk.Shared.UnitTests.csproj", "{CBC484EE-FB00-4EE5-88BE-E89424CF8852}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "samples\ConsoleApp\ConsoleApp.csproj", "{29F6A072-EA33-408E-96B0-44934852C7C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPing365.Sdk.Common", "src\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj", "{2A479683-3119-4645-A6B7-7B91CA550932}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -47,10 +49,14 @@ Global
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CBC484EE-FB00-4EE5-88BE-E89424CF8852}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CBC484EE-FB00-4EE5-88BE-E89424CF8852}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CBC484EE-FB00-4EE5-88BE-E89424CF8852}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CBC484EE-FB00-4EE5-88BE-E89424CF8852}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29F6A072-EA33-408E-96B0-44934852C7C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29F6A072-EA33-408E-96B0-44934852C7C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29F6A072-EA33-408E-96B0-44934852C7C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29F6A072-EA33-408E-96B0-44934852C7C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A479683-3119-4645-A6B7-7B91CA550932}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A479683-3119-4645-A6B7-7B91CA550932}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A479683-3119-4645-A6B7-7B91CA550932}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A479683-3119-4645-A6B7-7B91CA550932}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,16 +66,10 @@ Global
 		{FD397829-B952-41A1-B9EF-DB44B55964D4} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
 		{6814CE18-75C3-4B0A-864A-13113F732FCA} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A} = {464CE18C-1C75-473C-812A-E958172BC048}
-		{FF10E8A1-4FFC-4C92-B736-166542AF92D7} = {464CE18C-1C75-473C-812A-E958172BC048}
-		{CBC484EE-FB00-4EE5-88BE-E89424CF8852} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
+		{29F6A072-EA33-408E-96B0-44934852C7C3} = {B1313130-03E1-4238-BB93-74BD2E0084C1}
+		{2A479683-3119-4645-A6B7-7B91CA550932} = {464CE18C-1C75-473C-812A-E958172BC048}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EAD876E-2071-435E-AEC4-D3DEF2F4A328}
-	EndGlobalSection
-	GlobalSection(SharedMSBuildProjectFiles) = preSolution
-		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{cbc484ee-fb00-4ee5-88be-e89424cf8852}*SharedItemsImports = 5
-		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{cf9c97aa-fa29-43cd-b45f-76e60a6b1d9a}*SharedItemsImports = 5
-		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{ec960cdd-7ea0-4a2e-ba66-da05d361014e}*SharedItemsImports = 5
-		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{ff10e8a1-4ffc-4c92-b736-166542af92d7}*SharedItemsImports = 13
 	EndGlobalSection
 EndGlobal

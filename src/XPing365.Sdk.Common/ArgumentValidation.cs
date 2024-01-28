@@ -7,7 +7,7 @@ namespace XPing365.Sdk.Common;
 /// <summary>
 /// This class provide extension methods to help verify parameters validity.
 /// </summary>
-internal static class ArgumentValidation
+public static class ArgumentValidation
 {
     /// <summary>
     /// Basic Validation helper to verify parameter null validity.
@@ -54,10 +54,10 @@ internal static class ArgumentValidation
         [CallerFilePath] string sourceFilePath = "",
         [CallerLineNumber] int sourceLineNumber = -1)
     {
-        ArgumentNullException.ThrowIfNull(obj, nameof(obj));
-        ArgumentNullException.ThrowIfNull(condition, nameof(condition));
         ArgumentException.ThrowIfNullOrEmpty(parameterName, nameof(parameterName));
         ArgumentException.ThrowIfNullOrEmpty(message, nameof(message));
+        ArgumentNullException.ThrowIfNull(obj, parameterName);
+        ArgumentNullException.ThrowIfNull(condition, nameof(condition));
 
         if (!condition(obj))
         {

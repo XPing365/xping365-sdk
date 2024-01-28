@@ -1,6 +1,6 @@
 ﻿using XPing365.Sdk.Core;
 
-namespace XPing365.Sdk.Shared;
+namespace XPing365.Sdk.Common;
 
 internal static class Errors
 {
@@ -9,9 +9,9 @@ internal static class Errors
         new("1000", $"Exception of type {ex.GetType()} occured. Message: {ex.Message}.");
     #endregion
     #region TestStepHandler and derived class errors
-    public static Error InsufficientData(TestStepHandler handler) =>
+    public static Error InsufficientData(TestComponent handler) =>
         new("1100", $"Insufficient data to perform \"{handler.Name}\" test step.");
-    public static Error ValidationFailed(TestStepHandler handler) =>
+    public static Error ValidationFailed(TestComponent handler) =>
         new("1101", $"Validation failed to perform \"{handler.Name}\" test step.");
     public static Error DnsLookupFailed =>
         new("1102", $"Could not resolve the hostname to any IP address.");

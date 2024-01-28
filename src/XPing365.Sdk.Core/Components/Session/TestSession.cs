@@ -2,9 +2,10 @@
 using System.Globalization;
 using System.Text;
 using XPing365.Sdk.Core.Extensions;
-using XPing365.Sdk.Shared;
+using XPing365.Sdk.Common;
+using XPing365.Sdk.Core.Common;
 
-namespace XPing365.Sdk.Core;
+namespace XPing365.Sdk.Core.Components.Session;
 
 /// <summary>
 /// This class is used to represent a test session. It provides a set of properties that can be used to access 
@@ -13,15 +14,41 @@ namespace XPing365.Sdk.Core;
 /// <param name="startDate">Represents the start date of the test session.</param>
 /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public class TestSession(DateTime startDate, Uri url)
+public class TestSession
 {
-    private readonly List<TestStep> _steps = [];
+    private readonly List<TestStep> _steps;
     private TestSessionState _state = TestSessionState.NotStarted;
+
+    public TestSession(Uri url, DateTime startDate, ICollection<TestStep> steps, PropertyBag propertyBag)
+    {
+        _steps = [.. steps];
+        Url = url ?? throw new ArgumentNullException(nameof(url), Errors.MissingUrlInTestSession);
+        PropertyBag = propertyBag ?? new PropertyBag();
+        StartDate = startDate.RequireCondition(
+            condition: date => date >= DateTime.Today.ToUniversalTime(),
+            parameterName: nameof(StartDate),
+            message: Errors.IncorrectStartDate);
+    }
+
+    private TestSession(string declinedReason)
+    {
+        _state = TestSessionState.Declined;
+        _steps = null!;
+        DeclineReason = declinedReason;
+        StartDate = DateTime.MinValue;
+        Url = null!;
+        PropertyBag = null!;
+    }
+
+    public static TestSession GetDeclinedTestSession(string declinedReason)
+    {
+        return new TestSession(declinedReason);
+    }
 
     /// <summary>
     /// Gets the start date of the test session.
     /// </summary>
-    public DateTime StartDate { get; } = startDate;
+    public DateTime StartDate { get; }
 
     /// <summary>
     /// Gets the total duration of the test session.
@@ -31,12 +58,17 @@ public class TestSession(DateTime startDate, Uri url)
     /// <summary>
     /// A Uri object that represents the URL of the page being validated.
     /// </summary>
-    public Uri Url { get; } = url.RequireNotNull(nameof(url));
+    public Uri Url { get; }
 
     /// <summary>
     /// Gets the state of the test session.
     /// </summary>
     public TestSessionState State => _state;
+
+    /// <summary>
+    /// Gets the property bag which stores custom key-value pairs from test component.
+    /// </summary>
+    public PropertyBag PropertyBag { get; }
 
     /// <summary>
     /// Returns a boolean value indicating whether the test session is valid or not.
@@ -62,16 +94,6 @@ public class TestSession(DateTime startDate, Uri url)
     public string? DeclineReason { get; internal set; }
 
     /// <summary>
-    /// Internal use only, it adds a new <see cref="TestStep"/> object to the list of steps for the current 
-    /// test session.
-    /// </summary>
-    public void AddTestStep(TestStep step)
-    {
-        ArgumentNullException.ThrowIfNull(step, nameof(step));
-        _steps.Add(step);
-    }
-
-    /// <summary>
     /// Internal use only, it sets the state of the test session to Completed after all tests steps are run.
     /// </summary>
     public void Complete() => _state = TestSessionState.Completed;
@@ -92,23 +114,18 @@ public class TestSession(DateTime startDate, Uri url)
         var sb = new StringBuilder();
 
         sb.AppendFormat(
-            CultureInfo.InvariantCulture, 
+            CultureInfo.InvariantCulture,
             $"{StartDate} ({Duration.TotalMilliseconds}[ms]) " +
             $"Test session {State.GetDisplayName()} for {Url.AbsoluteUri}." +
             $"{Environment.NewLine}");
         sb.AppendFormat(
             CultureInfo.InvariantCulture,
-            $"Total steps: {Steps.Count}, Failures: {Failures.Count}" +
+            $"Total steps: {Steps.Count}, Success: {Steps.Count - Failures.Count}, Failures: {Failures.Count}" +
             $"{Environment.NewLine}{Environment.NewLine}");
-
-        foreach (var step in _steps)
-        {
-            sb.AppendFormat(CultureInfo.InvariantCulture, step.ToString() + Environment.NewLine);
-        }
 
         return sb.ToString();
     }
 
-    private string GetDebuggerDisplay() => 
+    private string GetDebuggerDisplay() =>
         $"{StartDate} ({Duration.TotalMilliseconds}[ms]), Steps: {_steps.Count}, Failures: {Failures.Count} ";
 }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace XPing365.Sdk.Core;
+namespace XPing365.Sdk.Core.Components;
 
 /// <summary>
 /// Represents a test step result.
@@ -11,7 +11,7 @@ public enum TestStepResult
     /// Represents a successful test result.
     /// </summary>
     [Display(Name = "succeeded")] Succeeded,
-    
+
     /// <summary>
     /// Represents a failed test result.
     /// </summary>

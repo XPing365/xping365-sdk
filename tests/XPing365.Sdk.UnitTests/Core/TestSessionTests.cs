@@ -1,74 +1,91 @@
-﻿using XPing365.Sdk.Core;
+﻿using XPing365.Sdk.Core.Common;
+using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Components.Session;
 
-namespace XPing365.Sdk.UnitTests;
+namespace XPing365.Sdk.UnitTests.Core;
 
 public sealed class TestSessionTests
 {
-    private static TestSession CreateTestSession() => new(startDate: DateTime.UtcNow, url: new Uri("https://test"));
-    private static TestStep CreateTestStep(
-        TestStepType type = TestStepType.ActionStep, 
+    private static TestSession CreateTestSessionUnderTest(
+        Uri? url = null,
+        DateTime? startDate = null,
+        ICollection<TestStep>? steps = null,
+        PropertyBag? propertyBag = null) => new(
+            url: url ?? new Uri("https://test"), 
+            startDate: startDate ?? DateTime.UtcNow,
+            steps: steps ?? new List<TestStep>(),
+            propertyBag: propertyBag ?? new PropertyBag());
+
+    private static TestStep CreateTestStepMock(
+        string name = "TestStepMock",
+        DateTime? startDate = null,
+        TimeSpan? duration = null,
+        TestStepType type = TestStepType.ActionStep,
         TestStepResult result = TestStepResult.Succeeded,
-        TimeSpan? elapsedTime = null) => new(
-            Name: "testStepName",
-            StartDate: DateTime.UtcNow,
-            Duration: elapsedTime ?? TimeSpan.Zero,
+        string? errorMessage = null) => new(
+            Name: name,
+            StartDate: startDate ?? DateTime.UtcNow,
+            Duration: duration ?? TimeSpan.Zero,
             Type: type,
             Result: result,
-            PropertyBag: new PropertyBag(),
-            ErrorMessage: "error message");
+            ErrorMessage: errorMessage);
 
     [Test]
     public void ThrowsArgumentNullExceptionWhenInstantiatedWithNullUri()
     {
         // Assert
-        Assert.Throws<ArgumentNullException>(() => new TestSession(DateTime.UtcNow, url: null!));
+        Assert.Throws<ArgumentNullException>(() => new TestSession(
+            url: null!, 
+            startDate: DateTime.UtcNow, 
+            steps: [],
+            propertyBag: new PropertyBag()));
     }
 
     [Test]
     public void NotStartedWhenNewlyInstantiated()
     {
         // Arrange
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest();
 
         // Assert
         Assert.That(testSession.State, Is.EqualTo(TestSessionState.NotStarted));
     }
 
     [Test]
-    public void HasZeroStepsWhenNewlyInstantiated()
+    public void HasZeroStepsWhenInstantiatedWithZeroSteps()
     {
         // Arrange
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest(steps: []);
 
         // Assert
         Assert.That(testSession.Steps, Is.Empty);
     }
 
     [Test]
-    public void HasZeroFailuresWhenNewlyInstantiated()
+    public void HasZeroFailuresWhenNoFailuresHasBeenAdded()
     {
         // Arrange
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest(steps: []);
 
         // Assert
         Assert.That(testSession.Failures, Is.Empty);
     }
 
     [Test]
-    public void IsNotValidWhenNewlyInstantiated()
+    public void IsValidWhenNoFailuresHasBeenGiven()
     {
         // Arrange
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest(steps: [CreateTestStepMock()]);
 
         // Assert
-        Assert.That(testSession.IsValid, Is.False);
+        Assert.That(testSession.IsValid, Is.True);
     }
 
     [Test]
     public void IsMarkedCompletedAfterCompleteMethodCalled()
     {
         // Arrange
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest();
 
         // Act
         testSession.Complete();
@@ -82,7 +99,7 @@ public sealed class TestSessionTests
     {
         // Arrange
         const string declineReason = "declinded";
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest();
 
         // Act
         testSession.Decline(declineReason: declineReason);
@@ -99,7 +116,7 @@ public sealed class TestSessionTests
     public void ThrowsExceptionWhenDeclinedAndEmptyDeclineReasonProvided()
     {
         // Arrange
-        var testSession = CreateTestSession();
+        var testSession = CreateTestSessionUnderTest();
 
         // Act
         Assert.Throws<ArgumentException>(() => testSession.Decline(declineReason: string.Empty));
@@ -110,15 +127,14 @@ public sealed class TestSessionTests
     {
         // Arrange
         const int expectedItemCount = 1;
-        var testSession = CreateTestSession();
-        var testStep = CreateTestStep(result: TestStepResult.Failed);
 
         // Act
-        testSession.AddTestStep(testStep);
+        var testSession = CreateTestSessionUnderTest(
+            steps: [CreateTestStepMock(result: TestStepResult.Failed, errorMessage: "error")]);
 
         // Assert
         Assert.Multiple(() =>
-        {         
+        {
             Assert.That(testSession.Steps, Has.Count.EqualTo(expectedItemCount));
             Assert.That(testSession.Failures, Has.Count.EqualTo(expectedItemCount));
         });
@@ -129,11 +145,9 @@ public sealed class TestSessionTests
     {
         // Arrange
         const int expectedItemCount = 0;
-        var testSession = CreateTestSession();
-        var testStep = CreateTestStep(result: TestStepResult.Succeeded);
 
         // Act
-        testSession.AddTestStep(testStep);
+        var testSession = CreateTestSessionUnderTest(steps: [CreateTestStepMock()]);
 
         // Assert
         Assert.That(testSession.Failures, Has.Count.EqualTo(expectedItemCount));
@@ -145,16 +159,19 @@ public sealed class TestSessionTests
         // Arrange
         const int testStepDurationInSeconds = 5;
         const int testStepCount = 5;
-        var testSession = CreateTestSession();
 
-        // Act
+        var steps = new List<TestStep>();
+
         for (int i = 0; i < testStepCount; i++)
         {
-            testSession.AddTestStep(CreateTestStep(elapsedTime: TimeSpan.FromSeconds(testStepDurationInSeconds)));
+            steps.Add(CreateTestStepMock(duration: TimeSpan.FromSeconds(testStepDurationInSeconds)));
         }
 
+        // Act
+        var testSession = CreateTestSessionUnderTest(steps: steps);
+
         // Assert
-        Assert.That(testSession.Duration, 
+        Assert.That(testSession.Duration,
             Is.EqualTo(TimeSpan.FromSeconds(testStepCount * testStepDurationInSeconds)));
     }
 }

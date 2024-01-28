@@ -15,7 +15,7 @@ namespace XPing365.Sdk.Common;
 /// }
 /// </code>
 /// </example>
-internal sealed class InstrumentationLog : IDisposable
+public sealed class InstrumentationLog : IDisposable
 {
     private bool _isDisposed;
     private readonly ThreadLocal<Stopwatch> _threadLocalStopwatch;

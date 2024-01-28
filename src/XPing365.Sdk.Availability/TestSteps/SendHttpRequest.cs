@@ -1,17 +1,18 @@
 ﻿using XPing365.Sdk.Availability.TestSteps.Internals;
 using XPing365.Sdk.Core;
-using XPing365.Sdk.Shared;
+using XPing365.Sdk.Common;
+using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Availability.TestSteps;
 
 /// <summary>
-/// The SendHttpRequest class is a concrete implementation of the <see cref="TestStepHandler"/> class that is used to 
+/// The SendHttpRequest class is a concrete implementation of the <see cref="TestComponent"/> class that is used to 
 /// send an HTTP request. It uses the <see cref="IHttpClientFactory"/> to create an instance of the 
 /// <see cref="HttpClient"/> class, which is used to send the HTTP request.
 /// </summary>
 /// <param name="httpClientFactory"><see cref="IHttpClientFactory"/> implementation instance.</param>
 public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) : 
-    TestStepHandler(StepName, TestStepType.ActionStep)
+    TestComponent(StepName, TestStepType.ActionStep)
 {
     public const string StepName = "Send HTTP Request";
 
@@ -27,19 +28,19 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
-    /// <param name="session">A <see cref="TestSession"/> object that represents the test session.</param>
+    /// <param name="context">A <see cref="TestContext"/> object that represents the test session.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>
     /// <returns><see cref="TestStep"/> object.</returns>
-    public override async Task<TestStep> HandleStepAsync(
+    public override async Task HandleAsync(
         Uri url,
         TestSettings settings,
-        TestSession session,
+        TestContext context,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
-        ArgumentNullException.ThrowIfNull(session, nameof(session));
+        ArgumentNullException.ThrowIfNull(context, nameof(context));
 
         HttpClient httpClient = CreateHttpClient(settings);
         using HttpRequestMessage request = CreateHttpRequestMessage(url, settings);
@@ -49,7 +50,7 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
             request.Headers.Add(httpHeader.Key, httpHeader.Value);
         }
 
-        using var inst = new InstrumentationLog(startStopwatch: true);
+        using var instrumentation = new InstrumentationLog(startStopwatch: true);
 
         TestStep testStep = null!;
         try
@@ -57,17 +58,19 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
             using HttpResponseMessage response = await httpClient
                 .SendAsync(request, cancellationToken)
                 .ConfigureAwait(false);
-            var propertyBag = new PropertyBag(response.ToProperties());
+            context.SessionBuilder.PropertyBag.AddOrUpdateProperties(response.ToProperties());
             byte[] buffer = await ReadAsByteArrayAsync(response.Content, cancellationToken).ConfigureAwait(false);
-            propertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpContent, buffer);
-            testStep = CreateSuccessTestStep(inst.StartTime, inst.ElapsedTime, propertyBag);
+            context.SessionBuilder.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpContent, buffer);
+            testStep = context.SessionBuilder.Build(component: this, instrumentation);
         }
         catch (Exception exception)
         {
-            testStep = CreateTestStepFromException(exception, inst.StartTime, inst.ElapsedTime);
+            testStep = context.SessionBuilder.Build(component: this, instrumentation, exception);
         }
-
-        return testStep;
+        finally
+        {
+            context.Progress?.Report(testStep);
+        }
     }
 
     private static async Task<byte[]> ReadAsByteArrayAsync(HttpContent httpContent, CancellationToken cancellationToken)

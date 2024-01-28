@@ -1,7 +1,8 @@
 ﻿using XPing365.Sdk.Core.Extensions;
-using XPing365.Sdk.Shared;
+using XPing365.Sdk.Common;
+using XPing365.Sdk.Core.Common;
 
-namespace XPing365.Sdk.Core;
+namespace XPing365.Sdk.Core.Components;
 
 /// <summary>
 /// This record represents a step in a test execution. It provides a set of properties that can be used to store 
@@ -14,13 +15,12 @@ namespace XPing365.Sdk.Core;
 /// <param name="Result">Represents the result of the test step.</param>
 /// <param name="PropertyBag">Represents the property bag which stores custom properties from test step.</param>
 /// <param name="ErrorMessage">Represents the error message. It cannot be null if TestStepResult is Failed.</param>
-public sealed record TestStep(
+public record TestStep(
     string Name,
     DateTime StartDate,
     TimeSpan Duration,
     TestStepType Type,
     TestStepResult Result,
-    PropertyBag PropertyBag,
     string? ErrorMessage = null)
 {
     /// <summary>
@@ -32,24 +32,23 @@ public sealed record TestStep(
     /// Gets the start date of the test step.
     /// </summary>
     public DateTime StartDate { get; } = StartDate.RequireCondition(
-        condition: date => date >= DateTime.Today, 
-        parameterName: nameof(StartDate), 
+        condition: date => date >= DateTime.Today.ToUniversalTime(),
+        parameterName: nameof(StartDate),
         message: Errors.IncorrectStartDate);
-
-    /// <summary>
-    /// Gets the property bag which stores custom key-value pairs from test step.
-    /// </summary>
-    public PropertyBag PropertyBag { get; } = PropertyBag.RequireNotNull(nameof(PropertyBag));
 
     /// <summary>
     /// Gets the error message if result is <see cref="TestStepResult.Failed"/>; otherwise null;
     /// </summary>
-    public string? ErrorMessage { get; } = Result == TestStepResult.Failed ? 
+    public string? ErrorMessage { get; } = Result == TestStepResult.Failed ?
         ErrorMessage.RequireNotNullOrEmpty(nameof(ErrorMessage)) : null;
 
     public override string ToString()
     {
-        string msg = $"{StartDate} ({Duration.TotalMilliseconds}[ms]) [{Type}] {Name} {Result.GetDisplayName()}.";
+        string msg = $"{StartDate} " +
+            $"({Math.Round(Duration.TotalMilliseconds, 0)}ms) " +
+            $"[{Type}] " +
+            $"{Name} " +
+            $"{Result.GetDisplayName()}.";
 
         if (!string.IsNullOrEmpty(ErrorMessage))
         {

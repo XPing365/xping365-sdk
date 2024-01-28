@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
-using XPing365.Sdk.Shared;
+using XPing365.Sdk.Common;
 
-namespace XPing365.Sdk.Core;
+namespace XPing365.Sdk.Core.Common;
 
 /// <summary>
 /// The PropertyBagKey class is used to represent a key in a <see cref="PropertyBag"/>. 
@@ -54,6 +54,8 @@ public class PropertyBagKey(string key) : IEquatable<PropertyBagKey?>
     {
         return !(left == right);
     }
+
+    public override string ToString() => _key;
 
     private string GetDebuggerDisplay() => _key;
 }

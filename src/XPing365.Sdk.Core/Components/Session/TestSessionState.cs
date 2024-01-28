@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace XPing365.Sdk.Core;
+namespace XPing365.Sdk.Core.Components.Session;
 
 /// <summary>
-/// Represents the state of the <see cref="TestSession"/>.
+/// Represents the state of the <see cref="TestContext"/>.
 /// </summary>
 public enum TestSessionState
 {

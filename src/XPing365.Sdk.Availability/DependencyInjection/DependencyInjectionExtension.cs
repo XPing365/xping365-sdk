@@ -2,6 +2,7 @@
 using Polly;
 using XPing365.Sdk.Availability.Configurations;
 using XPing365.Sdk.Availability.TestSteps;
+using XPing365.Sdk.Core.Components.Session;
 
 namespace XPing365.Sdk.Availability.DependencyInjection;
 
@@ -75,6 +76,7 @@ public static class DependencyInjectionExtension
                     handledEventsAllowedBeforeBreaking: httpClientConfiguration.HandledEventsAllowedBeforeBreaking,
                     durationOfBreak: httpClientConfiguration.DurationOfBreak));
 
+        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
         services.AddTransient<AvailabilityTestAgent>();
         
         return services;
