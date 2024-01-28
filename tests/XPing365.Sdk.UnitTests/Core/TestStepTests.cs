@@ -1,6 +1,6 @@
-﻿using XPing365.Sdk.Core;
+﻿using XPing365.Sdk.Core.Components;
 
-namespace XPing365.Sdk.UnitTests;
+namespace XPing365.Sdk.UnitTests.Core;
 
 public sealed class TestStepTests
 {
@@ -13,8 +13,7 @@ public sealed class TestStepTests
             StartDate: DateTime.UtcNow - TimeSpan.FromDays(2),
             Duration: TimeSpan.Zero,
             Type: TestStepType.ActionStep,
-            Result: TestStepResult.Succeeded,
-            PropertyBag: new PropertyBag()));
+            Result: TestStepResult.Succeeded));
     }
 
     [Test]
@@ -26,8 +25,7 @@ public sealed class TestStepTests
             StartDate: DateTime.Today,
             Duration: TimeSpan.Zero,
             Type: TestStepType.ActionStep,
-            Result: TestStepResult.Succeeded,
-            PropertyBag: new PropertyBag()));
+            Result: TestStepResult.Succeeded));
     }
 
     [Test]
@@ -40,7 +38,6 @@ public sealed class TestStepTests
             Duration: TimeSpan.Zero,
             Type: TestStepType.ActionStep,
             Result: TestStepResult.Succeeded,
-            PropertyBag: new PropertyBag(),
             ErrorMessage: "err msg"));
     }
 
@@ -54,7 +51,6 @@ public sealed class TestStepTests
             Duration: TimeSpan.Zero,
             Type: TestStepType.ActionStep,
             Result: TestStepResult.Succeeded,
-            PropertyBag: null!,
             ErrorMessage: "err msg"));
     }
 
@@ -68,7 +64,6 @@ public sealed class TestStepTests
             Duration: TimeSpan.Zero,
             Type: TestStepType.ActionStep,
             Result: TestStepResult.Failed,
-            PropertyBag: null!,
             ErrorMessage: null));
     }
 
@@ -82,7 +77,6 @@ public sealed class TestStepTests
             Duration: TimeSpan.Zero,
             Type: TestStepType.ActionStep,
             Result: TestStepResult.Succeeded,
-            PropertyBag: new PropertyBag(),
             ErrorMessage: "error message");
 
         // Assert

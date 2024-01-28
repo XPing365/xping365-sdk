@@ -1,9 +1,8 @@
-﻿using System.Net.Http.Headers;
-using System.Net.Http.Json;
-using Microsoft.Net.Http.Headers;
+﻿using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Components;
 
-namespace XPing365.Sdk.UnitTests;
+namespace XPing365.Sdk.UnitTests.Core;
 
 public sealed class TestSettignsTests
 {
@@ -35,7 +34,7 @@ public sealed class TestSettignsTests
         var testSettings = new TestSettings();
 
         // Act
-        testSettings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpMethod, specifiedHttpMethod);        
+        testSettings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpMethod, specifiedHttpMethod);
 
         // Assert
         Assert.That(testSettings.GetHttpMethod(), Is.EqualTo(specifiedHttpMethod));

@@ -1,6 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 
-namespace XPing365.Sdk.Core;
+namespace XPing365.Sdk.Core.Common;
 
 /// <summary>
 /// PropertyBag class represents a collection of key-value pairs that allows to store any object for a given unique key.

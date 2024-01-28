@@ -1,5 +1,6 @@
 ﻿using System.Net.NetworkInformation;
 using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Common;
 
 namespace XPing365.Sdk.Availability.TestSteps.Internals;
 

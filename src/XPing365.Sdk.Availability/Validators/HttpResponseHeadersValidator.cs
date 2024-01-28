@@ -1,12 +1,14 @@
 ﻿using System.Net.Http.Headers;
 using XPing365.Sdk.Availability.TestSteps;
 using XPing365.Sdk.Core;
-using XPing365.Sdk.Shared;
+using XPing365.Sdk.Common;
+using XPing365.Sdk.Core.Common;
+using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Availability.Validators;
 
 /// <summary>
-/// The HttpResponseHeadersValidator class is a concrete implementation of the <see cref="TestStepHandler"/> class that 
+/// The HttpResponseHeadersValidator class is a concrete implementation of the <see cref="TestComponent"/> class that 
 /// is used to validate the response headers of an HTTP response. It takes a Func&lt;HttpResponseHeaders, bool&gt; 
 /// delegate as a parameter, which is used to validate the response headers. The errorMessage parameter is an optional 
 /// error message that can be used to provide additional information about the validation failure.
@@ -18,14 +20,14 @@ namespace XPing365.Sdk.Availability.Validators;
 ///    errorMessage: (HttpResponseHeaders headers) => 
 ///        $"The HTTP response headers did not include the expected $'{HeaderNames.UserAgent}' header."
 /// );
-/// var validator = new Validator(responseHeadersValidator);
+/// var validator = new ValidationPipeline(responseHeadersValidator);
 /// </code>
 /// </example>
 /// <param name="isValid">Func&lt;HttpResponseHeaders, bool&gt; delegate to validate the response headers.</param>
 /// <param name="errorMessage">Optional information about the validation failure.</param>
 public class HttpResponseHeadersValidator(
     Func<HttpResponseHeaders, bool> isValid,
-    Func<HttpResponseHeaders, string>? errorMessage = null) : TestStepHandler(StepName, TestStepType.ValidateStep)
+    Func<HttpResponseHeaders, string>? errorMessage = null) : TestComponent(StepName, TestStepType.ValidateStep)
 {
     public const string StepName = "Http response headers validation";
 
@@ -37,54 +39,54 @@ public class HttpResponseHeadersValidator(
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
-    /// <param name="session">A <see cref="TestSession"/> object that represents the test session.</param>
+    /// <param name="context">A <see cref="TestContext"/> object that represents the test context.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>
     /// <returns><see cref="TestStep"/> object.</returns>
-    public override Task<TestStep> HandleStepAsync(
+    public override Task HandleAsync(
         Uri url,
         TestSettings settings,
-        TestSession session,
+        TestContext context,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
-        ArgumentNullException.ThrowIfNull(session, nameof(session));
+        ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        TestStep? sendHttpRequestStep = session.Steps.FirstOrDefault(step => step.Name == SendHttpRequest.StepName);
-
-        if (sendHttpRequestStep == null)
-        {
-            return Task.FromResult(CreateFailedTestStep(Errors.InsufficientData(handler: this)));
-        }
-
-        using var inst = new InstrumentationLog();
+        using var instrumentation = new InstrumentationLog();
         TestStep testStep = null!;
 
         try
         {
             HttpResponseHeaders responseHeaders =
-                sendHttpRequestStep.PropertyBag.GetProperty<HttpResponseHeaders>(
-                    PropertyBagKeys.HttpResponseHeaders);
+                context.SessionBuilder
+                    .PropertyBag.GetProperty<HttpResponseHeaders>(PropertyBagKeys.HttpResponseHeaders);
 
             // Perform test step validation.
             bool isValid = _isValid(responseHeaders);
 
             if (isValid)
             {
-                testStep = CreateSuccessTestStep(inst.StartTime, inst.ElapsedTime, new PropertyBag());
+                testStep = context.SessionBuilder.Build(component: this, instrumentation);
             }
             else
             {
                 string? errmsg = _errorMessage?.Invoke(responseHeaders);
-                testStep = CreateFailedTestStep(errmsg ?? Errors.ValidationFailed(handler: this));
+                testStep = context.SessionBuilder.Build(
+                    component: this,
+                    instrumentation: instrumentation,
+                    error: Errors.ValidationFailed(component: this, errmsg));
             }
         }
         catch (Exception exception)
         {
-            testStep = CreateTestStepFromException(exception, inst.StartTime, inst.ElapsedTime);
+            testStep = context.SessionBuilder.Build(component: this, instrumentation, exception);
+        }
+        finally
+        {
+            context.Progress?.Report(testStep);
         }
 
-        return Task.FromResult(testStep);
+        return Task.CompletedTask;
     }
 }

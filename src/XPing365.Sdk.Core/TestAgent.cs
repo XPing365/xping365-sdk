@@ -1,81 +1,58 @@
-﻿using XPing365.Sdk.Core.Validators;
-using XPing365.Sdk.Shared;
+﻿using Microsoft.Extensions.DependencyInjection;
+using XPing365.Sdk.Common;
+using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Components.Session;
 
 namespace XPing365.Sdk.Core;
 
 /// <summary>
-/// This class is used to perform testing operations. As a base and abstract class, it provides a set of common
-/// properties and methods that are shared by all derived classes. The derived classes then implement their own 
-/// specific functionality by overriding the base class methods.
+/// The TestAgent class is responsible for executing test components and test compositions, such as single test 
+/// components aggregated in a <see cref="Pipeline"/>. It provides a base implementation for executing tests and 
+/// reporting results. By subclassing the TestAgent class, test agents can focus on implementing specific test 
+/// operations and leave the details of executing tests and reporting results to the base implementation.
 /// </summary>
-/// <param name="handlers">An array of <see cref="TestStepHandler"/> objects which will be used to perform specific
-/// test operation.
+/// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
+/// <param name="component"><see cref="ITestComponent"/> object which will be used to perform specific test operation.
 /// </param>
-public abstract class TestAgent(params TestStepHandler[] handlers)
+public abstract class TestAgent(IServiceProvider serviceProvider, ITestComponent component)
 {
-    private readonly TestStepHandler[] _handlers = handlers ?? [];
+    private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     /// <summary>
-    /// Gets a read-only collection of associated <see cref="TestStepHandler"/> objects.
+    /// Gets the <see cref="ITestComponent"/> instance that represents the container of the current object.
     /// </summary>
-    public IReadOnlyCollection<TestStepHandler> Handlers => _handlers;
+    public ITestComponent Container { get; } = component.RequireNotNull(nameof(component));
 
     /// <summary>
-    /// The RunAsync method executes two stages to generate a <see cref="TestSession"/> object. In the first stage, it 
-    /// executes <see cref="TestStepHandler"/> objects that are defined in the derived classes. In the second stage, it 
-    /// executes an optional validator object that is used to validate the test session coming from the previous stage.
+    /// This method initializes the test context for executing the test component. After the test operation is executed, 
+    /// it constructs a test session that represents the outcome of the operation.
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
-    /// <param name="validator">An optional IValidator object that can be used to validate the test session.</param>
-    /// <param name="progress">An optional IProgress&lt;TestStep&gt; object that can be used to report progress during
-    /// the validation process.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// validation process.</param>
     /// <returns>
-    /// Returns a Task&lt;TestStession&gt; object that represents the asynchronous result of testing operations.
+    /// Returns a Task&lt;TestStession&gt; object that represents the asynchronous outcome of testing operation.
     /// </returns>
     public virtual async Task<TestSession> RunAsync(
         Uri url,
         TestSettings settings,
-        IValidator? validator = null,
-        IProgress<TestStep>? progress = null,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url);
         ArgumentNullException.ThrowIfNull(settings);
 
-        var session = new TestSession(startDate: DateTime.UtcNow, url: url);
+        var context = new TestContext(
+            sessionBuilder: _serviceProvider.GetRequiredService<ITestSessionBuilder>(),
+            progress: _serviceProvider.GetService<IProgress<TestStep>>());
 
-        foreach (TestStepHandler handler in _handlers)
-        {
-            TestStep testStep = await handler.HandleStepAsync(
-                url,
-                settings,
-                session,
-                cancellationToken).ConfigureAwait(false);
+        // Initiate test session by recording its start time and the URL of the page being validated.
+        context.SessionBuilder.Initiate(url, DateTime.UtcNow);
 
-            if (testStep != null)
-            {
-                session.AddTestStep(testStep);
-                progress?.Report(testStep);
-            }
-        }
+        // Execute test operation by invoking the HandleAsync method of the Container class.
+        await Container.HandleAsync(url, settings, context, cancellationToken).ConfigureAwait(false);
 
-        if (_handlers != null && _handlers.Length != 0 && validator != null)
-        {
-            await validator.ValidateAsync(url, settings, session, progress, cancellationToken).ConfigureAwait(false);
-        }
-
-        if (_handlers != null && _handlers.Length != 0)
-        {
-            session.Complete();
-        }
-        else
-        {
-            session.Decline(Errors.NoTestStepHandlers);
-        }
-
-        return await Task.FromResult(result: session).ConfigureAwait(false);
+        TestSession testSession = context.SessionBuilder.GetTestSession();
+        return testSession;
     }
 }

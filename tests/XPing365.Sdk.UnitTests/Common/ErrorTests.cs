@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Common.UnitTests;
+﻿using XPing365.Sdk.Core.Common;
+
+namespace XPing365.Sdk.Common.UnitTests;
 
 public sealed class ErrorTests
 {

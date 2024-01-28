@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core;
+﻿using XPing365.Sdk.Core.Common;
+
+namespace XPing365.Sdk.Core.Components;
 
 /// <summary>
 /// This class is used to store settings for a test execution. It provides a set of properties that can be used to 
@@ -17,7 +19,7 @@ public sealed class TestSettings
     /// </summary>
     public PropertyBag PropertyBag { get; } = new();
 
-     /// <summary>
+    /// <summary>
     /// Gets or sets a boolean value which determines whether to retry HTTP requests when they fail. Default is true, 
     /// unless specified differently in <see cref="DefaultForAvailability"/>.
     /// </summary>
@@ -28,6 +30,16 @@ public sealed class TestSettings
     /// unless specified differently in <see cref="DefaultForAvailability"/>.
     /// </summary>
     public bool FollowHttpRedirectionResponses { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets a value indicating whether to continue running all tests regardless of their results. Default is 
+    /// false.
+    /// </summary>
+    /// <remarks>
+    /// If this property is set to <c>true</c>, all tests will be run regardless of their results. If this property is 
+    /// set to <c>false</c>, the testing pipeline will stop running tests when a failure occurs.
+    /// </remarks>
+    public bool ContinueOnFailure { get; set; }
 
     /// <summary>
     /// Gets a TestSettings object with default settings for server availability testing.

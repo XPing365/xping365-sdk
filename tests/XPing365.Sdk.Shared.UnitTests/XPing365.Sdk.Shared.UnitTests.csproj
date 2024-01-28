@@ -21,6 +21,4 @@
     <ProjectReference Include="..\..\src\XPing365.Sdk.Core\XPing365.Sdk.Core.csproj" />
   </ItemGroup>
 
-  <Import Project="..\..\src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems" Label="Shared" />
-
 </Project>

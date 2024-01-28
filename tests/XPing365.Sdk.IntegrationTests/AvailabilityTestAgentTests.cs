@@ -3,11 +3,14 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
+using Moq;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestSteps;
 using XPing365.Sdk.Availability.Validators;
 using XPing365.Sdk.Core;
-using XPing365.Sdk.Core.Validators;
+using XPing365.Sdk.Core.Common;
+using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Components.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -54,12 +57,13 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer().ConfigureAwait(false);
-
+        
         // Assert
-        Assert.That(
-            session.Steps.Any(step =>
-                step.Name == DnsLookup.StepName &&
-                step.PropertyBag.TryGetProperty(expectedBag, out var ipaddresses)), Is.True);
+        Assert.Multiple(() =>
+        {
+            Assert.That(session.Steps.Any(step => step.Name == DnsLookup.StepName), Is.True);
+            Assert.That(session.PropertyBag.TryGetProperty(expectedBag, out var ipaddresses), Is.True);
+        });
     }
 
     [Test]
@@ -70,12 +74,13 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer().ConfigureAwait(false);
-
+        
         // Assert
-        Assert.That(
-            session.Steps.Any(step =>
-                step.Name == IPAddressAccessibilityCheck.StepName && 
-                step.PropertyBag.TryGetProperty(expectedBag, out var ipaddress)), Is.True);
+        Assert.Multiple(() =>
+        {
+            Assert.That(session.Steps.Any(step => step.Name == IPAddressAccessibilityCheck.StepName), Is.True);
+            Assert.That(session.PropertyBag.TryGetProperty(expectedBag, out var ipaddress), Is.True);
+        });
     }
 
     [Test]
@@ -106,9 +111,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         Assert.Multiple(() =>
         {
-            Assert.That(
-                session.Steps.Any(step => 
-                    step.PropertyBag.TryGetProperty(PropertyBagKeys.HttpStatus, out code)), Is.True);
+            Assert.That(session.PropertyBag.TryGetProperty(PropertyBagKeys.HttpStatus, out code), Is.True);
             Assert.That(code, Is.EqualTo(httpStatusCode));
         });
     }
@@ -193,9 +196,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         Assert.Multiple(() =>
         {
-            Assert.That(
-                session.Steps.Any(step =>
-                    step.PropertyBag.TryGetProperty(PropertyBagKeys.HttpContent, out byteArray)), Is.True);
+            Assert.That(session.PropertyBag.TryGetProperty(PropertyBagKeys.HttpContent, out byteArray), Is.True);
             Assert.That(byteArray is not null && Encoding.UTF8.GetString(byteArray) == responseContent);
         });
     }
@@ -207,20 +208,38 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         const bool expectedValidityResult = true;
         var serverContentValidator = new ServerContentResponseValidator(
             isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => expectedValidityResult);
-        var validator = new Validator(serverContentValidator);
 
         // Act
         TestSession session = 
-            await GetTestSessionFromInMemoryHttpTestServer(validator: validator).ConfigureAwait(false);
+            await GetTestSessionFromInMemoryHttpTestServer(component: serverContentValidator).ConfigureAwait(false);
 
         // Assert
         Assert.That(session.IsValid, Is.EqualTo(expectedValidityResult));
     }
 
+    [Test]
+    public async Task ProgressInstanceIsCalledForEveryStepWhenProgressIsProvided()
+    {
+        // Arrange
+        var mockProgress = _serviceProvider.GetService<IProgress<TestStep>>();
+        var validationPipeline = new Pipeline(components: [
+            new ServerContentResponseValidator(isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => true),
+            new HttpStatusCodeValidator(isValid: code => true),
+            new HttpResponseHeadersValidator(isValid: headers => true)
+        ]);
+
+        // Act
+        TestSession session =
+            await GetTestSessionFromInMemoryHttpTestServer(component: validationPipeline).ConfigureAwait(false);
+
+        // Assert
+        Mock.Get(mockProgress!).Verify(p => p.Report(It.IsAny<TestStep>()), Times.Exactly(session.Steps.Count));
+    }
+
     private async Task<TestSession> GetTestSessionFromInMemoryHttpTestServer(
         Action<HttpListenerResponse>? responseBuilder = null,
         Action<HttpListenerRequest>? requestReceived = null,
-        Validator? validator = null,
+        TestComponent? component = null,
         TestSettings? settings = null)
     {
         using var tokenSource = new CancellationTokenSource();
@@ -238,13 +257,17 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         
         var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
 
+        if (component != null)
+        {
+            testAgent.Container.AddComponent(component);
+        }
+
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.DefaultForAvailability,
-                validator: validator)
+                settings: settings ?? TestSettings.DefaultForAvailability)
             .ConfigureAwait(false);
-            
+
         // Notify InMemoryHttpServer to dispose listener.
         await tokenSource.CancelAsync().ConfigureAwait(false);
 
