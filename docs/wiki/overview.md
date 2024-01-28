@@ -31,4 +31,10 @@ Whenever any of these steps fail, <b>XPing365</b> makes it easy to find out the 
 Below figure provides a high-level overview of the XPing365 architecture. 
 <br/><br/>
 
-![XPing365 Architecture](./../images/architecture-overview.svg)
+![XPing365 Architecture](/xping365-sdk/images/architecture-overview.svg)
+
+## Next Steps
+
+To get started with <b>XPing365</b> SDK, see the following resources:
+
+- [Tutorial: Get started with XPing365 SDK](/xping365-sdk/wiki/tutorial.html)
