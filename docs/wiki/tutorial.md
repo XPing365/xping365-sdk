@@ -244,12 +244,6 @@ static Pipeline CreateValidationPipeline() =>
                 $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")]);
 ```
 
-- In the command handler reference the newly added `Pipeline` in the `AvailabilityTestAgent` as follows:
-
-```csharp
-testAgent.Container.AddComponent(CreateValidationPipeline());
-```
-
 - `HttpStatusCodeValidator` is used to validate the HTTP status code:
 
 ```csharp
@@ -268,7 +262,7 @@ new HttpResponseHeadersValidator(
         $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header.")
 ```
 
-- `ServerContentResponseValidtor` is used to validate the response content:
+- `ServerContentResponseValidator` is used to validate the response content:
 
 ```csharp
 new ServerContentResponseValidator(
@@ -277,6 +271,11 @@ new ServerContentResponseValidator(
         $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")
 ```
 
+- In the command handler reference the newly added `Pipeline` in the `AvailabilityTestAgent` as follows:
+
+```csharp
+testAgent.Container.AddComponent(CreateValidationPipeline());
+```
 
 ## Test the new app with validation pipeline
 

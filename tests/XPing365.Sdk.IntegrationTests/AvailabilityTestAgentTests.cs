@@ -23,6 +23,13 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
+    [SetUp]
+    public void Setup()
+    {
+        var progressMock = Mock.Get(_serviceProvider.GetRequiredService<IProgress<TestStep>>());
+        progressMock?.Reset();
+    }
+
     [Test]
     public async Task TestSessionFromAvailabilityTestAgentIsMarkedCompletedWhenSucceeded()
     {
@@ -240,9 +247,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         Action<HttpListenerResponse>? responseBuilder = null,
         Action<HttpListenerRequest>? requestReceived = null,
         TestComponent? component = null,
-        TestSettings? settings = null)
+        TestSettings? settings = null,
+        CancellationToken cancellationToken = default)
     {
-        using var tokenSource = new CancellationTokenSource();
         static void ResponseBuilder(HttpListenerResponse response)
         {
             response.StatusCode = (int)HttpStatusCode.OK;
@@ -250,10 +257,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         }
         static void RequestReceived(HttpListenerRequest request) { };
 
-        _ = InMemoryHttpServer.TestServer(
+        using Task testServer = InMemoryHttpServer.TestServer(
             responseBuilder ?? ResponseBuilder,
-            requestReceived ?? RequestReceived,
-            tokenSource.Token);
+            requestReceived ?? RequestReceived);
         
         var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
 
@@ -265,11 +271,11 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.DefaultForAvailability)
+                settings: settings ?? TestSettings.DefaultForAvailability, 
+                cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        // Notify InMemoryHttpServer to dispose listener.
-        await tokenSource.CancelAsync().ConfigureAwait(false);
+        await testServer.WaitAsync(cancellationToken).ConfigureAwait(false);
 
         return session;
     }
