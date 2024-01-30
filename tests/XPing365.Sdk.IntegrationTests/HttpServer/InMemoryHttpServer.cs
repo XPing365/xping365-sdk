@@ -5,16 +5,14 @@ namespace XPing365.Sdk.IntegrationTests.HttpServer;
 internal static class InMemoryHttpServer
 {
     public static Task TestServer(
-        Action<HttpListenerResponse> responseBuilder,
-        CancellationToken cancellationToken = default)
+        Action<HttpListenerResponse> responseBuilder)
     {
-        return TestServer(responseBuilder, requestReceived: (request) => { }, cancellationToken);
+        return TestServer(responseBuilder, requestReceived: (request) => { });
     }
 
     public static Task TestServer(
         Action<HttpListenerResponse> responseBuilder,
-        Action<HttpListenerRequest> requestReceived,
-        CancellationToken cancellationToken = default)
+        Action<HttpListenerRequest> requestReceived)
     {
         return Task.Run(() =>
         {
@@ -27,10 +25,7 @@ internal static class InMemoryHttpServer
             requestReceived?.Invoke(context.Request);
             // Build HttpListenerResponse
             responseBuilder(context.Response);
-            // Wait for the receiver of the response to read the stream.
-            // Cancelled token exits the Task.Delay without having to wait longer than is necessary.
-            Task.Delay(millisecondsDelay: 100, cancellationToken);
-        }, cancellationToken);
+        });
     }
 
     public static Uri GetTestServerAddress()

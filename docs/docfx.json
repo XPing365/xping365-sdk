@@ -40,6 +40,7 @@
       "_appTitle": "XPing365",
       "_appLogoPath": "images/logo.svg",
       "_appFaviconPath": "images/favicon.ico",
+      "_appFooter": "<span>Official website <a href=\"https://xping365.com\">xping365.com</a> | Made with <a href=\"https://dotnet.github.io/docfx\">docfx</a></span>",
       "_enableSearch": true,
       "pdf": false
     }
