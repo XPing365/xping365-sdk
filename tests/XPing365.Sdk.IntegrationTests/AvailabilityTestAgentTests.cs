@@ -274,7 +274,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
-        await testServer.WaitAsync(cancellationToken).ConfigureAwait(false);
+        //await testServer.WaitAsync(cancellationToken).ConfigureAwait(false);
+#pragma warning disable CA1849 // Call async methods when in an async method
+#pragma warning disable CA2016 // Forward the 'CancellationToken' parameter to methods
+        testServer.Wait();
+#pragma warning restore CA2016 // Forward the 'CancellationToken' parameter to methods
+#pragma warning restore CA1849 // Call async methods when in an async method
 
         return session;
     }
