@@ -246,9 +246,10 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         Action<HttpListenerResponse>? responseBuilder = null,
         Action<HttpListenerRequest>? requestReceived = null,
         TestComponent? component = null,
-        TestSettings? settings = null,
-        CancellationToken cancellationToken = default)
+        TestSettings? settings = null)
     {
+        using var cts = new CancellationTokenSource();
+
         static void ResponseBuilder(HttpListenerResponse response)
         {
             response.StatusCode = (int)HttpStatusCode.OK;
@@ -258,7 +259,8 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         using Task testServer = InMemoryHttpServer.TestServer(
             responseBuilder ?? ResponseBuilder,
-            requestReceived ?? RequestReceived);
+            requestReceived ?? RequestReceived, 
+            cts.Token);
         
         var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
 
@@ -271,10 +273,10 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
                 settings: settings ?? TestSettings.DefaultForAvailability, 
-                cancellationToken: cancellationToken)
+                cancellationToken: cts.Token)
             .ConfigureAwait(false);
 
-        await testServer.WaitAsync(cancellationToken).ConfigureAwait(false);
+        await testServer.WaitAsync(cts.Token).ConfigureAwait(false);
 
         return session;
     }
