@@ -16,9 +16,6 @@ namespace XPing365.Sdk.Availability.TestSteps;
 /// </summary>
 public sealed class IPAddressAccessibilityCheck() : TestComponent(StepName, TestStepType.ActionStep)
 {
-    // A buffer of 32 bytes of data to be transmitted during test.
-    private readonly byte[] _buffer = Encoding.ASCII.GetBytes("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
-
     public const string StepName = "IPAddress accessibility check";
 
     /// <summary>
@@ -62,7 +59,8 @@ public sealed class IPAddressAccessibilityCheck() : TestComponent(StepName, Test
                     PingReply reply = await pingSender.SendPingAsync(
                         address: address,
                         timeout: GetTimeout(settings),
-                        buffer: _buffer,
+                        // On Linux, non-privileged processes can't send a custom payload. Please leave this empty.
+                        buffer: [],
                         options: GetOptions(settings)).ConfigureAwait(false);
 
                     context.SessionBuilder.PropertyBag.AddOrUpdateProperties(reply.ToProperties());
