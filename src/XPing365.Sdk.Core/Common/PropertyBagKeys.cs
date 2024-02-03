@@ -59,6 +59,12 @@ public static class PropertyBagKeys
     public readonly static PropertyBagKey HttpStatus = new(nameof(HttpStatus));
 
     /// <summary>
+    /// Represents the HTTP response message. For more information check 
+    /// <see cref="System.Net.Http.HttpResponseMessage"/>.
+    /// </summary>
+    public readonly static PropertyBagKey HttpResponseMessage = new(nameof(HttpResponseMessage));
+
+    /// <summary>
     /// Represents the HTTP reason phrase.
     /// </summary>
     public readonly static PropertyBagKey HttpReasonPhrase = new(nameof(HttpReasonPhrase));

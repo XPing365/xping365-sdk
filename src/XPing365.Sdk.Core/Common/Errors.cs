@@ -6,9 +6,7 @@ namespace XPing365.Sdk.Core.Common;
 public static class Errors
 {
     public static Error ExceptionError(Exception ex) =>
-        new("1000",
-            $"Exception of type {ex.RequireNotNull(nameof(ex)).GetType()} occured. " +
-            $"Message: {ex.RequireNotNull(nameof(ex)).Message}.");
+        new("1000", $"Message: {ex.RequireNotNull(nameof(ex)).Message}");
 
     public static Error InsufficientData(TestComponent component) =>
         new("1100", $"Insufficient data to perform \"{component.RequireNotNull(nameof(component)).Name}\" test step.");

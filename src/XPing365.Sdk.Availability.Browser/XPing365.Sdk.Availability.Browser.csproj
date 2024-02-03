@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\XPing365.Sdk.Availability\XPing365.Sdk.Availability.csproj" />
+    <ProjectReference Include="..\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj" />
+    <ProjectReference Include="..\XPing365.Sdk.Core\XPing365.Sdk.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\libs\phantomjs-2.1.1\bin\win-x64\phantomjs.exe" Link="\Browser\win-x64\phantomjs.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\libs\phantomjs-2.1.1\bin\linux-x64\phantomjs" Link="\Browser\linux-x64\phantomjs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\libs\phantomjs-2.1.1\bin\macosx\phantomjs" Link="\Browser\macosx\phantomjs">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\libs\phantomjs-2.1.1\scripts\LoadHtml.js" Link="\Scripts\LoadHtml.js">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

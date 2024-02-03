@@ -115,7 +115,7 @@ public class TestSession
 
         sb.AppendFormat(
             CultureInfo.InvariantCulture,
-            $"{StartDate} ({Duration.TotalMilliseconds}[ms]) " +
+            $"{StartDate} ({TotalTime(Duration)}) " +
             $"Test session {State.GetDisplayName()} for {Url.AbsoluteUri}." +
             $"{Environment.NewLine}");
         sb.AppendFormat(
@@ -127,5 +127,15 @@ public class TestSession
     }
 
     private string GetDebuggerDisplay() =>
-        $"{StartDate} ({Duration.TotalMilliseconds}[ms]), Steps: {_steps.Count}, Failures: {Failures.Count} ";
+        $"{StartDate} ({TotalTime(Duration)}), Steps: {_steps.Count}, Failures: {Failures.Count} ";
+
+    private string TotalTime(TimeSpan duration)
+    {
+        if (duration.TotalSeconds >= 1)
+        {
+            return $"{Math.Round(Duration.TotalSeconds, 2)}[s]";
+        }
+
+        return $"{Math.Round(Duration.TotalMilliseconds, 0)}[ms]";
+    }
 }
