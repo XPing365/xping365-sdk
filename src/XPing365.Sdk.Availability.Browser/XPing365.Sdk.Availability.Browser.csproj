@@ -17,16 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\..\libs\phantomjs-2.1.1\bin\win-x64\phantomjs.exe" Link="\Browser\win-x64\phantomjs.exe">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\libs\phantomjs-2.1.1\bin\linux-x64\phantomjs" Link="\Browser\linux-x64\phantomjs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\libs\phantomjs-2.1.1\bin\macosx\phantomjs" Link="\Browser\macosx\phantomjs">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\libs\phantomjs-2.1.1\scripts\LoadHtml.js" Link="\Scripts\LoadHtml.js">
+    <None Update="Scripts\LoadHtml.js">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

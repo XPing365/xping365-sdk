@@ -13,7 +13,7 @@ internal sealed class PhantomJsBrowserClient(BrowserContext context) : HeadlessB
         Uri url,
         CancellationToken cancellationToken = default)
     {
-        _process.StartInfo.FileName = BrowserContext.BrowserExecutable?.FullName;
+        _process.StartInfo.FileName = BrowserContext.BrowserExecutable.Name;
         _process.StartInfo.Arguments = GetProcessArguments(url, Context);
         _process.StartInfo.UseShellExecute = false;
         _process.StartInfo.CreateNoWindow = true;
@@ -39,10 +39,16 @@ internal sealed class PhantomJsBrowserClient(BrowserContext context) : HeadlessB
 
     private static string GetProcessArguments(Uri requestUri, BrowserContext context)
     {
-        return $"{context.Script.Path.FullName} " +                         // arg[0]
-            $"{requestUri.AbsoluteUri} " +                                  // arg[1]
-            $"{context.Timeout.TotalMilliseconds} " +                       // arg[2]
-            $"\"{HttpUtility.JavaScriptStringEncode(context.UserAgent)}\""; // arg[3]
+        var args = $"{context.Script.Path.FullName} " + // arg[0]
+            $"{requestUri.AbsoluteUri} " +              // arg[1]
+            $"{context.Timeout.TotalMilliseconds} ";    // arg[2]
+            
+        if (!string.IsNullOrEmpty(context.UserAgent))
+        {
+            args += $"\"{HttpUtility.JavaScriptStringEncode(context.UserAgent)}\""; // arg[3]
+        }
+
+        return args;
     }
 
     private async Task<int> RunProcessAsync(

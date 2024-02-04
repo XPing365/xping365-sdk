@@ -108,92 +108,93 @@ internal sealed partial class WebPageBuilder
     {
         Match matchParams = OutputRegex().Match(data);
 
-        if (matchParams.Success)
+        if (!matchParams.Success)
         {
-            var statusCode = (HttpStatusCode)int.Parse(matchParams.Groups[1].Value, CultureInfo.InvariantCulture);
-            return statusCode;
+            // Create an error message for the user
+            var errorMessage =
+                "An error occurred while parsing the data response. The HTTP status code could not be obtained. " +
+                "Please check the following:\n" +
+                "- The URL of the request is valid and reachable\n" +
+                "- The format and content of the data response are correct and expected\n" +
+                "- The network connection is stable and reliable\n" +
+                "If the error persists, please contact the support team for assistance.";
+
+            throw new ArgumentException(errorMessage, nameof(data));
         }
 
-        // Create an error message for the user
-        var errorMessage = 
-            "An error occurred while parsing the data response. The HTTP status code could not be obtained. " +
-            "Please check the following:\n" +
-            "- The URL of the request is valid and reachable\n" +
-            "- The format and content of the data response are correct and expected\n" +
-            "- The network connection is stable and reliable\n" +
-            "If the error persists, please contact the support team for assistance.";
-
-        throw new ArgumentException(errorMessage, nameof(data));
+        var statusCode = (HttpStatusCode)int.Parse(matchParams.Groups[1].Value, CultureInfo.InvariantCulture);
+        return statusCode;
     }
 
     private static StringContent GetContent(string data)
     {
         Match matchHtml = HtmlRegex().Match(data);
 
-        if (matchHtml.Success)
+        if (!matchHtml.Success)
         {
-            string content = matchHtml.Groups[1].Value;
-            var stringContent = new StringContent(content);
-            return stringContent;
+            // Create an error message for the user
+            var errorMessage =
+                "An error occurred while parsing the data response. The HTTP response content could not be obtained. " +
+                "Please check the following:\n" +
+                "- The URL of the request is valid and reachable\n" +
+                "- The format and content of the data response are correct and expected\n" +
+                "- The network connection is stable and reliable\n" +
+                "If the error persists, please contact the support team for assistance.";
+
+            throw new ArgumentException(errorMessage, nameof(data));
         }
 
-        // Create an error message for the user
-        var errorMessage =
-            "An error occurred while parsing the data response. The HTTP response content could not be obtained. " +
-            "Please check the following:\n" +
-            "- The URL of the request is valid and reachable\n" +
-            "- The format and content of the data response are correct and expected\n" +
-            "- The network connection is stable and reliable\n" +
-            "If the error persists, please contact the support team for assistance.";
+        string content = matchHtml.Groups[1].Value;
+        var stringContent = new StringContent(content);
 
-        throw new ArgumentException(errorMessage, nameof(data));
+        return stringContent;
     }
 
     private static Dictionary<string, string> GetHttpResponseHeaders(string data)
     {
         Match matchHeaders = ResponseHeaders().Match(data);
 
-        if (matchHeaders.Success)
+        if (!matchHeaders.Success)
         {
-            string content = matchHeaders.Groups[1].Value;
+            // Create an error message for the user
+            var errorMessage =
+                "An error occurred while parsing the data response. The HTTP response headers could not be obtained. " +
+                "Please check the following:\n" +
+                "- The URL of the request is valid and reachable\n" +
+                "- The format and content of the data response are correct and expected\n" +
+                "- The network connection is stable and reliable\n" +
+                "If the error persists, please contact the support team for assistance.";
 
-            // Create a new dictionary<string, string> to store http headers
-            var dictionary = new Dictionary<string, string>();
-
-            // Split the text by newline character to get each header line
-            var lines = content.Split('\n');
-
-            // Loop through each line
-            foreach (var line in lines)
-            {
-                // Split the line by colon character to get the key and the value
-                var parts = line.Split(':');
-
-                // Check if the line has exactly two parts
-                if (parts.Length == 2)
-                {
-                    // Trim any whitespace from the key and the value
-                    var key = parts[0].Trim();
-                    var value = parts[1].Trim();
-
-                    // Add the key-value pair to the dictionary
-                    dictionary.Add(key, value);
-                }
-            }
-
-            return dictionary;
+            throw new ArgumentException(errorMessage, nameof(data));
         }
 
-        // Create an error message for the user
-        var errorMessage =
-            "An error occurred while parsing the data response. The HTTP response headers could not be obtained. " +
-            "Please check the following:\n" +
-            "- The URL of the request is valid and reachable\n" +
-            "- The format and content of the data response are correct and expected\n" +
-            "- The network connection is stable and reliable\n" +
-            "If the error persists, please contact the support team for assistance.";
+        string content = matchHeaders.Groups[1].Value;
 
-        throw new ArgumentException(errorMessage, nameof(data));
+        // Create a new dictionary<string, string> to store http headers
+        var dictionary = new Dictionary<string, string>();
+
+        // Split the text by newline character to get each header line
+        var lines = content.Split('\n');
+
+        // Loop through each line
+        foreach (var line in lines)
+        {
+            // Split the line by colon character to get the key and the value
+            var parts = line.Split(':');
+
+            // Check if the line has exactly two parts
+            if (parts.Length == 2)
+            {
+                // Trim any whitespace from the key and the value
+                var key = parts[0].Trim();
+                var value = parts[1].Trim();
+
+                // Add the key-value pair to the dictionary
+                dictionary.Add(key, value);
+            }
+        }
+
+        return dictionary;
     }
 
     private static string? GetErrorMessage(string? data)

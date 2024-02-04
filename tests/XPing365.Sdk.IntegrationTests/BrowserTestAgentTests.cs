@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Net.Mail;
 using Microsoft.Extensions.DependencyInjection;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestSteps;
@@ -10,12 +9,12 @@ using XPing365.Sdk.Core.Components.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
 using Microsoft.Net.Http.Headers;
-using System.Linq;
 using System.Text;
 using System.Collections;
 
 namespace XPing365.Sdk.IntegrationTests;
 
+[SingleThreaded]
 [SetUpFixture]
 [TestFixtureSource(typeof(TestFixtureProvider), nameof(TestFixtureProvider.ServiceProvider))]
 public class BrowserTestAgentTests(IServiceProvider serviceProvider)
@@ -223,8 +222,9 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         static void RequestReceived(HttpListenerRequest request) { };
 
         using Task testServer = InMemoryHttpServer.TestServer(
-            responseBuilder,
-            requestReceived ?? RequestReceived);
+            responseBuilder, 
+            requestReceived ?? RequestReceived, 
+            cancellationToken);
 
         var testAgent = _serviceProvider.GetRequiredService<BrowserTestAgent>();
 
