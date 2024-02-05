@@ -1,6 +1,5 @@
 ﻿using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability.TestSteps.HeadlessBrowser;
-using XPing365.Sdk.Availability.TestSteps.HeadlessBrowser.Internals;
 using XPing365.Sdk.Common;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Components;
@@ -24,15 +23,18 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
-        using var browser = _headlessBrowserFactory.CreateClient(CreateBrowserContext(settings));
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
+        await using HeadlessBrowserClient browser = await _headlessBrowserFactory
+            .CreateClientAsync(CreateBrowserContext(settings))
+            .ConfigureAwait(false);
+#pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
+
         using var instrumentation = new InstrumentationLog(startStopwatch: true);
 
         TestStep testStep = null!;
         try
         { 
-            WebPage webPage = await browser
-                .GetAsync(url, cancellationToken)
-                .ConfigureAwait(false);
+            WebPage webPage = await browser.GetAsync(url).ConfigureAwait(false);
             context.SessionBuilder.PropertyBag.AddOrUpdateProperty(
                 PropertyBagKeys.HttpResponseMessage, webPage.HttpResponseMessage);
             byte[] buffer = await ReadAsByteArrayAsync(
@@ -59,8 +61,7 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
         return new BrowserContext
         {
             Timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout),
-            UserAgent = values?.FirstOrDefault(),
-            Script = Scripts.LoadHtml
+            UserAgent = values?.FirstOrDefault()
         };
     }
 

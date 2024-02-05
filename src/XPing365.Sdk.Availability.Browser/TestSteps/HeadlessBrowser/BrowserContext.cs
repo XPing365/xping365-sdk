@@ -1,14 +1,12 @@
-﻿using XPing365.Sdk.Availability.TestSteps.HeadlessBrowser.Internals;
+﻿using Microsoft.Playwright;
 
 namespace XPing365.Sdk.Availability.TestSteps.HeadlessBrowser;
 
 public class BrowserContext
 {
-    public static FileInfo BrowserExecutable => new("phantomjs");
+    public string Type { get; set; } = BrowserType.Chromium;
 
     public TimeSpan Timeout { get; set; } = TimeSpan.Zero;
 
     public string? UserAgent { get; set; }
-
-    internal Script Script { get; set; } = Scripts.LoadHtml;
 }

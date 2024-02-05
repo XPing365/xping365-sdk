@@ -8,18 +8,13 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Playwright" Version="1.41.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\XPing365.Sdk.Availability\XPing365.Sdk.Availability.csproj" />
     <ProjectReference Include="..\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj" />
     <ProjectReference Include="..\XPing365.Sdk.Core\XPing365.Sdk.Core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Update="Scripts\LoadHtml.js">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 
 </Project>

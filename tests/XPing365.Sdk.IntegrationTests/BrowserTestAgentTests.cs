@@ -1,16 +1,15 @@
 ﻿using System.Net;
+using System.Text;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestSteps;
-using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Components.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
-using Microsoft.Net.Http.Headers;
-using System.Text;
-using System.Collections;
 
 namespace XPing365.Sdk.IntegrationTests;
 
@@ -41,6 +40,30 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
 
         // Assert
         Assert.That(session.State, Is.EqualTo(expectedTestSessionState));
+    }
+
+    [Test]
+    public async Task ResponseHttpContentTypeHeaderHasCorrectValue()
+    {
+        // Arrange
+        const string expectedContentType = "text/html";
+        const string expectedCharSet = "utf-8";
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder)
+            .ConfigureAwait(false);
+
+        var contentType = session.PropertyBag.GetProperty<HttpResponseMessage>(PropertyBagKeys.HttpResponseMessage)
+            .Content.Headers.ContentType;
+
+        // Assert
+        Assert.That(contentType, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(contentType.MediaType, Is.EqualTo(expectedContentType));
+            Assert.That(contentType.CharSet, Is.EqualTo(expectedCharSet));
+        });
     }
 
     [Test]
@@ -125,20 +148,12 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    public async Task HeadleddBrowserRequestSenderHasExpectedErrorMessageWhenTimeouts()
+    public async Task HeadlessBrowserRequestSenderHasExpectedErrorMessageWhenTimeouts()
     {
         // Arrange
-        const string expectedErrMsg = 
-            "Error 1000: Message: Sorry, we encountered a network error while loading the web page.\n" +
-            "This could be caused by various factors, such as:\n" +
-            "- The web page is not available or reachable\n" +
-            "- The network connection is unstable or interrupted\n" +
-            "- The headless browser settings are not configured properly\n" +
-            "Please check the following:\n" +
-            "- The URL of the web page is valid and correct\n" +
-            "- The timeout value for the test session is sufficient and not exceeded by the request duration\n" +
-            "- The network connection is stable and reliable\n" +
-            "If the problem persists, please contact us for further assistance.";
+        const string expectedErrMsg =
+            "Error 1000: Message: Timeout 1000ms exceeded.\nCall log:\n  - navigating to \"http://localhost:8080/\", " +
+            "waiting until \"load\"";
 
         TestSettings settings = TestSettings.DefaultForAvailability;
         settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestTimeout, TimeSpan.FromSeconds(1));
@@ -155,12 +170,13 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
 
             // Set the headers for the response
             response.StatusCode = (int)HttpStatusCode.OK;
-            response.ContentType = "text/html";
+            response.ContentType = "text/html; charset=utf-8";
             response.ContentLength64 = fileStream.Length;
 
             // Write the file contents to the response stream
             fileStream.CopyTo(response.OutputStream);
             fileStream.Close();
+            response.Close();
         }
 
         // Act
@@ -257,7 +273,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
 
         // Set the headers for the response
         response.StatusCode = (int)HttpStatusCode.OK;
-        response.ContentType = "text/html";
+        response.ContentType = "text/html; charset=utf-8";
         response.ContentLength64 = fileStream.Length;
 
         // Write the file contents to the response stream
