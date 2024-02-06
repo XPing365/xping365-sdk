@@ -1,8 +1,12 @@
 ﻿using Microsoft.Playwright;
 
-namespace XPing365.Sdk.Availability.TestSteps.HeadlessBrowser;
+namespace XPing365.Sdk.Availability.TestSteps.HeadlessBrowser.Internals;
 
-public sealed class HeadlessBrowserFactory : IHeadlessBrowserFactory
+// This class is being used in DependencyInjection and as such shows as never instantiated thus disabling the warning.
+
+#pragma warning disable CA1812 // internal class that is apparently never instantiated
+internal sealed class DefaultHeadlessBrowserFactory : IHeadlessBrowserFactory
+#pragma warning restore CA1812 // internal class that is apparently never instantiated
 {
     private bool _disposedValue;
     private IPlaywright? _playwright;

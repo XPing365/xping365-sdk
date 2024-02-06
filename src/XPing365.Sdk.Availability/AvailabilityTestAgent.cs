@@ -15,7 +15,7 @@ namespace XPing365.Sdk.Availability;
 /// </summary>
 /// <example>
 /// <code>
-/// using XPing365.Sdk.Availability;
+/// using XPing365.Sdk.Availability.DependencyInjection;
 /// 
 /// Host.CreateDefaultBuilder()
 ///     .ConfigureServices(services =>

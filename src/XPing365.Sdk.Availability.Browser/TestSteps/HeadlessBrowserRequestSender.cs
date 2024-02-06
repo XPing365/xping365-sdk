@@ -6,6 +6,20 @@ using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Availability.TestSteps;
 
+/// <summary>
+/// The HeadlessBrowserRequestSender class is a subclass of the TestComponent abstract class that implements the 
+/// ITestAgent interface. It is used to send HTTP requests to a web application using a headless browser, such as 
+/// Chromium, Firefox, or WebKit. It uses the Playwright library to create and control the headless browser instance. 
+/// It also supports taking screenshots, generating reports, and handling errors. 
+/// </summary>
+/// <param name="headlessBrowserFactory"><see cref="IHeadlessBrowserFactory"/> implementation instance.</param>
+/// <remarks>
+/// The constructor takes an <see cref="IHeadlessBrowserFactory"/> parameter, which is an interface that defines a 
+/// method to create a headless browser instance. The XPing365 SDK provides a default implementation of this interface, 
+/// called DefaultHeadlessBrowserFactory, which based on the <see cref="BrowserContext"/> creates a Chromium, WebKit or 
+/// Firefox headless browser instance. You can also implement your own custom headless browser factory by implementing 
+/// the <see cref="IHeadlessBrowserFactory"/> interface.
+/// </remarks>
 public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headlessBrowserFactory) :
     TestComponent(StepName, TestStepType.ActionStep)
 {
@@ -13,6 +27,15 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
 
     private readonly IHeadlessBrowserFactory _headlessBrowserFactory = headlessBrowserFactory;
 
+    /// <summary>
+    /// This method performs the test step operation asynchronously.
+    /// </summary>
+    /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
+    /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
+    /// <param name="context">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
+    /// this operation.</param>
+    /// <returns><see cref="TestStep"/> object.</returns>
     public override async Task HandleAsync(
         Uri url,
         TestSettings settings,
