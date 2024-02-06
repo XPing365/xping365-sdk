@@ -21,7 +21,7 @@ public static class TestFixtureProvider
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(implementationInstance: Mock.Of<IProgress<TestStep>>());
-            services.AddAvailabilityTestAgent();
+            services.AddHttpClientTestAgent();
             services.AddBrowserTestAgent();
         });
 

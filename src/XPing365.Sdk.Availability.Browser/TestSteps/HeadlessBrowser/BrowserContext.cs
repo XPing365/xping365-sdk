@@ -30,4 +30,10 @@ public class BrowserContext
     /// The default value is null, which means the default user agent of the browser type will be used.
     /// </summary>
     public string? UserAgent { get; set; }
+
+    /// <summary>
+    /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport.
+    /// Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#viewport">viewport emulation</a>.
+    /// </summary>
+    public ViewportSize? ViewportSize { get; set; }
 }

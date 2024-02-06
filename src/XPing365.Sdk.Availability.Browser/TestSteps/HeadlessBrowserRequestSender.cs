@@ -1,4 +1,5 @@
 ﻿using Microsoft.Net.Http.Headers;
+using Microsoft.Playwright;
 using XPing365.Sdk.Availability.TestSteps.HeadlessBrowser;
 using XPing365.Sdk.Common;
 using XPing365.Sdk.Core;
@@ -85,7 +86,13 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
         return new BrowserContext
         {
             Timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout),
-            UserAgent = values?.FirstOrDefault()
+            UserAgent = values?.FirstOrDefault(),
+            Type = settings.BrowserType,
+            ViewportSize = settings.BrowserViewportSize != null ? new ViewportSize
+            {
+                Height = settings.BrowserViewportSize.Value.Height,
+                Width = settings.BrowserViewportSize.Value.Width
+            } : null
         };
     }
 

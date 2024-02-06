@@ -103,7 +103,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             response.Close(); // By closing a response it can be send to client.
         }
 
-        TestSettings testSettings = TestSettings.DefaultForAvailability;
+        TestSettings testSettings = TestSettings.DefaultForHttpClient;
         testSettings.RetryHttpRequestWhenFailed = false;
         testSettings.FollowHttpRedirectionResponses = false;
 
@@ -128,7 +128,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         const string expectedErrMsg = 
             "Error 1000: Message: The request was canceled due to the configured HttpClient.Timeout of 1 seconds " +
             "elapsing.";
-        TestSettings settings = TestSettings.DefaultForAvailability;
+        TestSettings settings = TestSettings.DefaultForHttpClient;
         settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestTimeout, TimeSpan.FromSeconds(1));
 
         void ResponseBuilder(HttpListenerResponse response)
@@ -157,7 +157,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Arrange
         const string userAgent = "Chrome/51.0.2704.64 Safari/537.36";
 
-        TestSettings settings = TestSettings.DefaultForAvailability;
+        TestSettings settings = TestSettings.DefaultForHttpClient;
         var httpRequestHeaders = new Dictionary<string, IEnumerable<string>>
         {
             { HeaderNames.UserAgent, [userAgent] }
@@ -261,7 +261,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             requestReceived ?? RequestReceived, 
             cts.Token);
         
-        var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
+        var testAgent = _serviceProvider.GetRequiredService<HttpClientTestAgent>();
 
         if (component != null)
         {
@@ -271,7 +271,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.DefaultForAvailability, 
+                settings: settings ?? TestSettings.DefaultForHttpClient, 
                 cancellationToken: cts.Token)
             .ConfigureAwait(false);
 

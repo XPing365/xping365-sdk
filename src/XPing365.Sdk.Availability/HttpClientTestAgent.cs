@@ -6,7 +6,7 @@ using XPing365.Sdk.Core.Components.Session;
 namespace XPing365.Sdk.Availability;
 
 /// <summary>
-/// The AvailabilityTestAgent class is a concrete implementation of the <see cref="TestAgent"/> class that is used to 
+/// The HttpClientTestAgent class is a concrete implementation of the <see cref="TestAgent"/> class that is used to 
 /// perform availability tests. This class consist of following action test steps: 
 /// <see cref="DnsLookup"/>, <see cref="IPAddressAccessibilityCheck"/> and <see cref="SendHttpRequest"/> to perform the 
 /// availability tests. All action steps are performed in a specific order, and their results are added as 
@@ -20,21 +20,21 @@ namespace XPing365.Sdk.Availability;
 /// Host.CreateDefaultBuilder()
 ///     .ConfigureServices(services =>
 ///     {
-///         services.AddAvailabilityTestAgent();
+///         services.AddHttpClientTestAgent();
 ///     });
 /// 
-/// var testAgent = _serviceProvider.GetRequiredService&lt;AvailabilityTestAgent&gt;();
+/// var testAgent = _serviceProvider.GetRequiredService&lt;HttpClientTestAgent&gt;();
 /// 
 /// TestContext session = await testAgent
 ///     .RunAsync(
 ///         new Uri("www.demoblaze.com"),
-///         TestSettings.DefaultForAvailability)
+///         TestSettings.DefaultForHttpClient)
 ///     .ConfigureAwait(false);
 /// </code>
 /// </example>
 /// <param name="httpClientFactory"><see cref="IHttpClientFactory"/> implementation instance.</param>
 /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
-public sealed class AvailabilityTestAgent(IHttpClientFactory httpClientFactory, IServiceProvider serviceProvider) : 
+public sealed class HttpClientTestAgent(IHttpClientFactory httpClientFactory, IServiceProvider serviceProvider) : 
     TestAgent(serviceProvider, new Pipeline(name: PipelineName, [
         new DnsLookup(), 
         new IPAddressAccessibilityCheck(), 

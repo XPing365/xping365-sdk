@@ -35,11 +35,11 @@ sealed class Program
         command.SetHandler(async (InvocationContext context) =>
         {
             Uri url = context.ParseResult.GetValueForOption(urlOption)!;
-            var testAgent = host.Services.GetRequiredService<AvailabilityTestAgent>();
+            var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
             testAgent.Container.AddComponent(CreateValidationPipeline());
 
             TestSession session = await testAgent
-                .RunAsync(url, settings: TestSettings.DefaultForAvailability);
+                .RunAsync(url, settings: TestSettings.DefaultForHttpClient);
             context.Console.WriteLine("\nSummary:");
             context.Console.WriteLine($"{session}");
             context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -53,7 +53,7 @@ sealed class Program
             .ConfigureServices((services) =>
             {
                 services.AddTransient<IProgress<TestStep>, Progress>();
-                services.AddAvailabilityTestAgent();
+                services.AddHttpClientTestAgent();
             })
             .ConfigureLogging(logging =>
             {
