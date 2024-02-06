@@ -1,5 +1,4 @@
-﻿using XPing365.Sdk.Common;
-using XPing365.Sdk.Core.Common;
+﻿using XPing365.Sdk.Core.Common;
 
 namespace XPing365.Sdk.Core.Components.Session;
 

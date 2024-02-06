@@ -7,7 +7,7 @@ namespace XPing365.Sdk.Common;
 /// <summary>
 /// This class provide extension methods to help verify parameters validity.
 /// </summary>
-public static class ArgumentValidation
+internal static class ArgumentValidation
 {
     /// <summary>
     /// Basic Validation helper to verify parameter null validity.

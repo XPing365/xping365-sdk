@@ -12,7 +12,5 @@
     <InternalsVisibleTo Include="XPing365.Sdk.UnitTests" />
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj" />
-  </ItemGroup>
+  <Import Project="..\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems" Label="Shared" />
 </Project>

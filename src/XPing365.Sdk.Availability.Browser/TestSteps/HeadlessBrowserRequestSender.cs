@@ -2,6 +2,7 @@
 using XPing365.Sdk.Availability.TestSteps.HeadlessBrowser;
 using XPing365.Sdk.Common;
 using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Availability.TestSteps;

@@ -10,6 +10,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Common\ArgumentValidationTests.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <InternalsVisibleTo Include="DynamicProxyGenAssembly2" />
   </ItemGroup>
 
@@ -25,7 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\XPing365.Sdk.Availability\XPing365.Sdk.Availability.csproj" />
-    <ProjectReference Include="..\..\src\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj" />
     <ProjectReference Include="..\..\src\XPing365.Sdk.Core\XPing365.Sdk.Core.csproj" />
   </ItemGroup>
 

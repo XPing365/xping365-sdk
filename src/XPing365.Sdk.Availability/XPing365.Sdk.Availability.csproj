@@ -12,7 +12,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj" />
     <ProjectReference Include="..\XPing365.Sdk.Core\XPing365.Sdk.Core.csproj" />
   </ItemGroup>
 
@@ -20,5 +19,7 @@
     <InternalsVisibleTo Include="XPing365.Sdk.IntegrationTests" />
     <InternalsVisibleTo Include="XPing365.Sdk.UnitTests" />
   </ItemGroup>
+
+  <Import Project="..\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems" Label="Shared" />
   
 </Project>
