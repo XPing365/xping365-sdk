@@ -78,7 +78,7 @@ public static class DependencyInjectionExtension
 
         services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
         services.AddTransient<AvailabilityTestAgent>();
-        
+
         return services;
     }
 }

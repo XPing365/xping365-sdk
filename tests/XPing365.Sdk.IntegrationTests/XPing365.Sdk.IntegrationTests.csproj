@@ -17,8 +17,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\XPing365.Sdk.Availability.Browser\XPing365.Sdk.Availability.Browser.csproj" />
     <ProjectReference Include="..\..\src\XPing365.Sdk.Availability\XPing365.Sdk.Availability.csproj" />
     <ProjectReference Include="..\..\src\XPing365.Sdk.Core\XPing365.Sdk.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="HttpServer\Pages\JavascriptPage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="HttpServer\Pages\SimplePage.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

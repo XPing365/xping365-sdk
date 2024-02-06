@@ -23,9 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Availability",
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1313130-03E1-4238-BB93-74BD2E0084C1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp", "samples\ConsoleApp\ConsoleApp.csproj", "{29F6A072-EA33-408E-96B0-44934852C7C3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "samples\ConsoleApp\ConsoleApp.csproj", "{29F6A072-EA33-408E-96B0-44934852C7C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPing365.Sdk.Common", "src\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj", "{2A479683-3119-4645-A6B7-7B91CA550932}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Common", "src\XPing365.Sdk.Common\XPing365.Sdk.Common.csproj", "{2A479683-3119-4645-A6B7-7B91CA550932}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPing365.Sdk.Availability.Browser", "src\XPing365.Sdk.Availability.Browser\XPing365.Sdk.Availability.Browser.csproj", "{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -57,6 +59,10 @@ Global
 		{2A479683-3119-4645-A6B7-7B91CA550932}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2A479683-3119-4645-A6B7-7B91CA550932}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2A479683-3119-4645-A6B7-7B91CA550932}.Release|Any CPU.Build.0 = Release|Any CPU
+		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -68,6 +74,7 @@ Global
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A} = {464CE18C-1C75-473C-812A-E958172BC048}
 		{29F6A072-EA33-408E-96B0-44934852C7C3} = {B1313130-03E1-4238-BB93-74BD2E0084C1}
 		{2A479683-3119-4645-A6B7-7B91CA550932} = {464CE18C-1C75-473C-812A-E958172BC048}
+		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B} = {464CE18C-1C75-473C-812A-E958172BC048}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EAD876E-2071-435E-AEC4-D3DEF2F4A328}

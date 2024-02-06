@@ -32,7 +32,9 @@ public record TestStep(
     /// Gets the start date of the test step.
     /// </summary>
     public DateTime StartDate { get; } = StartDate.RequireCondition(
-        condition: date => date >= DateTime.Today.ToUniversalTime(),
+        // To prevent a difference between StartDate and this condition, we subtract 60 sec from the present date.
+        // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at 12:00. 
+        condition: date => date >= (DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60)),
         parameterName: nameof(StartDate),
         message: Errors.IncorrectStartDate);
 
@@ -45,7 +47,7 @@ public record TestStep(
     public override string ToString()
     {
         string msg = $"{StartDate} " +
-            $"({Math.Round(Duration.TotalMilliseconds, 0)}ms) " +
+            $"({TotalTime(Duration)}) " +
             $"[{Type}] " +
             $"{Name} " +
             $"{Result.GetDisplayName()}.";
@@ -56,5 +58,15 @@ public record TestStep(
         }
 
         return msg;
+    }
+
+    private string TotalTime(TimeSpan duration)
+    {
+        if (duration.TotalSeconds >= 1)
+        {
+            return $"{Math.Round(Duration.TotalSeconds, 2)}[s]";
+        }
+
+        return $"{Math.Round(Duration.TotalMilliseconds, 0)}[ms]";
     }
 }

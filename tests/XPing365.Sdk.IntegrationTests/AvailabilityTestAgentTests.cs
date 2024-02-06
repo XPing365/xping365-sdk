@@ -3,7 +3,6 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using Moq;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestSteps;
 using XPing365.Sdk.Availability.Validators;
@@ -126,9 +125,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     public async Task SentHttpRequestStepHasExpectedErrorMessageWhenTimeouts()
     {
         // Arrange
-        const string expectedErrMsg = "Error 1000: Exception of type System.Threading.Tasks.TaskCanceledException " +
-            "occured. Message: The request was canceled due to the configured HttpClient.Timeout of 1 seconds " +
-            "elapsing..";
+        const string expectedErrMsg = 
+            "Error 1000: Message: The request was canceled due to the configured HttpClient.Timeout of 1 seconds " +
+            "elapsing.";
         TestSettings settings = TestSettings.DefaultForAvailability;
         settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestTimeout, TimeSpan.FromSeconds(1));
 

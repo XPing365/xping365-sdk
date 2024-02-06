@@ -1,4 +1,5 @@
-﻿using XPing365.Sdk.Core.Common;
+﻿using System.Drawing;
+using XPing365.Sdk.Core.Common;
 
 namespace XPing365.Sdk.Core.Components;
 
@@ -42,7 +43,14 @@ public sealed class TestSettings
     public bool ContinueOnFailure { get; set; }
 
     /// <summary>
-    /// Gets a TestSettings object with default settings for server availability testing.
+    /// Gets or sets a value used to specify the size of the browser viewport for the web tests. It is a Size structure 
+    /// that contains the width and height values in pixels. The default value is null, which means the browser will use 
+    /// the maximum available size.
+    /// </summary>
+    public Size? BrowserViewPort { get; set; }
+
+    /// <summary>
+    /// Gets a TestSettings object with default settings for http client testing.
     /// The returned object has PingDontFragmetOption property set to true and the PingTTLOption property set to 64.
     /// See <see cref="PropertyBagKeys.PingDontFragmetOption"/> and <see cref="PropertyBagKeys.PingTTLOption"/> for more 
     /// information. It also has Http request timeout set to <see cref="DefaultHttpRequestTimeoutInSeconds"/> value.
@@ -62,6 +70,29 @@ public sealed class TestSettings
             return testSettings;
         }
     }
+
+    /// <summary>
+    /// Gets a TestSettings object with default settings for headless browser testing.
+    /// The returned object has PingDontFragmetOption property set to true and the PingTTLOption property set to 64.
+    /// See <see cref="PropertyBagKeys.PingDontFragmetOption"/> and <see cref="PropertyBagKeys.PingTTLOption"/> for more 
+    /// information. It also has Http request timeout set to <see cref="DefaultHttpRequestTimeoutInSeconds"/> value.
+    /// </summary>
+    public static TestSettings DefaultForBrowser
+    {
+        get
+        {
+            var testSettings = new TestSettings();
+            testSettings.PropertyBag.AddOrUpdateProperties(new Dictionary<PropertyBagKey, object>
+            {
+                { PropertyBagKeys.PingDontFragmetOption, true },
+                { PropertyBagKeys.PingTTLOption, 64 },
+                { PropertyBagKeys.HttpRequestTimeout, TimeSpan.FromSeconds(DefaultHttpRequestTimeoutInSeconds) }
+            });
+
+            return testSettings;
+        }
+    }
+
 
     /// <summary>
     /// Returns HTTP method stored in the current test settings instance.

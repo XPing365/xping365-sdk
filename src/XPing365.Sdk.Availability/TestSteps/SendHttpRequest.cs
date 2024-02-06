@@ -109,11 +109,11 @@ public sealed class SendHttpRequest(IHttpClientFactory httpClientFactory) :
         return httpClient;
     }
 
-    private static HttpRequestMessage CreateHttpRequestMessage(Uri uri, TestSettings settings)
+    private static HttpRequestMessage CreateHttpRequestMessage(Uri url, TestSettings settings)
     {
         return new HttpRequestMessage()
         {
-            RequestUri = uri,
+            RequestUri = url,
             Method = settings.GetHttpMethod(),
             Content = settings.GetHttpContent()
         };
