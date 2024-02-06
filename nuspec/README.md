@@ -31,19 +31,19 @@ using XPing365.Availability.DependencyInjection;
 Host.CreateDefaultBuilder()
     .ConfigureServices(services =>
     {
-        services.AddAvailabilityTestAgent();
+        services.AddHttpClientTestAgent();
     });
 ```
 
 ```c#
 using XPing365.Availability
 
-var testAgent = _serviceProvider.GetRequiredService<AvailabilityTestAgent>();
+var testAgent = _serviceProvider.GetRequiredService<HttpClientTestAgent>();
 
 TestSession session = await testAgent
     .RunAsync(
         new Uri("www.demoblaze.com"),
-        TestSettings.DefaultForAvailability)
+        TestSettings.DefaultForHttpClient)
     .ConfigureAwait(false);
 ```
 

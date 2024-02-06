@@ -22,13 +22,13 @@ public sealed class TestSettings
 
     /// <summary>
     /// Gets or sets a boolean value which determines whether to retry HTTP requests when they fail. Default is true, 
-    /// unless specified differently in <see cref="DefaultForAvailability"/>.
+    /// unless specified differently in <see cref="DefaultForHttpClient"/>.
     /// </summary>
     public bool RetryHttpRequestWhenFailed { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a boolean value which determines whether to follow HTTP redirection responses. Default is true, 
-    /// unless specified differently in <see cref="DefaultForAvailability"/>.
+    /// unless specified differently in <see cref="DefaultForHttpClient"/>.
     /// </summary>
     public bool FollowHttpRedirectionResponses { get; set; } = true;
 
@@ -45,9 +45,26 @@ public sealed class TestSettings
     /// <summary>
     /// Gets or sets a value used to specify the size of the browser viewport for the web tests. It is a Size structure 
     /// that contains the width and height values in pixels. The default value is null, which means the browser will use 
-    /// the maximum available size.
+    /// its default available viewport.
     /// </summary>
-    public Size? BrowserViewPort { get; set; }
+    public Size? BrowserViewportSize { get; set; }
+
+    /// <summary>
+    /// Gets or sets a value which specifies the browser type to use for the web tests. It can be one of the values from 
+    /// the BrowserType enum in the Playwright library, such as “chromium”, “firefox”, or “webkit”. The default value 
+    /// is “chromium”.
+    /// </summary>
+    /// <remarks>
+    /// The BrowserType property is used by the HeadlessBrowserTestAgent class to create a new browser instance of the 
+    /// specified type. For example, you can set this property as follows
+    /// <code>
+    /// var settings = new TestSettings
+    /// {
+    ///     BrowserType = BrowserType.Firefox;
+    /// }
+    /// </code>
+    /// </remarks>
+    public string BrowserType { get; set; } = "chromium";
 
     /// <summary>
     /// Gets a TestSettings object with default settings for http client testing.
@@ -55,7 +72,7 @@ public sealed class TestSettings
     /// See <see cref="PropertyBagKeys.PingDontFragmetOption"/> and <see cref="PropertyBagKeys.PingTTLOption"/> for more 
     /// information. It also has Http request timeout set to <see cref="DefaultHttpRequestTimeoutInSeconds"/> value.
     /// </summary>
-    public static TestSettings DefaultForAvailability
+    public static TestSettings DefaultForHttpClient
     {
         get
         {

@@ -65,10 +65,10 @@ class Program
         command.SetHandler(async (InvocationContext context) =>
         {
             Uri url = context.ParseResult.GetValueForOption(urlOption)!;
-            var testAgent = host.Services.GetRequiredService<AvailabilityTestAgent>();
+            var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
 
             TestSession session = await testAgent
-                .RunAsync(url, settings: TestSettings.DefaultForAvailability);
+                .RunAsync(url, settings: TestSettings.DefaultForHttpClient);
             context.Console.WriteLine("\nSummary:");
             context.Console.WriteLine($"{session}");
             context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -82,7 +82,7 @@ class Program
             .ConfigureServices((services) =>
             {
                 services.AddTransient<IProgress<TestStep>, Progress>();
-                services.AddAvailabilityTestAgent();
+                services.AddHttpClientTestAgent();
             })
             .ConfigureLogging(logging =>
             {
@@ -115,7 +115,7 @@ class Progress(ILogger<Program> logger) : IProgress<TestStep>
 }
 ```
 
-The `IProgress<TestStep>` interface is implemented by this class, which is called on every test step performed by `AvailabilityTestAgent` during its testing operation. This allows to monitor the progress of the test execution.
+The `IProgress<TestStep>` interface is implemented by this class, which is called on every test step performed by `HttpClientTestAgent` during its testing operation. This allows to monitor the progress of the test execution.
 
 The preceding code we added earlier does following:
 
@@ -127,7 +127,7 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         .ConfigureServices((services) =>
         {
             services.AddTransient<IProgress<TestStep>, Progress>();
-            services.AddAvailabilityTestAgent();
+            services.AddHttpClientTestAgent();
         })
         .ConfigureLogging(logging =>
         {
@@ -162,7 +162,7 @@ command.SetHandler(async (InvocationContext context) =>
 return await command.InvokeAsync(args);
 ```
 
-- Handler method retrieves `AvailabilityTestAgent` service and runs availability test operations with default test settings against the `url` value: 
+- Handler method retrieves `HttpClientTestAgent` service and runs availability test operations with default test settings against the `url` value: 
 
 ```csharp
 
@@ -170,10 +170,10 @@ command.SetHandler(async (InvocationContext context) =>
 {
     (...)
 
-    var testAgent = host.Services.GetRequiredService<AvailabilityTestAgent>();
+    var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
 
     TestSession session = await testAgent
-        .RunAsync(url, settings: TestSettings.DefaultForAvailability);
+        .RunAsync(url, settings: TestSettings.DefaultForHttpClient);
 });
 
 return await command.InvokeAsync(args);
@@ -271,7 +271,7 @@ new ServerContentResponseValidator(
         $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")
 ```
 
-- In the command handler reference the newly added `Pipeline` in the `AvailabilityTestAgent` as follows:
+- In the command handler reference the newly added `Pipeline` in the `HttpClientTestAgent` as follows:
 
 ```csharp
 testAgent.Container.AddComponent(CreateValidationPipeline());
@@ -279,7 +279,7 @@ testAgent.Container.AddComponent(CreateValidationPipeline());
 
 ## Test the new app with validation pipeline
 
-Now if you try to run the app, you get additional test steps performed by the `AvailabilityTestAgent` in the order in which they were added:
+Now if you try to run the app, you get additional test steps performed by the `HttpClientTestAgent` in the order in which they were added:
 
 ```console
 ConsoleApp.exe --url http://demoblaze.com

@@ -55,7 +55,8 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
 
         var options = new BrowserNewPageOptions
         {
-            UserAgent = Context.UserAgent
+            UserAgent = Context.UserAgent, 
+            ViewportSize = Context.ViewportSize
         };
 
         var page = await _browser.NewPageAsync(options).ConfigureAwait(false);

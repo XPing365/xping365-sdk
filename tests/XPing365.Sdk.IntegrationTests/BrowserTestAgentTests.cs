@@ -125,7 +125,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         // Arrange
         const string userAgent = "Chrome/51.0.2704.64 Safari/537.36";
 
-        TestSettings settings = TestSettings.DefaultForAvailability;
+        TestSettings settings = TestSettings.DefaultForHttpClient;
         var httpRequestHeaders = new Dictionary<string, IEnumerable<string>>
         {
             { HeaderNames.UserAgent, [userAgent] }
@@ -155,7 +155,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             "Error 1000: Message: Timeout 1000ms exceeded.\nCall log:\n  - navigating to \"http://localhost:8080/\", " +
             "waiting until \"load\"";
 
-        TestSettings settings = TestSettings.DefaultForAvailability;
+        TestSettings settings = TestSettings.DefaultForHttpClient;
         settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestTimeout, TimeSpan.FromSeconds(1));
 
         void ResponseBuilder(HttpListenerResponse response)
@@ -252,7 +252,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.DefaultForAvailability,
+                settings: settings ?? TestSettings.DefaultForHttpClient,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
