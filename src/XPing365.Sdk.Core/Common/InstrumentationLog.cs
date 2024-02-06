@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
+using XPing365.Sdk.Common;
 
-namespace XPing365.Sdk.Common;
+namespace XPing365.Sdk.Core.Common;
 
 /// <summary>
 /// This class provides a set utilities that can be used to log data related to code execution time.
