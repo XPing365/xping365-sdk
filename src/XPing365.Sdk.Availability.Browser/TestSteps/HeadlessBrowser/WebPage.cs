@@ -12,9 +12,14 @@
 /// Actual results are then transfered to the <see cref="Core.Components.Session.TestSession"/> objects to its
 /// PropertyBag. 
 /// </remarks>
-public class WebPage(HttpResponseMessage responseMessage)
+public class WebPage
 {
-    private readonly HttpResponseMessage _responseMessage = responseMessage;
+    private readonly HttpResponseMessage _responseMessage;
+
+    public WebPage(HttpResponseMessage responseMessage)
+    {
+        _responseMessage = responseMessage;
+    }
 
     /// <summary>
     /// A read-only property that gets the <see cref="HttpResponseMessage"/> object that is associated with the web 
