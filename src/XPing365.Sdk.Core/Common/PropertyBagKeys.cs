@@ -30,6 +30,9 @@ public static class PropertyBagKeys
     #endregion // DNS Lookup
 
     #region PING 
+
+    public readonly static PropertyBagKey PingReply = new(nameof(PingReply));
+
     /// <summary>
     /// Represents the number of times the ping data can be forwarded.
     /// </summary>

@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using XPing365.Sdk.Common;
+using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Components.Session;
+using XPing365.Sdk.Core.Session;
+using XPing365.Sdk.Core.Common;
 
 namespace XPing365.Sdk.Core;
 
@@ -14,7 +15,7 @@ namespace XPing365.Sdk.Core;
 /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
 /// <param name="component"><see cref="ITestComponent"/> object which will be used to perform specific test operation.
 /// </param>
-public abstract class TestAgent(IServiceProvider serviceProvider, ITestComponent component)
+public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent component)
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
@@ -22,6 +23,8 @@ public abstract class TestAgent(IServiceProvider serviceProvider, ITestComponent
     /// Gets the <see cref="ITestComponent"/> instance that represents the container of the current object.
     /// </summary>
     public ITestComponent Container { get; } = component.RequireNotNull(nameof(component));
+
+    internal static List<Type> DataContractSerializationKnownTypes { get; } = [];
 
     /// <summary>
     /// This method initializes the test context for executing the test component. After the test operation is executed, 
@@ -34,7 +37,7 @@ public abstract class TestAgent(IServiceProvider serviceProvider, ITestComponent
     /// <returns>
     /// Returns a Task&lt;TestStession&gt; object that represents the asynchronous outcome of testing operation.
     /// </returns>
-    public virtual async Task<TestSession> RunAsync(
+    public async Task<TestSession> RunAsync(
         Uri url,
         TestSettings settings,
         CancellationToken cancellationToken = default)
@@ -49,8 +52,15 @@ public abstract class TestAgent(IServiceProvider serviceProvider, ITestComponent
         // Initiate test session by recording its start time and the URL of the page being validated.
         context.SessionBuilder.Initiate(url, DateTime.UtcNow);
 
-        // Execute test operation by invoking the HandleAsync method of the Container class.
-        await Container.HandleAsync(url, settings, context, cancellationToken).ConfigureAwait(false);
+        try
+        {
+            // Execute test operation by invoking the HandleAsync method of the Container class.
+            await Container.HandleAsync(url, settings, context, cancellationToken).ConfigureAwait(false);
+        }
+        catch (Exception ex)
+        {
+            context.SessionBuilder.Build(agent: this, error: Errors.ExceptionError(ex));
+        }
 
         TestSession testSession = context.SessionBuilder.GetTestSession();
         return testSession;

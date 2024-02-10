@@ -1,14 +1,17 @@
 ﻿using Microsoft.Extensions.Logging;
 using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Session;
 
 namespace ConsoleApp;
 
-sealed class Progress(ILogger<Program> logger) : IProgress<TestStep>
+public sealed class Progress(ILogger<Program> logger) : IProgress<TestStep>
 {
     private readonly ILogger<Program> _logger = logger;
 
     public void Report(TestStep value)
     {
+        ArgumentNullException.ThrowIfNull(value, nameof(value));
+
         switch (value.Result)
         {
             case TestStepResult.Succeeded:

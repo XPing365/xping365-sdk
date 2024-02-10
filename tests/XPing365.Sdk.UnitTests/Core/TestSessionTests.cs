@@ -1,6 +1,6 @@
 ﻿using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Components.Session;
+using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.UnitTests.Core;
 

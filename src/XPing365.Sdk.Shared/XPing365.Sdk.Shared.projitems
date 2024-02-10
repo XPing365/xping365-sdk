@@ -10,5 +10,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)ArgumentValidation.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)DateTimeExtension.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)EnumExtension.cs" />
   </ItemGroup>
 </Project>

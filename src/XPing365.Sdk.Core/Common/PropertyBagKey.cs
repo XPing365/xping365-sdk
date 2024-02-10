@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using XPing365.Sdk.Common;
+using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Common;
 
@@ -11,6 +11,7 @@ namespace XPing365.Sdk.Core.Common;
 /// The key parameter represents the string value of the PropertyBagKey instance, which is used to 
 /// identify this instance in a <see cref="PropertyBag"/>.
 /// </param>
+[Serializable]
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class PropertyBagKey(string key) : IEquatable<PropertyBagKey?>
 {

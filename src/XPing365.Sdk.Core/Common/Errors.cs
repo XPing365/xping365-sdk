@@ -1,4 +1,4 @@
-﻿using XPing365.Sdk.Common;
+﻿using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Core.Common;

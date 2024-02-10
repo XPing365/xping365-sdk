@@ -2,7 +2,7 @@
     <PropertyGroup>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
-        <NoWarn>1701;1702;CA1031;CA1716</NoWarn>
+        <NoWarn>1701;1702;CA1031;CA1716;CA1848;CA1056</NoWarn>
         <AnalysisLevel>latest</AnalysisLevel>
         <AnalysisMode>All</AnalysisMode>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>

@@ -4,12 +4,12 @@ using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability;
-using XPing365.Sdk.Availability.TestSteps;
+using XPing365.Sdk.Availability.TestActions;
 using XPing365.Sdk.Availability.Validators;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Components.Session;
+using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -146,7 +146,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Assert
         Assert.That(session.Steps.Any(step =>
-            step.Name == SendHttpRequest.StepName &&
+            step.Name == HttpClientRequestSender.StepName &&
             step.Result == TestStepResult.Failed &&
             step.ErrorMessage == expectedErrMsg), Is.True);
     }

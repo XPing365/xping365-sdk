@@ -1,5 +1,5 @@
 ﻿using System.Diagnostics;
-using XPing365.Sdk.Common;
+using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Common;
 

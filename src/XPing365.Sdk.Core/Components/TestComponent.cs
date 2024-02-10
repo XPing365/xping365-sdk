@@ -1,5 +1,6 @@
-﻿using XPing365.Sdk.Common;
-using XPing365.Sdk.Core.Components.Session;
+﻿using XPing365.Sdk.Shared;
+using XPing365.Sdk.Core.Session;
+using System.Runtime.Serialization;
 
 namespace XPing365.Sdk.Core.Components;
 
@@ -9,10 +10,15 @@ namespace XPing365.Sdk.Core.Components;
 /// </summary>
 public abstract class TestComponent : ITestComponent
 {
-    protected TestComponent(string name, TestStepType type)
+    protected TestComponent(string name, TestStepType type, IEnumerable<Type>? dataContractSerializationTypes = null)
     {
         Name = name.RequireNotNullOrEmpty(nameof(name));
         Type = type;
+
+        if (dataContractSerializationTypes != null)
+        {
+            TestAgent.DataContractSerializationKnownTypes.AddRange(dataContractSerializationTypes);
+        }
     }
 
     /// <summary>

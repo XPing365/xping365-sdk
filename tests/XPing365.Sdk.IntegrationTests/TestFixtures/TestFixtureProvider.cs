@@ -2,7 +2,7 @@
 using Microsoft.Extensions.Hosting;
 using XPing365.Sdk.Availability.Browser.DependencyInjection;
 using XPing365.Sdk.Availability.DependencyInjection;
-using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.IntegrationTests.TestFixtures;
 
