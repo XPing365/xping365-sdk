@@ -161,7 +161,14 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         var dataContractSerializer = new DataContractSerializer(
             type: typeof(TestSession),
             knownTypes: GetKnownTypes());
-        dataContractSerializer.WriteObject(writer, this);
+        try
+        {
+            dataContractSerializer.WriteObject(writer, this);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e.Message);
+        }
     }
 
     /// <summary>
@@ -201,6 +208,7 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     }
 
     private static List<Type> GetKnownTypes() => [
+        typeof(TestStep[]),
         typeof(PropertyBag<ISerializable>),
         typeof(Dictionary<PropertyBagKey, ISerializable>),
         ..TestAgent.DataContractSerializationKnownTypes];

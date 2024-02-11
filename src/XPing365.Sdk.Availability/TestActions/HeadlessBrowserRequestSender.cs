@@ -6,6 +6,7 @@ using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Availability.TestBags;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace XPing365.Sdk.Availability.TestActions;
 
@@ -22,12 +23,13 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// Firefox headless browser instance. You can also implement your own custom headless browser factory by implementing 
 /// the <see cref="IHeadlessBrowserFactory"/> interface.
 /// </remarks>
-public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headlessBrowserFactory) :
-    TestComponent(StepName, TestStepType.ActionStep)
+public sealed class HeadlessBrowserRequestSender() : 
+    TestComponent(
+        name: StepName, 
+        type: TestStepType.ActionStep,
+        dataContractSerializationTypes: [typeof(HttpResponseMessageBag)])
 {
     public const string StepName = "Headless browser request";
-
-    private readonly IHeadlessBrowserFactory _headlessBrowserFactory = headlessBrowserFactory;
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -35,6 +37,7 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="context">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>
     /// <returns><see cref="TestStep"/> object.</returns>
@@ -42,14 +45,19 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
         Uri url,
         TestSettings settings,
         TestContext context,
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
+        using IHeadlessBrowserFactory? headlessBrowserFactory = 
+            serviceProvider.GetService<IHeadlessBrowserFactory>() ?? 
+            throw new InvalidProgramException(Errors.HeadlessBrowserNotFound);
+
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
-        await using HeadlessBrowserClient browser = await _headlessBrowserFactory
+        await using HeadlessBrowserClient browser = await headlessBrowserFactory
             .CreateClientAsync(CreateBrowserContext(settings))
             .ConfigureAwait(false);
 #pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
@@ -67,8 +75,8 @@ public sealed class HeadlessBrowserRequestSender(IHeadlessBrowserFactory headles
             testStep = context
                 .SessionBuilder
                 .Build(
-                    key: PropertyBagKeys.HttpResponseMessage, 
-                    propertyBagValue: new HttpResponseMessageBag(webPage.HttpResponseMessage, buffer))
+                    key: HttpResponseMessageBag.Key,
+                    value: new HttpResponseMessageBag(webPage.HttpResponseMessage, buffer))
                 .Build(component: this, instrumentation);
         }
         catch (Exception exception)

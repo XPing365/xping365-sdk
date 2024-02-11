@@ -52,6 +52,11 @@ public static class PropertyBagKeys
 
     #region HTTP
     /// <summary>
+    /// Represents the HTTP response message.
+    /// </summary>
+    public readonly static PropertyBagKey HttpResponseMessage = new(nameof(HttpResponseMessage));
+
+    /// <summary>
     /// Represents the HTTP method.
     /// </summary>
     public readonly static PropertyBagKey HttpMethod = new(nameof(HttpMethod));
@@ -60,12 +65,6 @@ public static class PropertyBagKeys
     /// Represents the HTTP status. 
     /// </summary>
     public readonly static PropertyBagKey HttpStatus = new(nameof(HttpStatus));
-
-    /// <summary>
-    /// Represents the HTTP response message. For more information check 
-    /// <see cref="System.Net.Http.HttpResponseMessage"/>.
-    /// </summary>
-    public readonly static PropertyBagKey HttpResponseMessage = new(nameof(HttpResponseMessage));
 
     /// <summary>
     /// Represents the HTTP reason phrase.

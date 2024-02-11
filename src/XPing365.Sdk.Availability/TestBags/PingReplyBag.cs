@@ -1,6 +1,7 @@
 ﻿using System.Net;
 using System.Net.NetworkInformation;
 using System.Runtime.Serialization;
+using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Availability.TestBags;
@@ -13,6 +14,8 @@ public sealed class PingReplyBag : ISerializable
     public IPAddress Address { get; }
 
     public long RoundtripTime { get; }
+
+    public static PropertyBagKey Key => new(nameof(PingReplyBag));
 
     public PingReplyBag(PingReply pingReply)
     {

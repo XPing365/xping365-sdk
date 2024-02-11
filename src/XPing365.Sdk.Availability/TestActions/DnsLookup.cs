@@ -1,6 +1,5 @@
 ﻿using System.Net;
 using XPing365.Sdk.Availability.TestBags;
-using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
@@ -25,6 +24,7 @@ public sealed class DnsLookup() :
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="session">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>
     /// <returns><see cref="TestStep"/> object.</returns>
@@ -32,6 +32,7 @@ public sealed class DnsLookup() :
         Uri url, 
         TestSettings settings,
         TestContext context,
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
@@ -45,8 +46,8 @@ public sealed class DnsLookup() :
         {
             IPHostEntry resolved = await Dns.GetHostEntryAsync(url.Host, cancellationToken).ConfigureAwait(false);
             context.SessionBuilder.Build(
-                key: PropertyBagKeys.DnsResolvedIPAddresses, 
-                propertyBagValue: new DnsResolvedIPAddressesBag(resolved.AddressList));
+                key: DnsResolvedIPAddressesBag.Key, 
+                value: new DnsResolvedIPAddressesBag(resolved.AddressList));
 
             if (resolved != null && resolved.AddressList.Length != 0) 
             {

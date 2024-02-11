@@ -43,9 +43,9 @@ public interface ITestSessionBuilder
     /// <see cref="ISerializable"/> derived type as a property bag value. 
     /// </summary>
     /// <param name="key">The property bag key that identifies the test session data.</param>
-    /// <param name="propertyBagValue">The property bag value that contains the test session data.</param>
+    /// <param name="value">The property bag value that contains the test session data.</param>
     /// <returns>An instance of the current ITestSessionBuilder that can be used to build the test session.</returns>
-    ITestSessionBuilder Build(PropertyBagKey key, ISerializable propertyBagValue);
+    ITestSessionBuilder Build(PropertyBagKey key, ISerializable  value);
 
     /// <summary>
     /// Builds a test step with the specified component and instrumentation log.

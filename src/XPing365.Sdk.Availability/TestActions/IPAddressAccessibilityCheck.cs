@@ -29,6 +29,7 @@ public sealed class IPAddressAccessibilityCheck() :
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="session">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>
     /// <returns><see cref="TestStep"/> object.</returns>
@@ -36,6 +37,7 @@ public sealed class IPAddressAccessibilityCheck() :
         Uri url,
         TestSettings settings,
         TestContext context,
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
@@ -68,7 +70,7 @@ public sealed class IPAddressAccessibilityCheck() :
                         buffer: [],
                         options: GetOptions(settings)).ConfigureAwait(false);
 
-                    context.SessionBuilder.Build(PropertyBagKeys.PingReply, new PingReplyBag(reply));
+                    context.SessionBuilder.Build(key: PingReplyBag.Key, value: new PingReplyBag(reply));
 
                     if (reply.Status == IPStatus.Success)
                     {
@@ -108,7 +110,10 @@ public sealed class IPAddressAccessibilityCheck() :
 
     private static ReadOnlyCollection<IPAddress>? GetIPAddresses(PropertyBag<ISerializable> propertyBag)
     {
-        propertyBag.TryGetProperty(PropertyBagKeys.DnsResolvedIPAddresses, out DnsResolvedIPAddressesBag? bag);
+        propertyBag.TryGetProperty(
+            key: DnsResolvedIPAddressesBag.Key, 
+            value: out DnsResolvedIPAddressesBag? bag);
+        
         return bag?.IPAddresses;
     }
 }

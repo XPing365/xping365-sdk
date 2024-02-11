@@ -99,7 +99,7 @@ public sealed record TestStep : ISerializable
             .GetValue(nameof(Type), typeof(string))
             .RequireNotNull(nameof(Type)));
         Result = Enum.Parse<TestStepResult>((string)info
-            .GetValue(nameof(Result), typeof(TestStepResult))
+            .GetValue(nameof(Result), typeof(string))
             .RequireNotNull(nameof(Result)));
         ErrorMessage = info.GetValue(nameof(ErrorMessage), typeof(string)) as string;
     }
@@ -126,7 +126,7 @@ public sealed record TestStep : ISerializable
         info.AddValue(nameof(StartDate), StartDate, typeof(DateTime));
         info.AddValue(nameof(Duration), Duration, typeof(TimeSpan));
         info.AddValue(nameof(Type), Type.ToString(), typeof(string));
-        info.AddValue(nameof(Result), Result.ToString(), typeof(TestStepResult));
+        info.AddValue(nameof(Result), Result.ToString(), typeof(string));
         info.AddValue(nameof(ErrorMessage), ErrorMessage, typeof(string));
     }
 }

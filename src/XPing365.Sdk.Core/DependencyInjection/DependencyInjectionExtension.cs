@@ -4,6 +4,7 @@ using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Core.Configurations;
 using XPing365.Sdk.Core.HeadlessBrowser;
 using XPing365.Sdk.Core.HeadlessBrowser.Internals;
+using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Core.DependencyInjection;
 
@@ -16,7 +17,7 @@ public static class DependencyInjectionExtension
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <param name="configuration">The <see cref="HttpClientConfiguration"/>.</param>
     /// <returns><see cref="IServiceCollection"/> object.</returns>
-    public static IServiceCollection AddHttpClientTestAgent(
+    public static IServiceCollection AddHttpClients(
         this IServiceCollection services,
         Action<IServiceProvider, HttpClientConfiguration>? configuration = null)
     {
@@ -77,9 +78,6 @@ public static class DependencyInjectionExtension
                     handledEventsAllowedBeforeBreaking: httpClientConfiguration.HandledEventsAllowedBeforeBreaking,
                     durationOfBreak: httpClientConfiguration.DurationOfBreak));
 
-        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
-        services.AddTransient<TestAgent>();
-
         return services;
     }
 
@@ -89,12 +87,35 @@ public static class DependencyInjectionExtension
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <returns><see cref="IServiceCollection"/> object.</returns>
-    public static IServiceCollection AddBrowserTestAgent(
+    public static IServiceCollection AddBrowserClients(
         this IServiceCollection services)
     {
-        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
         services.AddTransient<IHeadlessBrowserFactory, DefaultHeadlessBrowserFactory>();
-        services.AddTransient<TestAgent>();
+
+        return services;
+    }
+
+    public static IServiceCollection AddTestAgent(
+        this IServiceCollection services,
+        string name,
+        Func<TestAgent, TestAgent> builder)
+    {
+        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
+        services.AddKeyedTransient(
+            serviceKey: name,
+            implementationFactory: (IServiceProvider provider, object? serviceKey) =>
+            {
+                var agent = new TestAgent(provider);
+                return builder(agent);
+            });
+
+        return services;
+    }
+
+    public static IServiceCollection AddTestAgent(this IServiceCollection services)
+    {
+        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
+        services.AddTransient(implementationFactory: (IServiceProvider provider) => new TestAgent(provider));
 
         return services;
     }

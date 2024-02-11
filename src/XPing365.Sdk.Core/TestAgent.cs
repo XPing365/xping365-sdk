@@ -15,14 +15,14 @@ namespace XPing365.Sdk.Core;
 /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
 /// <param name="component"><see cref="ITestComponent"/> object which will be used to perform specific test operation.
 /// </param>
-public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent component)
+public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent? component = null)
 {
     private readonly IServiceProvider _serviceProvider = serviceProvider;
 
     /// <summary>
     /// Gets the <see cref="ITestComponent"/> instance that represents the container of the current object.
     /// </summary>
-    public ITestComponent Container { get; } = component.RequireNotNull(nameof(component));
+    public ITestComponent? Container { get; set; } = component;
 
     internal static List<Type> DataContractSerializationKnownTypes { get; } = [];
 
@@ -54,8 +54,13 @@ public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent c
 
         try
         {
-            // Execute test operation by invoking the HandleAsync method of the Container class.
-            await Container.HandleAsync(url, settings, context, cancellationToken).ConfigureAwait(false);
+            if (Container != null)
+            {
+                // Execute test operation by invoking the HandleAsync method of the Container class.
+                await Container
+                    .HandleAsync(url, settings, context, _serviceProvider, cancellationToken)
+                    .ConfigureAwait(false);
+            }
         }
         catch (Exception ex)
         {
@@ -64,5 +69,31 @@ public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent c
 
         TestSession testSession = context.SessionBuilder.GetTestSession();
         return testSession;
+    }
+
+    public async Task<bool> ProbeAsync(
+        Uri url,
+        TestSettings settings,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(url);
+        ArgumentNullException.ThrowIfNull(settings);
+
+        try
+        {
+            if (Container != null)
+            {
+                // Execute test operation by invoking the ProbeAsync method of the Container class.
+                return await Container
+                    .ProbeAsync(url, settings, _serviceProvider, cancellationToken)
+                    .ConfigureAwait(false);
+            }
+
+            return false;
+        }
+        catch (Exception)
+        {
+            return false;
+        }
     }
 }

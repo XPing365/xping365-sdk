@@ -1,20 +1,14 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
-using System.Net;
-using System.Net.Http.Headers;
-
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Net.Http.Headers;
-using XPing365.Sdk.Availability;
-using XPing365.Sdk.Availability.DependencyInjection;
-//using XPing365.Sdk.Availability.Validators;
 using XPing365.Sdk.Core.Components;
-using System.Text.Json;
-using System;
-using System.Text.Json.Serialization;
 using XPing365.Sdk.Core.Session;
+using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.DependencyInjection;
+using XPing365.Sdk.Availability.TestActions;
+using System.Xml;
 
 namespace ConsoleApp;
 
@@ -36,52 +30,23 @@ public sealed class Program
 
         var command = new RootCommand("Sample application for XPing365.Availability");
         command.AddOption(urlOption);
-        command.SetHandler(async (InvocationContext context) =>
+        command.SetHandler( (InvocationContext context) =>
         {
             Uri url = context.ParseResult.GetValueForOption(urlOption)!;
-            var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
+            //var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
             //testAgent.Container.AddComponent(CreateValidationPipeline());
 
-            TestSession session = await testAgent
-                .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
-                .ConfigureAwait(false);
+            //TestSession session = await testAgent
+            //    .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
+            //    .ConfigureAwait(false);
 
-            try
-            {
-                // Create a stream to write to
-                Stream stream = File.Open("dict.json", FileMode.Open);
+            // Create a stream to write to
+            using Stream stream = File.Open("dict.xml", FileMode.Open);
+            //using XmlDictionaryWriter writer = XmlDictionaryWriter.CreateTextWriter(stream);
+            using XmlDictionaryReader reader = XmlDictionaryReader.CreateTextReader(stream, XmlDictionaryReaderQuotas.Max);
 
-                var options = new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                    //IgnoreReadOnlyFields = true,
-                    //IncludeFields = true,
-                    Converters =
-                    {
-                        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
-                    }
-                };
-                // Serialize the object to a JSON string
-                //await JsonSerializer.SerializeAsync(stream, session, options).ConfigureAwait(false);
+            TestSession session = TestSession.Load(reader)!;
 
-
-
-
-                TestSession? session1 = (await JsonSerializer.DeserializeAsync(stream, typeof(TestSession), options).ConfigureAwait(false)) as TestSession;
-
-                //JsonConvert.SerializeObject(session, new JsonSerializerSettings()
-                //{
-                //    TypeNameHandling = TypeNameHandling.All
-                //});
-
-                // Close the writer and the stream
-                //writer.Close();
-                stream.Close();
-            }
-            catch (Exception e)
-            {
-                context.Console.Write(e.Message);
-            }
             context.Console.WriteLine("\nSummary:");
             context.Console.WriteLine($"{session}");
             context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -95,7 +60,19 @@ public sealed class Program
             .ConfigureServices((services) =>
             {
                 services.AddTransient<IProgress<TestStep>, Progress>();
-                services.AddHttpClientTestAgent();
+                services.AddHttpClients();
+                services.AddTestAgent(
+                    name: "TestAgent", builder: (TestAgent agent) =>
+                    {
+                        agent.Container = new Pipeline(
+                            name: "Availability pipeline",
+                            components: [
+                                new DnsLookup(),
+                                new IPAddressAccessibilityCheck(),
+                                new HttpClientRequestSender()
+                            ]);
+                        return agent;
+                    });
             })
             .ConfigureLogging(logging =>
             {

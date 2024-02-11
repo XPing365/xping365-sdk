@@ -8,6 +8,14 @@ public static class Errors
     public static Error ExceptionError(Exception ex) =>
         new("1000", $"Message: {ex.RequireNotNull(nameof(ex)).Message}");
 
+    public static Error HttpClientsNotFound =>
+        new("1010", $"The service provider does not have any Http clients registered. You need to invoke " +
+            $"`AddHttpClients()` to add them before you can use them.");
+
+    public static Error HeadlessBrowserNotFound =>
+        new("1011", $"The service provider does not have any Headless browsers registered. You need to invoke " +
+            $"`AddBrowserClient()` to add them before you can use them.");
+
     public static Error InsufficientData(TestComponent component) =>
         new("1100", $"Insufficient data to perform \"{component.RequireNotNull(nameof(component)).Name}\" test step.");
 

@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Runtime.Serialization;
+using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Availability.TestBags;
@@ -10,6 +11,7 @@ public sealed class HttpResponseMessageBag : ISerializable
 {
     private readonly byte[] _data;
 
+    public static PropertyBagKey Key => new(nameof(HttpResponseMessageBag));
     public bool IsSuccessStatusCode { get; }
     public HttpStatusCode StatusCode { get; }
     public IDictionary<string, string>? ResponseHeaders { get; }

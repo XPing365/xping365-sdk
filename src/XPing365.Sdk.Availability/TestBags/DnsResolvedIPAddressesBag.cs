@@ -2,6 +2,7 @@
 using XPing365.Sdk.Shared;
 using System.Runtime.Serialization;
 using System.Collections.ObjectModel;
+using XPing365.Sdk.Core.Common;
 
 namespace XPing365.Sdk.Availability.TestBags;
 
@@ -10,6 +11,8 @@ namespace XPing365.Sdk.Availability.TestBags;
 public sealed class DnsResolvedIPAddressesBag : ISerializable
 {
     private readonly IPAddress[] _addresses;
+
+    public static PropertyBagKey Key => new(nameof(DnsResolvedIPAddressesBag));
 
     public ReadOnlyCollection<IPAddress> IPAddresses => _addresses.AsReadOnly();
 

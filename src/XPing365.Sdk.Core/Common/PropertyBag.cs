@@ -18,8 +18,6 @@ public sealed class PropertyBag<TValue> : ISerializable
     /// </summary>
     public int Count => _properties.Count;
 
-    public Type GetPropertyBagValueType => typeof(TValue);
-
     /// <summary>
     /// Gets a read-only collection that contains the keys of the collection.
     /// </summary>

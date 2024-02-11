@@ -38,6 +38,7 @@ public sealed class HttpStatusCodeValidator(
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="context">A <see cref="TestContext"/> object that represents the test context.</param>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel this operation.
     /// </param>
     /// <returns><see cref="TestStep"/> object.</returns>
@@ -45,6 +46,7 @@ public sealed class HttpStatusCodeValidator(
         Uri url,
         TestSettings settings,
         TestContext context,
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));

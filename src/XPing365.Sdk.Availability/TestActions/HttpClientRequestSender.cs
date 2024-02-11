@@ -4,6 +4,7 @@ using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Availability.TestBags;
 using XPing365.Sdk.Core.Configurations;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace XPing365.Sdk.Availability.TestActions;
 
@@ -13,7 +14,7 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// <see cref="HttpClient"/> class, which is used to send the HTTP request.
 /// </summary>
 /// <param name="httpClientFactory"><see cref="IHttpClientFactory"/> implementation instance.</param>
-public sealed class HttpClientRequestSender(IHttpClientFactory httpClientFactory) : 
+public sealed class HttpClientRequestSender() : 
     TestComponent(
         name: StepName, 
         type: TestStepType.ActionStep, 
@@ -21,14 +22,13 @@ public sealed class HttpClientRequestSender(IHttpClientFactory httpClientFactory
 {
     public const string StepName = "Send HTTP Request";
 
-    private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
-
     /// <summary>
     /// This method performs the test step operation asynchronously.
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="context">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>
     /// <returns><see cref="TestStep"/> object.</returns>
@@ -36,13 +36,18 @@ public sealed class HttpClientRequestSender(IHttpClientFactory httpClientFactory
         Uri url,
         TestSettings settings,
         TestContext context,
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        HttpClient httpClient = CreateHttpClient(settings);
+        IHttpClientFactory httpClientFactory =
+            serviceProvider.GetService<IHttpClientFactory>() ??
+            throw new InvalidProgramException(Errors.HttpClientsNotFound);
+
+        using HttpClient httpClient = CreateHttpClient(settings, httpClientFactory);
         using HttpRequestMessage request = CreateHttpRequestMessage(url, settings);
 
         foreach (var httpHeader in settings.GetHttpRequestHeadersOrEmpty())
@@ -60,11 +65,9 @@ public sealed class HttpClientRequestSender(IHttpClientFactory httpClientFactory
                 .ConfigureAwait(false);
             
             byte[] buffer = await ReadAsByteArrayAsync(response.Content, cancellationToken).ConfigureAwait(false);
-            context.SessionBuilder
-                .PropertyBag
-                .AddOrUpdateProperty(
-                    PropertyBagKeys.HttpContent, 
-                    new HttpResponseMessageBag(response, buffer));
+            context.SessionBuilder.Build(
+                key: HttpResponseMessageBag.Key, 
+                value: new HttpResponseMessageBag(response, buffer));
             testStep = context.SessionBuilder.Build(component: this, instrumentation);
         }
         catch (Exception exception)
@@ -88,27 +91,27 @@ public sealed class HttpClientRequestSender(IHttpClientFactory httpClientFactory
         return await httpContent.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
     }
 
-    private HttpClient CreateHttpClient(TestSettings settings)
+    private static HttpClient CreateHttpClient(TestSettings settings, IHttpClientFactory httpClientFactory)
     {
         HttpClient httpClient = null!;
         if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == true)
         {
-            httpClient = _httpClientFactory.CreateClient(
+            httpClient = httpClientFactory.CreateClient(
                 HttpClientConfiguration.HttpClientWithRetryAndFollowRedirect);
         }
         else if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == false)
         {
-            httpClient = _httpClientFactory.CreateClient(
+            httpClient = httpClientFactory.CreateClient(
                 HttpClientConfiguration.HttpClientWithRetryAndNoFollowRedirect);
         }
         else if (settings.RetryHttpRequestWhenFailed == false && settings.FollowHttpRedirectionResponses == false)
         {
-            httpClient = _httpClientFactory.CreateClient(
+            httpClient = httpClientFactory.CreateClient(
                 HttpClientConfiguration.HttpClientWithNoRetryAndNoFollowRedirect);
         }
         else if (settings.RetryHttpRequestWhenFailed == false && settings.FollowHttpRedirectionResponses == true)
         {
-            httpClient = _httpClientFactory.CreateClient(
+            httpClient = httpClientFactory.CreateClient(
                 HttpClientConfiguration.HttpClientWithNoRetryAndFollowRedirect);
         }
 
