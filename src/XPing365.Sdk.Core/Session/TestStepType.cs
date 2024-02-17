@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using XPing365.Sdk.Core.Components;
 
-namespace XPing365.Sdk.Core.Components;
+namespace XPing365.Sdk.Core.Session;
 
 /// <summary>
 /// The TestStepType enum is used to specify the type of <see cref="TestComponent"/>, whether it is an action step or 

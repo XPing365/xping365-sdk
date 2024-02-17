@@ -8,7 +8,7 @@ public sealed class PropertyBagTests
     public void IsEmptyWhenInstantiatedWithDefaultCtor()
     {
         // Arrange
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<IPropertyBagValue>();
 
         Assert.Multiple(() =>
         {
@@ -22,7 +22,8 @@ public sealed class PropertyBagTests
     public void IsEmptyWhenInstantiatedWithEmptyProperties()
     {
         // Arrange
-        var propertyBag = new PropertyBag(properties: (Dictionary<PropertyBagKey, object>)([]));
+        var propertyBag = new PropertyBag<IPropertyBagValue>(
+            properties: (Dictionary<PropertyBagKey, IPropertyBagValue>)([]));
 
         Assert.Multiple(() =>
         {
@@ -36,7 +37,7 @@ public sealed class PropertyBagTests
     public void IsNotEmptyWhenInstantiatedWithNotEmptyProperties()
     {
         // Arrange
-        var propertyBag = new PropertyBag(properties: new Dictionary<PropertyBagKey, object>
+        var propertyBag = new PropertyBag<object>(properties: new Dictionary<PropertyBagKey, object>
         {
             { new PropertyBagKey("key"), new object() }
         });
@@ -53,7 +54,7 @@ public sealed class PropertyBagTests
         const int expectedItemsCount = 1;
         const string keyName = "key";
 
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(new PropertyBagKey(keyName), new object());
@@ -72,7 +73,7 @@ public sealed class PropertyBagTests
         // Arrange
         const int expectedItemsCount = 1;
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -91,7 +92,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -106,7 +107,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -121,7 +122,7 @@ public sealed class PropertyBagTests
         // Arrange
         var key = new PropertyBagKey("key");
         var newKey = new PropertyBagKey("newKey");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -135,7 +136,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         PropertyBagKey key = null!;
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert
         Assert.Throws<ArgumentNullException>(() => propertyBag.AddOrUpdateProperty(key, new object()));
@@ -146,7 +147,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert
         Assert.Throws<ArgumentNullException>(() => propertyBag.AddOrUpdateProperty(key, null!));
@@ -157,7 +158,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         Dictionary<PropertyBagKey, object> properties = null!;
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert
         Assert.Throws<ArgumentNullException>(() => propertyBag.AddOrUpdateProperties(properties));
@@ -173,7 +174,7 @@ public sealed class PropertyBagTests
             { new PropertyBagKey("yek"), new object() }
         };
         int expectedItemsCount = properties.Count;
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperties(properties);
@@ -191,7 +192,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -205,7 +206,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -219,7 +220,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -233,7 +234,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -248,7 +249,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -262,7 +263,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -276,7 +277,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -291,7 +292,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -305,7 +306,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         PropertyBagKey key = null!;
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert
         Assert.Throws<ArgumentNullException>(() => propertyBag.GetProperty(key));
@@ -315,7 +316,7 @@ public sealed class PropertyBagTests
     public void GetPropertyThrowsKeyNotFoundExceptionWhenKeyDoesNotExist()
     {
         // Arrange
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert            
         Assert.Throws<KeyNotFoundException>(() => propertyBag.GetProperty(new PropertyBagKey("no_found")));
@@ -326,7 +327,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         PropertyBagKey key = null!;
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert
         Assert.Throws<ArgumentNullException>(() => propertyBag.GetProperty<object>(key));
@@ -336,7 +337,7 @@ public sealed class PropertyBagTests
     public void GenericGetPropertyThrowsKeyNotFoundExceptionWhenKeyDoesNotExist()
     {
         // Arrange
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Assert            
         Assert.Throws<KeyNotFoundException>(() => propertyBag.GetProperty<object>(new PropertyBagKey("no_found")));
@@ -347,7 +348,7 @@ public sealed class PropertyBagTests
     {
         // Arrange
         var key = new PropertyBagKey("key");
-        var propertyBag = new PropertyBag();
+        var propertyBag = new PropertyBag<object>();
 
         // Act
         propertyBag.AddOrUpdateProperty(key, new object());
@@ -360,7 +361,7 @@ public sealed class PropertyBagTests
     public void ClearRemovesAllPropertes()
     {
         // Arrange
-        var propertyBag = new PropertyBag(new Dictionary<PropertyBagKey, object>
+        var propertyBag = new PropertyBag<object>(new Dictionary<PropertyBagKey, object>
         {
             { new PropertyBagKey("key"), new object() },
             { new PropertyBagKey("yek"), new object() }

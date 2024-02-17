@@ -1,10 +1,11 @@
-﻿using XPing365.Sdk.Core;
-using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Common;
-using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Availability.TestBags;
-using XPing365.Sdk.Core.Configurations;
+﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
+using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Common;
+using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Configurations;
+using XPing365.Sdk.Core.DependencyInjection;
+using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Availability.TestActions;
 
@@ -13,12 +14,11 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// to send an HTTP request. It uses the <see cref="IHttpClientFactory"/> to create an instance of the 
 /// <see cref="HttpClient"/> class, which is used to send the HTTP request.
 /// </summary>
-/// <param name="httpClientFactory"><see cref="IHttpClientFactory"/> implementation instance.</param>
-public sealed class HttpClientRequestSender() : 
-    TestComponent(
-        name: StepName, 
-        type: TestStepType.ActionStep, 
-        dataContractSerializationTypes: [typeof(HttpResponseMessageBag)])
+/// <remarks>
+/// Before using this test component, you need to register the necessary services by calling the 
+/// <see cref="DependencyInjectionExtension.AddHttpClients(IServiceCollection, Action{IServiceProvider, HttpClientConfiguration}?)(IServiceCollection)"/>
+/// method.
+public sealed class HttpClientRequestSender() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     public const string StepName = "Send HTTP Request";
 
@@ -63,12 +63,18 @@ public sealed class HttpClientRequestSender() :
             using HttpResponseMessage response = await httpClient
                 .SendAsync(request, cancellationToken)
                 .ConfigureAwait(false);
-            
+
             byte[] buffer = await ReadAsByteArrayAsync(response.Content, cancellationToken).ConfigureAwait(false);
-            context.SessionBuilder.Build(
-                key: HttpResponseMessageBag.Key, 
-                value: new HttpResponseMessageBag(response, buffer));
-            testStep = context.SessionBuilder.Build(component: this, instrumentation);
+            testStep = context.SessionBuilder
+                .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{response.StatusCode}"))
+                .Build(PropertyBagKeys.HttpVersion, new PropertyBagValue<string>($"{response.Version}"))
+                .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(response.ReasonPhrase))
+                .Build(PropertyBagKeys.HttpResponseHeaders, GetHeaders(response.Headers))
+                .Build(PropertyBagKeys.HttpResponseTrailingHeaders, GetHeaders(response.TrailingHeaders))
+                .Build(PropertyBagKeys.HttpContentHeaders, GetHeaders(response.Content.Headers))
+                .Build(PropertyBagKeys.HttpContent, new PropertyBagValue<byte[]>(buffer))
+                .Build(PropertyBagKeys.HttpResponseMessage, new NonSerializable<HttpResponseMessage>(response))
+                .Build(component: this, instrumentation);
         }
         catch (Exception exception)
         {
@@ -79,6 +85,9 @@ public sealed class HttpClientRequestSender() :
             context.Progress?.Report(testStep);
         }
     }
+
+    private static PropertyBagValue<Dictionary<string, string>> GetHeaders(HttpHeaders headers) =>
+        new(headers.ToDictionary(h => h.Key.ToUpperInvariant(), h => string.Join(";", h.Value)));
 
     private static async Task<byte[]> ReadAsByteArrayAsync(HttpContent httpContent, CancellationToken cancellationToken)
     {
@@ -130,4 +139,3 @@ public sealed class HttpClientRequestSender() :
         };
     }
 }
- 

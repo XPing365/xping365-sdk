@@ -1,7 +1,11 @@
-﻿using XPing365.Sdk.Core.Common;
+﻿using System;
+using Moq;
+using Polly;
+using XPing365.Sdk.Core.Common;
+using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
 
-namespace XPing365.Sdk.UnitTests.Core;
+namespace XPing365.Sdk.UnitTests.Session;
 
 public sealed class TestSessionBuilderTests
 {
@@ -23,6 +27,25 @@ public sealed class TestSessionBuilderTests
 
         // Assert
         Assert.That(builder.HasFailed, Is.False);
+    }
+
+    [Test]
+    public void HasFailedReturnsTrueWhenFailingStepHasBeenAdded()
+    {
+        // Arrange
+        const bool expectedResult = true;
+
+        var builder = new TestSessionBuilder();
+        using var instrumentation = new InstrumentationLog();
+        var mockedComponent = new Mock<ITestComponent>();
+        mockedComponent.SetupGet(c => c.Name).Returns("ComponenName");
+        mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
+
+        // Act
+        builder.Build(mockedComponent.Object, instrumentation, new Error("code", "message"));
+
+        // Assert
+        Assert.That(builder.HasFailed, Is.EqualTo(expectedResult));
     }
 
     [Test]

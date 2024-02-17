@@ -5,8 +5,8 @@ using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Availability.TestBags;
 using Microsoft.Extensions.DependencyInjection;
+using System.Net.Http.Headers;
 
 namespace XPing365.Sdk.Availability.TestActions;
 
@@ -15,19 +15,16 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// ITestComponent interface. It is used to send HTTP requests to a web application using a headless browser, such as 
 /// Chromium, Firefox, or WebKit. It uses the Playwright library to create and control the headless browser instance. 
 /// </summary>
-/// <param name="headlessBrowserFactory"><see cref="IHeadlessBrowserFactory"/> implementation instance.</param>
 /// <remarks>
-/// The constructor takes an <see cref="IHeadlessBrowserFactory"/> parameter, which is an interface that defines a 
-/// method to create a headless browser instance. The XPing365 SDK provides a default implementation of this interface, 
-/// called DefaultHeadlessBrowserFactory, which based on the <see cref="BrowserContext"/> creates a Chromium, WebKit or 
-/// Firefox headless browser instance. You can also implement your own custom headless browser factory by implementing 
-/// the <see cref="IHeadlessBrowserFactory"/> interface.
+/// Before using this test component, you need to register the necessary services by calling the 
+/// <see cref="Core.DependencyInjection.DependencyInjectionExtension.AddBrowserClients(IServiceCollection)"/> method 
+/// which adds <see cref="IHeadlessBrowserFactory"/> factory service. The XPing365 SDK provides a default implementation 
+/// of this interface, called DefaultHeadlessBrowserFactory, which based on the <see cref="BrowserContext"/> creates a 
+/// Chromium, WebKit or Firefox headless browser instance. You can also implement your own custom headless browser 
+/// factory by implementing the <see cref="IHeadlessBrowserFactory"/> interface and adding its implementation into
+/// services.
 /// </remarks>
-public sealed class HeadlessBrowserRequestSender() : 
-    TestComponent(
-        name: StepName, 
-        type: TestStepType.ActionStep,
-        dataContractSerializationTypes: [typeof(HttpResponseMessageBag)])
+public sealed class HeadlessBrowserRequestSender() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     public const string StepName = "Headless browser request";
 
@@ -56,7 +53,7 @@ public sealed class HeadlessBrowserRequestSender() :
             serviceProvider.GetService<IHeadlessBrowserFactory>() ?? 
             throw new InvalidProgramException(Errors.HeadlessBrowserNotFound);
 
-#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task - impossible to enforce this rule
         await using HeadlessBrowserClient browser = await headlessBrowserFactory
             .CreateClientAsync(CreateBrowserContext(settings))
             .ConfigureAwait(false);
@@ -72,11 +69,16 @@ public sealed class HeadlessBrowserRequestSender() :
                     webPage.HttpResponseMessage.Content, 
                     cancellationToken)
                 .ConfigureAwait(false);
-            testStep = context
-                .SessionBuilder
-                .Build(
-                    key: HttpResponseMessageBag.Key,
-                    value: new HttpResponseMessageBag(webPage.HttpResponseMessage, buffer))
+            HttpResponseMessage Response() => webPage.HttpResponseMessage;
+            testStep = context.SessionBuilder
+                .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{Response().StatusCode}"))
+                .Build(PropertyBagKeys.HttpVersion, new PropertyBagValue<string>($"{Response().Version}"))
+                .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(Response().ReasonPhrase))
+                .Build(PropertyBagKeys.HttpResponseHeaders, GetHeaders(Response().Headers))
+                .Build(PropertyBagKeys.HttpResponseTrailingHeaders, GetHeaders(Response().TrailingHeaders))
+                .Build(PropertyBagKeys.HttpContentHeaders, GetHeaders(Response().Content.Headers))
+                .Build(PropertyBagKeys.HttpContent, new PropertyBagValue<byte[]>(buffer))
+                .Build(PropertyBagKeys.HttpResponseMessage, new NonSerializable<HttpResponseMessage>(Response()))
                 .Build(component: this, instrumentation);
         }
         catch (Exception exception)
@@ -88,6 +90,9 @@ public sealed class HeadlessBrowserRequestSender() :
             context.Progress?.Report(testStep);
         }
     }
+
+    private static PropertyBagValue<Dictionary<string, string>> GetHeaders(HttpHeaders headers) =>
+        new(headers.ToDictionary(h => h.Key.ToUpperInvariant(), h => string.Join(";", h.Value)));
 
     private static BrowserContext CreateBrowserContext(TestSettings settings)
     {

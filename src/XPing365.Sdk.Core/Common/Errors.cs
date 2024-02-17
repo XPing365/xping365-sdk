@@ -43,6 +43,6 @@ public static class Errors
         new("1202", $"Missing start time in test session");
 
     public static Error IncorrectStartDate =>
-        new("1300", $"StartDate cannot be in the past.");
+        new("1203", $"StartDate cannot be in the past.");
 
 }

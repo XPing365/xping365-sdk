@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Moq;
-using XPing365.Sdk.Availability.DependencyInjection;
+using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.UnitTests.TestFixtures;
@@ -21,7 +21,7 @@ public static class TestFixtureProvider
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(implementationInstance: Mock.Of<IProgress<TestStep>>());
-            services.AddHttpClientTestAgent();
+            services.AddTestAgent();
         });
 
         var host = builder.Build();

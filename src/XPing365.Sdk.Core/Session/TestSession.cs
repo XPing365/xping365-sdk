@@ -1,10 +1,10 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
 using XPing365.Sdk.Core.Common;
-using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Session;
@@ -43,10 +43,17 @@ namespace XPing365.Sdk.Core.Session;
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public sealed class TestSession : ISerializable, IDeserializationCallback
 {
+    private readonly Uri _url = null!;
+    private readonly DateTime _startDate;
+
     /// <summary>
     /// A Uri object that represents the URL of the page being validated.
     /// </summary>
-    public required Uri Url { get; init; }
+    public required Uri Url 
+    {
+        get => _url;
+        init => _url = value ?? throw new ArgumentNullException(nameof(Url), Errors.MissingUrlInTestSession);
+    }
 
     /// <summary>
     /// Gets the start date of the test session.
@@ -54,7 +61,16 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     /// <value>
     /// A <see cref="DateTime"/> object that represents the start time of the test session.
     /// </value>
-    public required DateTime StartDate { get; init; }
+    public required DateTime StartDate
+    {
+        get => _startDate;
+        init => _startDate = value.RequireCondition(
+            // To prevent a difference between StartDate and this condition, we subtract 60 sec from the present date.
+            // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at 12:00. 
+            condition: date => date >= DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60),
+            parameterName: nameof(StartDate),
+            message: Errors.IncorrectStartDate);
+    }
 
     /// <summary>
     /// Returns a read-only collection of the test steps executed within current test session.
@@ -65,16 +81,16 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     /// Gets or sets the property bag of the test session.
     /// </summary>
     /// <value>
-    /// A PropertyBag&lt;ISerializable&gt; object that contains key-value pairs of various data related to the test 
+    /// A PropertyBag&lt;IPropertyBagValue&gt; object that contains key-value pairs of various data related to the test 
     /// operation, such as resolved IP addresses from DNS lookup, HTTP response headers, HTML content, or captured 
     /// screenshots from the headless browsers. 
     /// </value>
     /// <remarks>
-    /// This property bag requires all objects to inherit from the <see cref="ISerializable"/> interface, so that they 
+    /// This property bag requires all objects to inherit from the <see cref="IPropertyBagValue"/> interface, so that they 
     /// can be serialized and deserialized using the serializers that support the ISerializable interface. This enables 
     /// the property bag to be saved and loaded to and from XML writers and readers.
     /// </remarks>
-    public required PropertyBag<ISerializable> PropertyBag { get; init; }
+    //public required PropertyBag<IPropertyBagValue> PropertyBag { get; init; }
 
     /// <summary>
     /// Gets the state of the test session.
@@ -141,10 +157,6 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         Steps = info.GetValue(nameof(Steps), typeof(TestStep[])) as TestStep[] ?? [];
         State = Enum.Parse<TestSessionState>(
             value: (string)info.GetValue(nameof(State), typeof(string)).RequireNotNull(nameof(State)));
-        PropertyBag = (PropertyBag<ISerializable>)info.GetValue(
-                name: nameof(PropertyBag),
-                type: typeof(PropertyBag<ISerializable>))
-            .RequireNotNull(nameof(PropertyBag));
         DeclineReason = info.GetValue(nameof(DeclineReason), typeof(string)) as string;
     }
 
@@ -161,14 +173,8 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         var dataContractSerializer = new DataContractSerializer(
             type: typeof(TestSession),
             knownTypes: GetKnownTypes());
-        try
-        {
-            dataContractSerializer.WriteObject(writer, this);
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e.Message);
-        }
+
+        dataContractSerializer.WriteObject(writer, this);
     }
 
     /// <summary>
@@ -185,8 +191,8 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         var dataContractSerializer = new DataContractSerializer(
             type: typeof(TestSession),
             knownTypes: GetKnownTypes());
-        var result = dataContractSerializer.ReadObject(reader);
 
+        var result = dataContractSerializer.ReadObject(reader, true);
         return result as TestSession;
     }
 
@@ -209,9 +215,12 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
 
     private static List<Type> GetKnownTypes() => [
         typeof(TestStep[]),
-        typeof(PropertyBag<ISerializable>),
-        typeof(Dictionary<PropertyBagKey, ISerializable>),
-        ..TestAgent.DataContractSerializationKnownTypes];
+        typeof(PropertyBag<IPropertyBagValue>),
+        typeof(Dictionary<PropertyBagKey, IPropertyBagValue>),
+        typeof(PropertyBagValue<byte[]>),
+        typeof(PropertyBagValue<string>),
+        typeof(PropertyBagValue<string[]>),
+        typeof(PropertyBagValue<Dictionary<string, string>>)];
 
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
@@ -219,7 +228,6 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         info.AddValue(nameof(StartDate), StartDate, typeof(DateTime));
         info.AddValue(nameof(Steps), Steps.ToArray(), typeof(TestStep[]));
         info.AddValue(nameof(State), State.ToString(), typeof(string));
-        info.AddValue(nameof(PropertyBag), PropertyBag, typeof(PropertyBag<ISerializable>));
         info.AddValue(nameof(DeclineReason), DeclineReason, typeof(string));
     }
 

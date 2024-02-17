@@ -1,8 +1,8 @@
 ﻿using System.Net;
-using XPing365.Sdk.Availability.TestBags;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Extensions;
 using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Availability.TestValidators;
@@ -58,25 +58,33 @@ public sealed class HttpStatusCodeValidator(
 
         try
         {
-            HttpResponseMessageBag response = context
-                .SessionBuilder
-                .PropertyBag
-                .GetProperty<HttpResponseMessageBag>(PropertyBagKeys.HttpResponseHeaders);
+            var response = context.GetNonSerializablePropertyBagValue<HttpResponseMessage>(
+                PropertyBagKeys.HttpResponseMessage);
 
-            // Perform test step validation.
-            bool isValid = _isValid(response.StatusCode);
-
-            if (isValid)
+            if (response == null)
             {
-                testStep = context.SessionBuilder.Build(component: this, instrumentation);
-            }
-            else
-            {
-                string? errmsg = _errorMessage?.Invoke(response.StatusCode);
                 testStep = context.SessionBuilder.Build(
                     component: this,
                     instrumentation: instrumentation,
-                    error: Errors.ValidationFailed(component: this, errmsg));
+                    error: Errors.InsufficientData(component: this));
+            }
+            else
+            {
+                // Perform test step validation.
+                bool isValid = _isValid(response.StatusCode);
+
+                if (isValid)
+                {
+                    testStep = context.SessionBuilder.Build(component: this, instrumentation);
+                }
+                else
+                {
+                    string? errmsg = _errorMessage?.Invoke(response.StatusCode);
+                    testStep = context.SessionBuilder.Build(
+                        component: this,
+                        instrumentation: instrumentation,
+                        error: Errors.ValidationFailed(component: this, errmsg));
+                }
             }
         }
         catch (Exception exception)

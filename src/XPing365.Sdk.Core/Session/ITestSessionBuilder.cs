@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 
@@ -27,9 +28,9 @@ public interface ITestSessionBuilder
     bool HasFailed { get; }
 
     /// <summary>
-    /// Gets the property bag that stores key-value pairs of items that can be referenced later in the pipeline.
+    /// Gets a read only collection of test steps associated with the current instance of the test session builder.
     /// </summary>
-    PropertyBag<ISerializable> PropertyBag { get; }
+    ReadOnlyCollection<TestStep> Steps { get; }
 
     /// <summary>
     /// Builds a test session that has been declined by the <see cref="TestAgent"/>. 
@@ -45,7 +46,7 @@ public interface ITestSessionBuilder
     /// <param name="key">The property bag key that identifies the test session data.</param>
     /// <param name="value">The property bag value that contains the test session data.</param>
     /// <returns>An instance of the current ITestSessionBuilder that can be used to build the test session.</returns>
-    ITestSessionBuilder Build(PropertyBagKey key, ISerializable  value);
+    ITestSessionBuilder Build(PropertyBagKey key, IPropertyBagValue value);
 
     /// <summary>
     /// Builds a test step with the specified component and instrumentation log.

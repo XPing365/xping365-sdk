@@ -1,10 +1,9 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Polly;
-using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Core.Configurations;
 using XPing365.Sdk.Core.HeadlessBrowser;
 using XPing365.Sdk.Core.HeadlessBrowser.Internals;
-using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Core.DependencyInjection;
 
@@ -82,8 +81,8 @@ public static class DependencyInjectionExtension
     }
 
     /// <summary>
-    /// This extension method adds the BrowserTestAgent service and related services to your application’s service 
-    /// collection.
+    /// This extension method adds the necessary factory service to create headless browser instance into your 
+    /// application’s service collection.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <returns><see cref="IServiceCollection"/> object.</returns>

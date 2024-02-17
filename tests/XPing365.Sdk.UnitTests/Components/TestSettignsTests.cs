@@ -2,12 +2,12 @@
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Components;
 
-namespace XPing365.Sdk.UnitTests.Core;
+namespace XPing365.Sdk.UnitTests.Components;
 
 public sealed class TestSettignsTests
 {
     [Test]
-    public void PropertyBagIsNotNullWhenNewlyinstantiated()
+    public void PropertyBagIsNotNullWhenNewlyInstantiated()
     {
         // Arrange
         var testSettings = new TestSettings();
@@ -89,5 +89,15 @@ public sealed class TestSettignsTests
 
         // Assert
         Assert.That(testSettings.GetHttpRequestHeadersOrEmpty(), Is.EqualTo(httpRequestHeaders));
+    }
+
+    [Test]
+    public void DefaultTestSettingsAlwaysReturnNewInstanceWhenCalled()
+    {
+        // To not affect default instance parameters, this instance should always be recreated.
+        var testSettings1 = TestSettings.DefaultForHttpClient;
+        var testSettings2 = TestSettings.DefaultForHttpClient;
+
+        Assert.That(testSettings1, Is.Not.EqualTo(testSettings2));
     }
 }

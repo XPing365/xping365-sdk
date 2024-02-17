@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using XPing365.Sdk.Availability.Browser.DependencyInjection;
-using XPing365.Sdk.Availability.DependencyInjection;
+using XPing365.Sdk.Core.DependencyInjection;
+using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Session;
+using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Availability.TestActions;
 
 namespace XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -21,8 +23,32 @@ public static class TestFixtureProvider
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(implementationInstance: Mock.Of<IProgress<TestStep>>());
-            services.AddHttpClientTestAgent();
-            services.AddBrowserTestAgent();
+            services.AddHttpClients();
+            services.AddBrowserClients();
+            services.AddTestAgent(
+                name: "HttpClient", builder: (TestAgent agent) =>
+                {
+                    agent.Container = new Pipeline(
+                        name: "Availability pipeline (HttpClient)",
+                        components: [
+                            new DnsLookup(),
+                            new IPAddressAccessibilityCheck(),
+                            new HttpClientRequestSender()
+                        ]);
+                    return agent;
+                });
+            services.AddTestAgent(
+                name: "BrowserClient", builder: (TestAgent agent) =>
+                {
+                    agent.Container = new Pipeline(
+                        name: "Availability pipeline (BrowserClient)",
+                        components: [
+                            new DnsLookup(),
+                            new IPAddressAccessibilityCheck(),
+                            new HeadlessBrowserRequestSender()
+                        ]);
+                    return agent;
+                });
         });
 
         var host = builder.Build();

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace XPing365.Sdk.Core.Components;
+namespace XPing365.Sdk.Core.Session;
 
 /// <summary>
 /// Represents a test step result.

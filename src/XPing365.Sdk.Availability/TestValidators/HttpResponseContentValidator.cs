@@ -1,8 +1,8 @@
 ﻿using System.Net.Http.Headers;
-using XPing365.Sdk.Availability.TestBags;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Extensions;
 using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Availability.TestValidators;
@@ -10,7 +10,7 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// <summary>
 /// The HttpStatusCodeValidator class is a concrete implementation of the <see cref="TestComponent"/> class that is 
 /// used to validate server content response. It takes a Func&lt;byte[], HttpContentHeaders, bool&gt; delegate as a
-/// parameter, which is used to validate the response content. The errorMessage parameter is an optional error message 
+/// parameter, which is used to validate the response content. The onError parameter is an optional error message 
 /// that can be used to provide additional information about the validation failure.
 /// </summary>
 /// <remarks>
@@ -45,7 +45,7 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// 
 ///         return false;
 ///     },
-///     errorMessage: (byte[] buffer, HttpContentHeaders contentHeaders) => 
+///     onError: (byte[] buffer, HttpContentHeaders contentHeaders) => 
 ///         $"The HTTP content response did not contain expected text.");
 /// var validator = new ValidationPipeline(serverContentValidator);
 /// </code>
@@ -53,16 +53,16 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// <param name="isValid">Func&lt;byte[], HttpContentHeaders, bool&gt; delegate used to validate the response 
 /// content.
 /// </param>
-/// <param name="errorMessage">Optional information about the validation failure.</param>
+/// <param name="onError">Optional information about the validation failure.</param>
 public class HttpResponseContentValidator(
-    Func<byte[], IDictionary<string, string>, bool> isValid,
-    Func<byte[], IDictionary<string, string>, string>? errorMessage = null) :
+    Func<byte[], HttpContentHeaders, bool> isValid,
+    Func<byte[], HttpContentHeaders, string>? onError = null) :
         TestComponent(StepName, TestStepType.ValidateStep)
 {
     public const string StepName = "Server content response validation";
 
-    private readonly Func<byte[], IDictionary<string, string>, bool> _isValid = isValid;
-    private readonly Func<byte[], IDictionary<string, string>, string>? _errorMessage = errorMessage;
+    private readonly Func<byte[], HttpContentHeaders, bool> _isValid = isValid;
+    private readonly Func<byte[], HttpContentHeaders, string>? _errorMessage = onError;
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -92,26 +92,34 @@ public class HttpResponseContentValidator(
 
         try
         {
-            HttpResponseMessageBag response = context
-                .SessionBuilder
-                .PropertyBag
-                .GetProperty<HttpResponseMessageBag>(PropertyBagKeys.HttpResponseHeaders);
+            var response = context.GetNonSerializablePropertyBagValue<HttpResponseMessage>(
+                PropertyBagKeys.HttpResponseMessage);
+            var content = context.GetPropertyBagValue<byte[]>(PropertyBagKeys.HttpContent);
 
-            // Perform test step validation.
-            bool isValid = _isValid(response.GetContent(), response.ContentHeaders ?? new Dictionary<string, string>());
-
-            if (isValid)
+            if (response == null || content == null)
             {
-                testStep = context.SessionBuilder.Build(component: this, instrumentation);
-            }
-            else
-            {
-                string? errmsg = _errorMessage?.Invoke(
-                    response.GetContent(), response.ContentHeaders ?? new Dictionary<string, string>());
                 testStep = context.SessionBuilder.Build(
                     component: this,
                     instrumentation: instrumentation,
-                    error: Errors.ValidationFailed(component: this));
+                    error: Errors.InsufficientData(component: this));
+            }
+            else
+            {
+                // Perform test step validation.
+                bool isValid = _isValid(content, response.Content.Headers);
+
+                if (isValid)
+                {
+                    testStep = context.SessionBuilder.Build(component: this, instrumentation);
+                }
+                else
+                {
+                    string? errmsg = _errorMessage?.Invoke(content, response.Content.Headers);
+                    testStep = context.SessionBuilder.Build(
+                        component: this,
+                        instrumentation: instrumentation,
+                        error: Errors.ValidationFailed(component: this));
+                }
             }
         }
         catch (Exception exception)
@@ -125,4 +133,6 @@ public class HttpResponseContentValidator(
 
         return Task.FromResult(testStep);
     }
+
+
 }

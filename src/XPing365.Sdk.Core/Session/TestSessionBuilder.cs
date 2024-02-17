@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Shared;
@@ -15,6 +16,7 @@ public class TestSessionBuilder : ITestSessionBuilder
     private DateTime _startDate = DateTime.MinValue;
     private Error? _error;
     private Uri? _url;
+    private PropertyBag<IPropertyBagValue>? _propertyBag;
 
     /// <summary>
     /// Gets a value indicating whether the test session has failed.
@@ -22,9 +24,9 @@ public class TestSessionBuilder : ITestSessionBuilder
     public bool HasFailed => _steps.Any(step => step.Result == TestStepResult.Failed);
 
     /// <summary>
-    /// Gets the property bag that stores key-value pairs of items that can be referenced later in the test session.
+    /// Gets a collection of test steps associated with the current instance of the test session builder.
     /// </summary>
-    public PropertyBag<ISerializable> PropertyBag { get; } = new PropertyBag<ISerializable>();
+    public ReadOnlyCollection<TestStep> Steps => _steps.AsReadOnly();
 
     /// <summary>
     /// Initializes the test session builder with the specified URL and start date.
@@ -57,12 +59,13 @@ public class TestSessionBuilder : ITestSessionBuilder
     /// <param name="key">The property bag key that identifies the test session data.</param>
     /// <param name="value">The property bag value that contains the test session data.</param>
     /// <returns>An instance of the current ITestSessionBuilder that can be used to build the test session.</returns>
-    public ITestSessionBuilder Build(PropertyBagKey key, ISerializable value)
+    public ITestSessionBuilder Build(PropertyBagKey key, IPropertyBagValue value)
     {
         ArgumentNullException.ThrowIfNull(key, nameof(key));
         ArgumentNullException.ThrowIfNull(value, nameof(value));
 
-        PropertyBag.AddOrUpdateProperty(key, value);
+        _propertyBag ??= new();
+        _propertyBag.AddOrUpdateProperty(key, value);
 
         return this;
     }
@@ -84,11 +87,15 @@ public class TestSessionBuilder : ITestSessionBuilder
             StartDate = instrumentation.StartTime,
             Duration = instrumentation.ElapsedTime,
             Type = component.Type,
+            PropertyBag = _propertyBag,
             Result = TestStepResult.Succeeded,
             ErrorMessage = null
         };
 
         _steps.Add(testStep);
+
+        // Set property bag to null to force its reconstruction when new data is added.
+        _propertyBag = null;
 
         return testStep;
     }
@@ -112,11 +119,15 @@ public class TestSessionBuilder : ITestSessionBuilder
             StartDate = instrumentation.StartTime,
             Duration = instrumentation.ElapsedTime,
             Type = component.Type,
+            PropertyBag = _propertyBag,
             Result = TestStepResult.Failed,
             ErrorMessage = error
         };
 
         _steps.Add(testStep);
+
+        // Set property bag to null to force its reconstruction when new data is added.
+        _propertyBag = null;
 
         return testStep;
     }
@@ -141,11 +152,15 @@ public class TestSessionBuilder : ITestSessionBuilder
             StartDate = instrumentation.StartTime,
             Duration = instrumentation.ElapsedTime,
             Type = component.Type,
+            PropertyBag = _propertyBag,
             Result = TestStepResult.Failed,
             ErrorMessage = Errors.ExceptionError(exception)
         };
 
         _steps.Add(testStep);
+
+        // Set property bag to null to force its reconstruction when new data is added.
+        _propertyBag = null;
 
         return testStep;
     }
@@ -165,10 +180,9 @@ public class TestSessionBuilder : ITestSessionBuilder
 
             var session = new TestSession
             {
-                Url = _url.RequireNotNull(nameof(TestSession.Url)),
+                Url = _url!,
                 StartDate = _startDate,
                 Steps = _steps,
-                PropertyBag = PropertyBag,
                 // Set the test session status to completed to indicate that no further modifications are allowed.
                 State = TestSessionState.Completed,
                 DeclineReason = null
@@ -180,10 +194,9 @@ public class TestSessionBuilder : ITestSessionBuilder
         {
             var session = new TestSession
             {
-                Url = _url.RequireNotNull(nameof(TestSession.Url)),
-                StartDate = _startDate,
+                Url = _url ?? new Uri("/", UriKind.Relative),
+                StartDate = _startDate < DateTime.UtcNow ? DateTime.UtcNow : _startDate,
                 Steps = _steps,
-                PropertyBag = PropertyBag,
                 State = TestSessionState.Declined,
                 DeclineReason = ex.Message
             };

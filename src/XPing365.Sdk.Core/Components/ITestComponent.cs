@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core.Components;
+﻿using XPing365.Sdk.Core.Session;
+
+namespace XPing365.Sdk.Core.Components;
 
 /// <summary>
 /// The ITestComponent interface defines the methods and properties for a TestComponent base class.

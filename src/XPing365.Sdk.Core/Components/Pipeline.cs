@@ -10,7 +10,7 @@ public class Pipeline : CompositeTests
 
     public Pipeline(
         string? name = null,
-        params TestComponent[] components) : base(name ?? StepName)
+        params ITestComponent[] components) : base(name ?? StepName)
     {
         if (components != null)
         {
@@ -53,6 +53,6 @@ public class Pipeline : CompositeTests
             {
                 break;
             }
-        }
+        } 
     }
 }

@@ -1,12 +1,9 @@
-﻿using System.Net.Http.Headers;
-using XPing365.Sdk.Availability.TestActions;
-using XPing365.Sdk.Core;
-using XPing365.Sdk.Shared;
+﻿using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Availability.TestBags;
-using System.Collections.Generic;
+using XPing365.Sdk.Core.Extensions;
+using System.Net.Http.Headers;
 
 namespace XPing365.Sdk.Availability.TestValidators;
 
@@ -29,13 +26,13 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// <param name="isValid">Func&lt;HttpResponseHeaders, bool&gt; delegate to validate the response headers.</param>
 /// <param name="onError">Optional information about the validation failure.</param>
 public class HttpResponseHeadersValidator(
-    Func<IDictionary<string, string>, bool> isValid,
-    Func<IDictionary<string, string>, string>? onError = null) : TestComponent(StepName, TestStepType.ValidateStep)
+    Func<HttpResponseHeaders, bool> isValid,
+    Func<HttpResponseHeaders, string>? onError = null) : TestComponent(StepName, TestStepType.ValidateStep)
 {
     public const string StepName = "Http response headers validation";
 
-    private readonly Func<IDictionary<string, string>, bool> _isValid = isValid;
-    private readonly Func<IDictionary<string, string>, string>? _errorMessage = onError;
+    private readonly Func<HttpResponseHeaders, bool> _isValid = isValid;
+    private readonly Func<HttpResponseHeaders, string>? _errorMessage = onError;
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -63,25 +60,33 @@ public class HttpResponseHeadersValidator(
 
         try
         {
-            HttpResponseMessageBag response = context
-                .SessionBuilder
-                .PropertyBag
-                .GetProperty<HttpResponseMessageBag>(PropertyBagKeys.HttpResponseHeaders);
+            var responseMessage = context.GetNonSerializablePropertyBagValue<HttpResponseMessage>(
+                PropertyBagKeys.HttpResponseMessage);
 
-            // Perform test step validation.
-            bool isValid = _isValid(response.ResponseHeaders ?? new Dictionary<string, string>());
-
-            if (isValid)
+            if (responseMessage == null)
             {
-                testStep = context.SessionBuilder.Build(component: this, instrumentation);
-            }
-            else
-            {
-                string? errmsg = _errorMessage?.Invoke(response.ResponseHeaders ?? new Dictionary<string, string>());
                 testStep = context.SessionBuilder.Build(
                     component: this,
                     instrumentation: instrumentation,
-                    error: Errors.ValidationFailed(component: this, errmsg));
+                    error: Errors.InsufficientData(component: this));
+            }
+            else
+            {
+                // Perform test step validation.
+                bool isValid = _isValid(responseMessage.Headers);
+
+                if (isValid)
+                {
+                    testStep = context.SessionBuilder.Build(component: this, instrumentation);
+                }
+                else
+                {
+                    string? errmsg = _errorMessage?.Invoke(responseMessage.Headers);
+                    testStep = context.SessionBuilder.Build(
+                        component: this,
+                        instrumentation: instrumentation,
+                        error: Errors.ValidationFailed(component: this, errmsg));
+                }
             }
         }
         catch (Exception exception)

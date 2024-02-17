@@ -1,5 +1,6 @@
 ﻿using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Session;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace XPing365.Sdk.Core.Components;
 
@@ -9,15 +10,10 @@ namespace XPing365.Sdk.Core.Components;
 /// </summary>
 public abstract class TestComponent : ITestComponent
 {
-    protected TestComponent(string name, TestStepType type, IEnumerable<Type>? dataContractSerializationTypes = null)
+    protected TestComponent(string name, TestStepType type)
     {
         Name = name.RequireNotNullOrEmpty(nameof(name));
         Type = type;
-
-        if (dataContractSerializationTypes != null)
-        {
-            TestAgent.DataContractSerializationKnownTypes.AddRange(dataContractSerializationTypes);
-        }
     }
 
     /// <summary>
@@ -69,8 +65,8 @@ public abstract class TestComponent : ITestComponent
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
         var context = new TestContext(
-            sessionBuilder: new TestSessionBuilder(),
-            progress: null);
+            sessionBuilder: serviceProvider.GetRequiredService<ITestSessionBuilder>(),
+            progress: serviceProvider.GetService<IProgress<TestStep>>());
 
         // Execute test operation by invoking the HandleAsync method of this class.
         await HandleAsync(url, settings, context, serviceProvider, cancellationToken).ConfigureAwait(false);

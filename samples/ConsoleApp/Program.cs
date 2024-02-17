@@ -9,6 +9,10 @@ using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Availability.TestActions;
 using System.Xml;
+using XPing365.Sdk.Availability.TestValidators;
+using System.Net;
+using Microsoft.Net.Http.Headers;
+using System.Net.Http.Headers;
 
 namespace ConsoleApp;
 
@@ -17,7 +21,7 @@ public sealed class Program
     const int EXIT_SUCCESS = 0;
     const int EXIT_FAILURE = 1;
 
-    //const int MAX_SIZE_IN_BYTES = 153600; // 150kB
+    const int MAX_SIZE_IN_BYTES = 153600; // 150kB
 
     static async Task<int> Main(string[] args)
     {
@@ -30,22 +34,15 @@ public sealed class Program
 
         var command = new RootCommand("Sample application for XPing365.Availability");
         command.AddOption(urlOption);
-        command.SetHandler( (InvocationContext context) =>
+        command.SetHandler(async (InvocationContext context) =>
         {
             Uri url = context.ParseResult.GetValueForOption(urlOption)!;
-            //var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
-            //testAgent.Container.AddComponent(CreateValidationPipeline());
+            var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
+            testAgent.Container?.AddComponent(CreateValidationPipeline());
 
-            //TestSession session = await testAgent
-            //    .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
-            //    .ConfigureAwait(false);
-
-            // Create a stream to write to
-            using Stream stream = File.Open("dict.xml", FileMode.Open);
-            //using XmlDictionaryWriter writer = XmlDictionaryWriter.CreateTextWriter(stream);
-            using XmlDictionaryReader reader = XmlDictionaryReader.CreateTextReader(stream, XmlDictionaryReaderQuotas.Max);
-
-            TestSession session = TestSession.Load(reader)!;
+            TestSession session = await testAgent
+                .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
+                .ConfigureAwait(false);
 
             context.Console.WriteLine("\nSummary:");
             context.Console.WriteLine($"{session}");
@@ -79,20 +76,21 @@ public sealed class Program
                 logging.AddFilter(typeof(HttpClient).FullName, LogLevel.Warning);
             });
 
-    //static Pipeline CreateValidationPipeline() =>
-    //    new(components: [
-    //        new HttpStatusCodeValidator(
-    //            isValid: (HttpStatusCode code) => code == HttpStatusCode.OK,
-    //            errorMessage: (HttpStatusCode code) =>
-    //                $"The HTTP request failed with status code {code}"),
+    static Pipeline CreateValidationPipeline() =>
+        new(name: "Validation pipeline",
+            components: [
+            new HttpStatusCodeValidator(
+                isValid: (HttpStatusCode code) => code == HttpStatusCode.OK,
+                onError: (HttpStatusCode code) =>
+                    $"The HTTP request failed with status code {code}"),
 
-    //        new HttpResponseHeadersValidator(
-    //            isValid: (HttpResponseHeaders headers) => headers.Contains(HeaderNames.Server),
-    //            errorMessage: (HttpResponseHeaders headers) =>
-    //                $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header."),
+            new HttpResponseHeadersValidator(
+                isValid: (HttpResponseHeaders headers) => headers.Contains(HeaderNames.Server),
+                onError: (HttpResponseHeaders headers) =>
+                    $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header."),
 
-    //        new ServerContentResponseValidator(
-    //            isValid: (byte[] content, HttpContentHeaders contentHeaders) => content.Length < MAX_SIZE_IN_BYTES,
-    //            errorMessage: (byte[] content, HttpContentHeaders contentHeaders) =>
-    //                $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")]);
+            new HttpResponseContentValidator(
+                isValid: (byte[] content, HttpContentHeaders contentHeaders) => content.Length < MAX_SIZE_IN_BYTES,
+                onError: (byte[] content, HttpContentHeaders contentHeaders) =>
+                    $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")]);
 }

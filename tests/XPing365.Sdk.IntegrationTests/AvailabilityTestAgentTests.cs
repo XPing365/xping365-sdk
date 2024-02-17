@@ -3,12 +3,12 @@ using System.Net.Http.Headers;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.TestActions;
-using XPing365.Sdk.Availability.Validators;
+using XPing365.Sdk.Availability.TestValidators;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.Extensions;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
@@ -67,7 +67,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         Assert.Multiple(() =>
         {
             Assert.That(session.Steps.Any(step => step.Name == DnsLookup.StepName), Is.True);
-            Assert.That(session.PropertyBag.TryGetProperty(expectedBag, out var ipaddresses), Is.True);
+            Assert.That(session.TryGetPropertyBagValue(expectedBag, out PropertyBagValue<string[]>? ips), Is.True);
         });
     }
 
@@ -79,12 +79,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer().ConfigureAwait(false);
-        
+
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(session.Steps.Any(step => step.Name == IPAddressAccessibilityCheck.StepName), Is.True);
-            Assert.That(session.PropertyBag.TryGetProperty(expectedBag, out var ipaddress), Is.True);
+            Assert.That(session.TryGetPropertyBagValue(expectedBag, out PropertyBagValue<string>? ipAddress), Is.True);
         });
     }
 
@@ -112,12 +112,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             ResponseBuilder, settings: testSettings).ConfigureAwait(false);
 
         // Assert
-        HttpStatusCode? code = null;
+        PropertyBagValue<string>? code = null;
 
         Assert.Multiple(() =>
         {
-            Assert.That(session.PropertyBag.TryGetProperty(PropertyBagKeys.HttpStatus, out code), Is.True);
-            Assert.That(code, Is.EqualTo(httpStatusCode));
+            Assert.That(session.TryGetPropertyBagValue(PropertyBagKeys.HttpStatus, out code), Is.True);
+            Assert.That(Enum.Parse<HttpStatusCode>(code!.Value), Is.EqualTo(httpStatusCode));
         });
     }
 
@@ -197,12 +197,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(ResponseBuilder).ConfigureAwait(false);
 
         // Assert
-        byte[]? byteArray = null;
+        PropertyBagValue<byte[]>? byteArray = null;
 
         Assert.Multiple(() =>
         {
-            Assert.That(session.PropertyBag.TryGetProperty(PropertyBagKeys.HttpContent, out byteArray), Is.True);
-            Assert.That(byteArray is not null && Encoding.UTF8.GetString(byteArray) == responseContent);
+            Assert.That(session.TryGetPropertyBagValue(PropertyBagKeys.HttpContent, out byteArray), Is.True);
+            Assert.That(byteArray is not null && Encoding.UTF8.GetString(byteArray.Value) == responseContent);
         });
     }
 
@@ -211,7 +211,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     {
         // Arrange
         const bool expectedValidityResult = true;
-        var serverContentValidator = new ServerContentResponseValidator(
+        var serverContentValidator = new HttpResponseContentValidator(
             isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => expectedValidityResult);
 
         // Act
@@ -228,7 +228,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Arrange
         var mockProgress = _serviceProvider.GetService<IProgress<TestStep>>();
         var validationPipeline = new Pipeline(components: [
-            new ServerContentResponseValidator(isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => true),
+            new HttpResponseContentValidator(isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => true),
             new HttpStatusCodeValidator(isValid: code => true),
             new HttpResponseHeadersValidator(isValid: headers => true)
         ]);
@@ -261,11 +261,18 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             requestReceived ?? RequestReceived, 
             cts.Token);
         
-        var testAgent = _serviceProvider.GetRequiredService<HttpClientTestAgent>();
+        var testAgent = _serviceProvider.GetRequiredKeyedService<TestAgent>(serviceKey: "HttpClient");
 
         if (component != null)
         {
-            testAgent.Container.AddComponent(component);
+            if (testAgent.Container == null)
+            {
+                testAgent.Container = new Pipeline(components: [component]);
+            }
+            else
+            {
+                testAgent.Container.AddComponent(component);
+            }
         }
 
         TestSession session = await testAgent

@@ -1,12 +1,10 @@
-﻿using System.Net;
+﻿using System.Collections.ObjectModel;
+using System.Net;
 using System.Net.NetworkInformation;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
-using System.Runtime.Serialization;
-using System.Collections.ObjectModel;
 using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Availability.TestBags;
 
 namespace XPing365.Sdk.Availability.TestActions;
 
@@ -15,11 +13,7 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// is used to check the accessibility of an IP address. It uses the mechanisms provided by the operating system to 
 /// check the accessibility of an IP address.
 /// </summary>
-public sealed class IPAddressAccessibilityCheck() : 
-    TestComponent(
-        name: StepName, 
-        type: TestStepType.ActionStep, 
-        dataContractSerializationTypes: [typeof(PingReplyBag)])
+public sealed class IPAddressAccessibilityCheck() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     public const string StepName = "IPAddress accessibility check";
 
@@ -44,7 +38,7 @@ public sealed class IPAddressAccessibilityCheck() :
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
-        ReadOnlyCollection<IPAddress>? addresses = GetIPAddresses(context.SessionBuilder.PropertyBag);
+        ReadOnlyCollection<IPAddress>? addresses = GetIPAddresses(context.SessionBuilder.Steps);
         using var pingSender = new Ping();
         using var instrumentation = new InstrumentationLog(startStopwatch: true);
         bool completed = false;
@@ -70,11 +64,11 @@ public sealed class IPAddressAccessibilityCheck() :
                         buffer: [],
                         options: GetOptions(settings)).ConfigureAwait(false);
 
-                    context.SessionBuilder.Build(key: PingReplyBag.Key, value: new PingReplyBag(reply));
-
                     if (reply.Status == IPStatus.Success)
                     {
-                        testStep = context.SessionBuilder.Build(component: this, instrumentation);
+                        testStep = context.SessionBuilder
+                            .Build(PropertyBagKeys.IPAddress, new PropertyBagValue<string>(address.ToString()))
+                            .Build(component: this, instrumentation);
                         completed = true;
                     }
                     else
@@ -108,12 +102,19 @@ public sealed class IPAddressAccessibilityCheck() :
     private static int GetTimeout(TestSettings settings) =>
         (int)settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout).TotalMilliseconds;
 
-    private static ReadOnlyCollection<IPAddress>? GetIPAddresses(PropertyBag<ISerializable> propertyBag)
+    private static ReadOnlyCollection<IPAddress>? GetIPAddresses(ReadOnlyCollection<TestStep> steps)
     {
-        propertyBag.TryGetProperty(
-            key: DnsResolvedIPAddressesBag.Key, 
-            value: out DnsResolvedIPAddressesBag? bag);
-        
-        return bag?.IPAddresses;
+        PropertyBagValue<string[]>? bag = null;
+
+        if (steps.Any(
+            step => step.PropertyBag != null && 
+            step.PropertyBag.TryGetProperty(key: PropertyBagKeys.DnsResolvedIPAddresses, value: out bag)) && 
+            bag != null)
+        {
+            var result = bag.Value.Select(IPAddress.Parse).ToList();
+            return result.AsReadOnly();
+        }
+
+        return null;
     }
 }

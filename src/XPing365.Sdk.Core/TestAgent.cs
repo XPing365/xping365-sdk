@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Core.Common;
@@ -24,8 +23,6 @@ public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent? 
     /// </summary>
     public ITestComponent? Container { get; set; } = component;
 
-    internal static List<Type> DataContractSerializationKnownTypes { get; } = [];
-
     /// <summary>
     /// This method initializes the test context for executing the test component. After the test operation is executed, 
     /// it constructs a test session that represents the outcome of the operation.
@@ -49,11 +46,11 @@ public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent? 
             sessionBuilder: _serviceProvider.GetRequiredService<ITestSessionBuilder>(),
             progress: _serviceProvider.GetService<IProgress<TestStep>>());
 
-        // Initiate test session by recording its start time and the URL of the page being validated.
-        context.SessionBuilder.Initiate(url, DateTime.UtcNow);
-
         try
         {
+            // Initiate test session by recording its start time and the URL of the page being validated.
+            context.SessionBuilder.Initiate(url, DateTime.UtcNow);
+
             if (Container != null)
             {
                 // Execute test operation by invoking the HandleAsync method of the Container class.

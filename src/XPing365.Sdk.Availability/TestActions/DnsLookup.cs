@@ -1,5 +1,5 @@
 ﻿using System.Net;
-using XPing365.Sdk.Availability.TestBags;
+using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
@@ -10,11 +10,7 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// The DnsLookup class is a concrete implementation of the <see cref="TestComponent"/> class that is used to perform 
 /// a DNS lookup. It uses the mechanisms provided by the operating system to perform DNS lookups.
 /// </summary>
-public sealed class DnsLookup() : 
-    TestComponent(
-        name: StepName, 
-        type: TestStepType.ActionStep, 
-        dataContractSerializationTypes: [typeof(DnsResolvedIPAddressesBag)])
+public sealed class DnsLookup() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     public const string StepName = "DNS lookup";
 
@@ -45,22 +41,24 @@ public sealed class DnsLookup() :
         try
         {
             IPHostEntry resolved = await Dns.GetHostEntryAsync(url.Host, cancellationToken).ConfigureAwait(false);
-            context.SessionBuilder.Build(
-                key: DnsResolvedIPAddressesBag.Key, 
-                value: new DnsResolvedIPAddressesBag(resolved.AddressList));
 
-            if (resolved != null && resolved.AddressList.Length != 0) 
+            if (resolved != null && resolved.AddressList != null && resolved.AddressList.Length != 0)
             {
-                testStep = context.SessionBuilder.Build(this, instrumentation);
+                testStep = context.SessionBuilder
+                    .Build(
+                        key: PropertyBagKeys.DnsResolvedIPAddresses,
+                        value: new PropertyBagValue<string[]>(
+                            Array.ConvertAll(resolved.AddressList, addr => addr.ToString())))
+                    .Build(component: this, instrumentation);
             }
             else
             {
-                testStep = context.SessionBuilder.Build(this, instrumentation, Errors.DnsLookupFailed);
+                testStep = context.SessionBuilder.Build(component: this, instrumentation, Errors.DnsLookupFailed);
             }
         }
         catch (Exception exception)
         {
-            testStep = context.SessionBuilder.Build(this, instrumentation, exception);
+            testStep = context.SessionBuilder.Build(component: this, instrumentation, exception);
         }
         finally
         {

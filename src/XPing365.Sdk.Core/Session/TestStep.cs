@@ -1,7 +1,6 @@
 ﻿using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Common;
 using System.Runtime.Serialization;
-using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Core.Session;
 
@@ -69,6 +68,21 @@ public sealed record TestStep : ISerializable
     public required TestStepResult Result { get; init; }
 
     /// <summary>
+    /// Gets or sets the property bag of the test session.
+    /// </summary>
+    /// <value>
+    /// A PropertyBag&lt;IPropertyBagValue&gt; object that contains key-value pairs of various data related to the test 
+    /// operation, such as resolved IP addresses from DNS lookup, HTTP response headers, HTML content, or captured 
+    /// screenshots from the headless browsers. 
+    /// </value>
+    /// <remarks>
+    /// This property bag requires all objects to inherit from the <see cref="IPropertyBagValue"/> interface, so that 
+    /// they can be serialized and deserialized using the serializers that support the ISerializable interface. This 
+    /// enables the property bag to be saved and loaded to and from XML writers and readers.
+    /// </remarks>
+    public required PropertyBag<IPropertyBagValue>? PropertyBag { get; init; }
+
+    /// <summary>
     /// Gets or sets the error message of the test step.
     /// </summary>
     public string? ErrorMessage { get; init; }
@@ -101,6 +115,9 @@ public sealed record TestStep : ISerializable
         Result = Enum.Parse<TestStepResult>((string)info
             .GetValue(nameof(Result), typeof(string))
             .RequireNotNull(nameof(Result)));
+        PropertyBag = (PropertyBag<IPropertyBagValue>?)info.GetValue(
+                name: nameof(PropertyBag),
+                type: typeof(PropertyBag<IPropertyBagValue>));
         ErrorMessage = info.GetValue(nameof(ErrorMessage), typeof(string)) as string;
     }
 
@@ -127,6 +144,7 @@ public sealed record TestStep : ISerializable
         info.AddValue(nameof(Duration), Duration, typeof(TimeSpan));
         info.AddValue(nameof(Type), Type.ToString(), typeof(string));
         info.AddValue(nameof(Result), Result.ToString(), typeof(string));
+        info.AddValue(nameof(PropertyBag), PropertyBag, typeof(PropertyBag<IPropertyBagValue>));
         info.AddValue(nameof(ErrorMessage), ErrorMessage, typeof(string));
     }
 }

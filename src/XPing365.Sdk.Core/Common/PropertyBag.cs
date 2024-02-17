@@ -11,6 +11,8 @@ namespace XPing365.Sdk.Core.Common;
 [Serializable]
 public sealed class PropertyBag<TValue> : ISerializable
 {
+    private const string SerializableEntryName = "Properties";
+
     private readonly Dictionary<PropertyBagKey, TValue> _properties;
 
     /// <summary>
@@ -26,14 +28,14 @@ public sealed class PropertyBag<TValue> : ISerializable
     public PropertyBag(IDictionary<PropertyBagKey, TValue>? properties = null)
     {
         _properties = properties?.ToDictionary() ?? [];
-    }
+    } 
 
     // Constructor for deserialization
     public PropertyBag(SerializationInfo info, StreamingContext context)
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        if (info.GetValue("Properties", typeof(Dictionary<PropertyBagKey, TValue>)) 
+        if (info.GetValue(SerializableEntryName, typeof(Dictionary<PropertyBagKey, TValue>)) 
             is Dictionary<PropertyBagKey, TValue> properties)
         {
             _properties = properties;
@@ -185,7 +187,9 @@ public sealed class PropertyBag<TValue> : ISerializable
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        //var p = _properties.Select(item => new { Item = item.Key, item.Value }).ToList();
-        info.AddValue("Properties", _properties);
+        var serializable = _properties
+            .Where(item => item.Value is ISerializable)
+            .ToDictionary(i => i.Key, i => i.Value);
+        info.AddValue(SerializableEntryName, serializable);
     }
 }

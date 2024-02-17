@@ -117,7 +117,7 @@ class Progress(ILogger<Program> logger) : IProgress<TestStep>
 
 The `IProgress<TestStep>` interface is implemented by this class, which is called on every test step performed by `HttpClientTestAgent` during its testing operation. This allows to monitor the progress of the test execution.
 
-The preceding code we added earlier does following:
+The preceding code we added earlier in `Program.cs` does following:
 
 - Creates a default host builder and adds availability test agent. It also configures logging mechanism to filter logs coming out from `HttpClient`. 
 
