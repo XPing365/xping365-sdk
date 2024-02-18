@@ -1,7 +1,6 @@
 ﻿using Microsoft.Net.Http.Headers;
 using Microsoft.Playwright;
 using XPing365.Sdk.Core.HeadlessBrowser;
-using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;

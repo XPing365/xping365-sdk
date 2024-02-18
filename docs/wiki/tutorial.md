@@ -65,10 +65,12 @@ class Program
         command.SetHandler(async (InvocationContext context) =>
         {
             Uri url = context.ParseResult.GetValueForOption(urlOption)!;
-            var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
+            var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
 
             TestSession session = await testAgent
-                .RunAsync(url, settings: TestSettings.DefaultForHttpClient);
+                .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
+                .ConfigureAwait(false);
+
             context.Console.WriteLine("\nSummary:");
             context.Console.WriteLine($"{session}");
             context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -82,7 +84,19 @@ class Program
             .ConfigureServices((services) =>
             {
                 services.AddTransient<IProgress<TestStep>, Progress>();
-                services.AddHttpClientTestAgent();
+                services.AddHttpClients();
+                services.AddTestAgent(
+                    name: "TestAgent", builder: (TestAgent agent) =>
+                    {
+                        agent.Container = new Pipeline(
+                            name: "Availability pipeline",
+                            components: [
+                                new DnsLookup(),
+                                new IPAddressAccessibilityCheck(),
+                                new HttpClientRequestSender()
+                            ]);
+                        return agent;
+                    });
             })
             .ConfigureLogging(logging =>
             {
@@ -127,7 +141,19 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         .ConfigureServices((services) =>
         {
             services.AddTransient<IProgress<TestStep>, Progress>();
-            services.AddHttpClientTestAgent();
+            services.AddHttpClients();
+            services.AddTestAgent(
+                name: "TestAgent", builder: (TestAgent agent) =>
+                {
+                    agent.Container = new Pipeline(
+                        name: "Availability pipeline",
+                        components: [
+                            new DnsLookup(),
+                            new IPAddressAccessibilityCheck(),
+                            new HttpClientRequestSender()
+                        ]);
+                    return agent;
+                });
         })
         .ConfigureLogging(logging =>
         {
@@ -170,7 +196,7 @@ command.SetHandler(async (InvocationContext context) =>
 {
     (...)
 
-    var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
+    var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
 
     TestSession session = await testAgent
         .RunAsync(url, settings: TestSettings.DefaultForHttpClient);

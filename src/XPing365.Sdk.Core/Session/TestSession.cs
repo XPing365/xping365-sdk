@@ -13,12 +13,12 @@ namespace XPing365.Sdk.Core.Session;
 /// Represents a test session that contains a collection of test steps and their results.
 /// </summary>
 /// <remarks>
-/// A test session is a unit of testing that performs a specific task or scenario on a target URL. 
-/// It consists of one or more test steps that execute different actions or validations on the URL, such as DNS lookup, 
-/// HTTP request, HTML parsing, or headless browser interaction. A test session has a start date and a duration that 
-/// indicate when and how long the testing took place. It also has a state that indicates the overall status of the test 
-/// session, such as completed, failed, or declined. A test session can store various data related to the test 
-/// operation in a property bag, which is a dictionary of key-value pairs of serializable objects. 
+/// A test session is a class that represents a test execution and its attributes. It consists of one or more test steps 
+/// that execute different actions or validations on the URL, such as DNS lookup, HTTP request, HTML parsing, or 
+/// headless browser interaction. A test session has a start date and a duration that indicate when and how long the 
+/// testing took place. It also has a state that indicates the overall status of the test session, such as completed, 
+/// failed, or declined. A test session can store various data related to the test operation in a property bag, which is 
+/// a dictionary of key-value pairs of serializable objects. 
 /// The property bag can contain data such as resolved IP addresses from DNS lookup, HTTP response headers, HTML 
 /// content, or captured screenshots from the headless browsers.
 /// A test session can be serialized and deserialized to and from XML writers and readers, using the 

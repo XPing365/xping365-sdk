@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Extensions;

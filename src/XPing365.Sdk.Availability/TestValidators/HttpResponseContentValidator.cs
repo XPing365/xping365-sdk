@@ -1,5 +1,4 @@
 ﻿using System.Net.Http.Headers;
-using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Extensions;
@@ -27,7 +26,7 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// </remarks>
 /// <example>
 /// <code>
-/// var serverContentValidator = new ServerContentResponseValidator(
+/// var serverContentValidator = new HttpResponseContentValidator(
 ///     isValid: (byte[] buffer, HttpContentHeaders contentHeaders) =>
 ///     {
 ///         foreach (string encoding in contentHeaders.ContentEncoding)
@@ -47,7 +46,7 @@ namespace XPing365.Sdk.Availability.TestValidators;
 ///     },
 ///     onError: (byte[] buffer, HttpContentHeaders contentHeaders) => 
 ///         $"The HTTP content response did not contain expected text.");
-/// var validator = new ValidationPipeline(serverContentValidator);
+/// var validator = new Pipeline(serverContentValidator);
 /// </code>
 /// </example>
 /// <param name="isValid">Func&lt;byte[], HttpContentHeaders, bool&gt; delegate used to validate the response 

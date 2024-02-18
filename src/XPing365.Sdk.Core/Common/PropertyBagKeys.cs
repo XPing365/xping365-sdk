@@ -1,9 +1,8 @@
-﻿using XPing365.Sdk.Core.Common;
-
-namespace XPing365.Sdk.Core;
+﻿namespace XPing365.Sdk.Core.Common;
 
 /// <summary>
-/// This class is used to provide a set of predefined keys that can be used with the <see cref="PropertyBag"/> class.
+/// This class is used to provide a set of predefined keys that can be used with the <see cref="PropertyBag{TValue}"/> 
+/// class.
 /// </summary>
 /// <remarks>
 /// Since the PropertyBagKeys class is a static class, it cannot be instantiated. The class contains the properties

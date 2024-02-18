@@ -1,5 +1,5 @@
 ﻿using Microsoft.Net.Http.Headers;
-using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.UnitTests.Components;

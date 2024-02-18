@@ -5,11 +5,6 @@ namespace XPing365.Sdk.Core.HeadlessBrowser;
 /// <summary>
 /// This class represents the browser context options that are used to create a new headless browser.
 /// </summary>
-/// <remarks>
-/// Based on the <see cref="TestSettings"/> options, the <see cref="HeadlessBrowserRequestSender"/> class creates a 
-/// BrowserContext object. This object is used by the <see cref="IHeadlessBrowserFactory"/> to make a headless browser 
-/// instance with the same options.
-/// </remarks>
 public class BrowserContext
 {
     /// <summary>

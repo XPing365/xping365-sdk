@@ -1,6 +1,5 @@
 ﻿using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
-using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Configurations;
@@ -18,6 +17,7 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// Before using this test component, you need to register the necessary services by calling the 
 /// <see cref="DependencyInjectionExtension.AddHttpClients(IServiceCollection, Action{IServiceProvider, HttpClientConfiguration}?)(IServiceCollection)"/>
 /// method.
+/// </remarks>
 public sealed class HttpClientRequestSender() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     public const string StepName = "Send HTTP Request";
