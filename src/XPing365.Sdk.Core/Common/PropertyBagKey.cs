@@ -1,16 +1,17 @@
 ﻿using System.Diagnostics;
-using XPing365.Sdk.Common;
+using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Common;
 
 /// <summary>
-/// The PropertyBagKey class is used to represent a key in a <see cref="PropertyBag"/>. 
+/// The PropertyBagKey class is used to represent a key in a <see cref="PropertyBag{TValue}"/>. 
 /// The IEquatable&lt;PropertyBagKey?&gt; interface is implemented to allow for comparison of PropertyBagKey instances.
 /// </summary>
 /// <param name="key">
 /// The key parameter represents the string value of the PropertyBagKey instance, which is used to 
-/// identify this instance in a <see cref="PropertyBag"/>.
+/// identify this instance in a <see cref="PropertyBag{TValue}"/>.
 /// </param>
+[Serializable]
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
 public class PropertyBagKey(string key) : IEquatable<PropertyBagKey?>
 {

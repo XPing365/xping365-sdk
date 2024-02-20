@@ -2,7 +2,7 @@
 
 /// <summary>
 /// The Pipeline class is a concrete implementation of the <see cref="CompositeTests"/> class that is designed to run 
-/// the test components that have been added.
+/// and manage the test components that have been added.
 /// </summary>
 public class Pipeline : CompositeTests
 {
@@ -10,7 +10,7 @@ public class Pipeline : CompositeTests
 
     public Pipeline(
         string? name = null,
-        params TestComponent[] components) : base(name ?? StepName)
+        params ITestComponent[] components) : base(name ?? StepName)
     {
         if (components != null)
         {
@@ -27,12 +27,14 @@ public class Pipeline : CompositeTests
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="session">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel this operation.
     /// </param>
     public override async Task HandleAsync(
         Uri url,
         TestSettings settings,
         TestContext context,
+        IServiceProvider serviceProvider,
         CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(url);
@@ -41,7 +43,9 @@ public class Pipeline : CompositeTests
 
         foreach (var component in Components)
         {
-            await component.HandleAsync(url, settings, context, cancellationToken).ConfigureAwait(false);
+            await component
+                .HandleAsync(url, settings, context, serviceProvider, cancellationToken)
+                .ConfigureAwait(false);
 
             // If the 'ContinueOnFailure' property is set to false and the test context contains a session that has
             // failed, then break the loop.
@@ -49,6 +53,6 @@ public class Pipeline : CompositeTests
             {
                 break;
             }
-        }
+        } 
     }
 }

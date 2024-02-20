@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.Runtime.Serialization;
 
 namespace XPing365.Sdk.Core.Common;
 
@@ -7,9 +8,12 @@ namespace XPing365.Sdk.Core.Common;
 /// All keys are represented by <see cref="PropertyBagKey"/> but values may be of any type. Null values are not 
 /// permitted, since a null entry represents the absence of the key.
 /// </summary>
-public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
+[Serializable]
+public sealed class PropertyBag<TValue> : ISerializable
 {
-    private readonly Dictionary<PropertyBagKey, object> _properties = properties?.ToDictionary() ?? [];
+    private const string SerializableEntryName = "Properties";
+
+    private readonly Dictionary<PropertyBagKey, TValue> _properties;
 
     /// <summary>
     /// Gets the number of items in the collection.
@@ -20,6 +24,27 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     /// Gets a read-only collection that contains the keys of the collection.
     /// </summary>
     public ReadOnlyCollection<PropertyBagKey> Keys => _properties.Keys.ToList().AsReadOnly();
+
+    public PropertyBag(IDictionary<PropertyBagKey, TValue>? properties = null)
+    {
+        _properties = properties?.ToDictionary() ?? [];
+    } 
+
+    // Constructor for deserialization
+    public PropertyBag(SerializationInfo info, StreamingContext context)
+    {
+        ArgumentNullException.ThrowIfNull(info, nameof(info));
+
+        if (info.GetValue(SerializableEntryName, typeof(Dictionary<PropertyBagKey, TValue>)) 
+            is Dictionary<PropertyBagKey, TValue> properties)
+        {
+            _properties = properties;
+        }
+        else
+        {
+            _properties = [];
+        }
+    }
 
     /// <summary>
     /// Determines whether the collection contains an element that has the specified key.
@@ -37,7 +62,7 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     /// If a key is not found in the collection, a new key-value pair is created. If a key is already present in the
     /// collection, the value associated with the key is updated.
     /// </remarks>
-    public void AddOrUpdateProperties(IDictionary<PropertyBagKey, object> properties)
+    public void AddOrUpdateProperties(IDictionary<PropertyBagKey, TValue> properties)
     {
         ArgumentNullException.ThrowIfNull(properties, nameof(properties));
 
@@ -56,7 +81,7 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     /// If a key is not found in the collection, a new key-value pair is created. If a key is already present in the
     /// collection, the value associated with the key is updated.
     /// </remarks>
-    public void AddOrUpdateProperty(PropertyBagKey key, object value)
+    public void AddOrUpdateProperty(PropertyBagKey key, TValue value)
     {
         ArgumentNullException.ThrowIfNull(key);
         ArgumentNullException.ThrowIfNull(value);
@@ -74,7 +99,7 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     /// <param name="value">When this method returns, contains the object value stored in the collection, if
     /// the key is found, or null if the key is not found.</param>
     /// <returns>true if a key was found successfully; otherwise, false</returns>
-    public bool TryGetProperty(PropertyBagKey key, out object? value)
+    public bool TryGetProperty(PropertyBagKey key, out TValue? value)
     {
         ArgumentNullException.ThrowIfNull(key);
 
@@ -93,7 +118,7 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     /// <returns>The value associated with the specified key. If the specified key is not found, this operation
     /// throws a KeyNotFoundException exception.</returns>
     /// <exception cref="KeyNotFoundException">If the specified key is not found.</exception>
-    public object GetProperty(PropertyBagKey key)
+    public TValue GetProperty(PropertyBagKey key)
     {
         ArgumentNullException.ThrowIfNull(key);
 
@@ -104,24 +129,24 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     /// This method attempts to get the value associated with the specified key from the collection and cast it 
     /// to the specified type T.
     /// </summary>
-    /// <typeparam name="TValue">The value type associated with the specified key.</typeparam>
+    /// <typeparam name="T">The value type associated with the specified key.</typeparam>
     /// <param name="key">A key represented as <see cref="PropertyBagKey"/> type.</param>
-    /// <param name="value">When this method returns, contains the value of specified <typeparamref name="TValue"/> type
-    /// stored in the collection, if the key is found, or default value of <typeparamref name="TValue"/> if the key is
+    /// <param name="value">When this method returns, contains the value of specified <typeparamref name="T"/> type
+    /// stored in the collection, if the key is found, or default value of <typeparamref name="T"/> if the key is
     /// not found.
     /// </param>
-    /// <returns>true if a key was found successfully and its type matches with <typeparamref name="TValue"/>; 
+    /// <returns>true if a key was found successfully and its type matches with <typeparamref name="T"/>; 
     /// otherwise, false
     /// </returns>
     /// <remarks>This method does not throw exception when type of a value associated with a given key does not match 
-    /// with <typeparamref name="TValue"/>.
+    /// with <typeparamref name="T"/>.
     /// </remarks>
-    public bool TryGetProperty<TValue>(PropertyBagKey key, out TValue? value)
+    public bool TryGetProperty<T>(PropertyBagKey key, out T? value) where T : TValue
     {
         value = default;
 
         // It is not expected to throw InvalidCastException when property cannot be cast to type T.
-        if (TryGetProperty(key, out object? bag) && bag is TValue TProperty)
+        if (TryGetProperty(key, out TValue? bag) && bag is T TProperty)
         {
             value = TProperty;
             return true;
@@ -132,22 +157,22 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
 
     /// <summary>
     /// Gets the value associated with the specified key from the collection and casts it to the specified type
-    /// <typeparamref name="TValue"/>.
+    /// <typeparamref name="T"/>.
     /// </summary>
-    /// <typeparam name="TValue">The value type associated with the specified key.</typeparam>
+    /// <typeparam name="T">The value type associated with the specified key.</typeparam>
     /// <param name="key">A key represented as <see cref="PropertyBagKey"/> type.</param>
     /// <returns>The value associated with the specified key. If the specified key is not found, this operation
     /// throws a KeyNotFoundException exception. If the specified key is found, however its type does not match
-    /// with <typeparamref name="TValue"/> it throws InvalidCastException.
+    /// with <typeparamref name="T"/> it throws InvalidCastException.
     /// </returns>
     /// <exception cref="KeyNotFoundException">If the specified key is not found.</exception>
-    /// <exception cref="InvalidCastException">If the specified value type <typeparamref name="TValue"/> does not match 
+    /// <exception cref="InvalidCastException">If the specified value type <typeparamref name="T"/> does not match 
     /// with a value type stored in the collection.
     /// </exception>
-    public TValue GetProperty<TValue>(PropertyBagKey key)
+    public T GetProperty<T>(PropertyBagKey key) where T : TValue
     {
         // It is expected to throw InvalidCastException when property cannot be cast to type T.
-        return (TValue)GetProperty(key);
+        return (T)GetProperty(key)!;
     }
 
     /// <summary>
@@ -156,5 +181,15 @@ public class PropertyBag(IDictionary<PropertyBagKey, object>? properties = null)
     public void Clear()
     {
         _properties.Clear();
+    }
+
+    void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
+    {
+        ArgumentNullException.ThrowIfNull(info, nameof(info));
+
+        var serializable = _properties
+            .Where(item => item.Value is ISerializable)
+            .ToDictionary(i => i.Key, i => i.Value);
+        info.AddValue(SerializableEntryName, serializable);
     }
 }

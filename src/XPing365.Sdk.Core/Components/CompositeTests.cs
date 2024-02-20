@@ -1,4 +1,7 @@
-﻿namespace XPing365.Sdk.Core.Components;
+﻿using XPing365.Sdk.Core.Session;
+using XPing365.Sdk.Shared;
+
+namespace XPing365.Sdk.Core.Components;
 
 
 interface ICompositeTests
@@ -26,13 +29,18 @@ public abstract class CompositeTests : TestComponent, ICompositeTests
     /// Adds a new instance of the TestComponent class to the current object.
     /// </summary>
     /// <param name="component">The TestComponent instance to add.</param>
-    public new void AddComponent(ITestComponent component) => _components.Add(component);
+    public new void AddComponent(ITestComponent component) => 
+        _components.Add(component.RequireNotNull(nameof(component)));
 
     /// <summary>
     /// Removes the specified instance of the TestComponent class from the current object.
     /// </summary>
     /// <param name="component">The TestComponent instance to remove.</param>
-    public new void RemoveComponent(ITestComponent component) => _components.Remove(component);
+    /// <returns>
+    /// <c>true</c> if component is successfully removed; otherwise, <c>false</c>. This method also returns <c>false</c>
+    /// when component was not found.
+    /// </returns>
+    public new bool RemoveComponent(ITestComponent component) => _components.Remove(component);
 
     /// <summary>
     /// Gets a read-only collection of the child TestComponent instances of the current object.

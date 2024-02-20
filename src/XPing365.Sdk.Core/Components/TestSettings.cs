@@ -18,7 +18,7 @@ public sealed class TestSettings
     /// <summary>
     /// Gets a property bag which represents the custom properties of the test steps execution.
     /// </summary>
-    public PropertyBag PropertyBag { get; } = new();
+    public PropertyBag<object> PropertyBag { get; } = new();
 
     /// <summary>
     /// Gets or sets a boolean value which determines whether to retry HTTP requests when they fail. Default is true, 

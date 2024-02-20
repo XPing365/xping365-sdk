@@ -31,14 +31,26 @@ using XPing365.Availability.DependencyInjection;
 Host.CreateDefaultBuilder()
     .ConfigureServices(services =>
     {
-        services.AddHttpClientTestAgent();
+        services.AddHttpClients();
+        services.AddTestAgent(
+            name: "TestAgent", builder: (TestAgent agent) =>
+            {
+                agent.Container = new Pipeline(
+                    name: "Availability pipeline",
+                    components: [
+                        new DnsLookup(),
+                        new IPAddressAccessibilityCheck(),
+                        new HttpClientRequestSender()
+                    ]);
+                return agent;
+            });
     });
 ```
 
 ```c#
 using XPing365.Availability
 
-var testAgent = _serviceProvider.GetRequiredService<HttpClientTestAgent>();
+var testAgent = _serviceProvider.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
 
 TestSession session = await testAgent
     .RunAsync(

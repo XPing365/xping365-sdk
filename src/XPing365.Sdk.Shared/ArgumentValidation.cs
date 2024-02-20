@@ -2,7 +2,7 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 
-namespace XPing365.Sdk.Common;
+namespace XPing365.Sdk.Shared;
 
 /// <summary>
 /// This class provide extension methods to help verify parameters validity.

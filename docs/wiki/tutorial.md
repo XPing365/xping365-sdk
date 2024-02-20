@@ -65,10 +65,12 @@ class Program
         command.SetHandler(async (InvocationContext context) =>
         {
             Uri url = context.ParseResult.GetValueForOption(urlOption)!;
-            var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
+            var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
 
             TestSession session = await testAgent
-                .RunAsync(url, settings: TestSettings.DefaultForHttpClient);
+                .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
+                .ConfigureAwait(false);
+
             context.Console.WriteLine("\nSummary:");
             context.Console.WriteLine($"{session}");
             context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
@@ -82,7 +84,19 @@ class Program
             .ConfigureServices((services) =>
             {
                 services.AddTransient<IProgress<TestStep>, Progress>();
-                services.AddHttpClientTestAgent();
+                services.AddHttpClients();
+                services.AddTestAgent(
+                    name: "TestAgent", builder: (TestAgent agent) =>
+                    {
+                        agent.Container = new Pipeline(
+                            name: "Availability pipeline",
+                            components: [
+                                new DnsLookup(),
+                                new IPAddressAccessibilityCheck(),
+                                new HttpClientRequestSender()
+                            ]);
+                        return agent;
+                    });
             })
             .ConfigureLogging(logging =>
             {
@@ -117,7 +131,7 @@ class Progress(ILogger<Program> logger) : IProgress<TestStep>
 
 The `IProgress<TestStep>` interface is implemented by this class, which is called on every test step performed by `HttpClientTestAgent` during its testing operation. This allows to monitor the progress of the test execution.
 
-The preceding code we added earlier does following:
+The preceding code we added earlier in `Program.cs` does following:
 
 - Creates a default host builder and adds availability test agent. It also configures logging mechanism to filter logs coming out from `HttpClient`. 
 
@@ -127,7 +141,19 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         .ConfigureServices((services) =>
         {
             services.AddTransient<IProgress<TestStep>, Progress>();
-            services.AddHttpClientTestAgent();
+            services.AddHttpClients();
+            services.AddTestAgent(
+                name: "TestAgent", builder: (TestAgent agent) =>
+                {
+                    agent.Container = new Pipeline(
+                        name: "Availability pipeline",
+                        components: [
+                            new DnsLookup(),
+                            new IPAddressAccessibilityCheck(),
+                            new HttpClientRequestSender()
+                        ]);
+                    return agent;
+                });
         })
         .ConfigureLogging(logging =>
         {
@@ -170,7 +196,7 @@ command.SetHandler(async (InvocationContext context) =>
 {
     (...)
 
-    var testAgent = host.Services.GetRequiredService<HttpClientTestAgent>();
+    var testAgent = host.Services.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
 
     TestSession session = await testAgent
         .RunAsync(url, settings: TestSettings.DefaultForHttpClient);
@@ -230,17 +256,17 @@ static Pipeline CreateValidationPipeline() =>
     new(components: [
         new HttpStatusCodeValidator(
             isValid: (HttpStatusCode code) => code == HttpStatusCode.OK,
-            errorMessage: (HttpStatusCode code) =>
+            onError: (HttpStatusCode code) =>
                 $"The HTTP request failed with status code {code}"),
 
         new HttpResponseHeadersValidator(
             isValid: (HttpResponseHeaders headers) => headers.Contains(HeaderNames.Server),
-            errorMessage: (HttpResponseHeaders headers) =>
+            onError: (HttpResponseHeaders headers) =>
                 $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header."),
 
         new ServerContentResponseValidator(
             isValid: (byte[] content, HttpContentHeaders contentHeaders) => content.Length < MAX_SIZE_IN_BYTES,
-            errorMessage: (byte[] content, HttpContentHeaders contentHeaders) =>
+            onError: (byte[] content, HttpContentHeaders contentHeaders) =>
                 $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")]);
 ```
 
@@ -249,7 +275,7 @@ static Pipeline CreateValidationPipeline() =>
 ```csharp
 new HttpStatusCodeValidator(
     isValid: (HttpStatusCode code) => code == HttpStatusCode.OK,
-    errorMessage: (HttpStatusCode code) =>
+    onError: (HttpStatusCode code) =>
         $"The HTTP request failed with status code {code}")
 ```
 
@@ -258,7 +284,7 @@ new HttpStatusCodeValidator(
 ```csharp
 new HttpResponseHeadersValidator(
     isValid: (HttpResponseHeaders headers) => headers.Contains(HeaderNames.Server),
-    errorMessage: (HttpResponseHeaders headers) =>
+    onError: (HttpResponseHeaders headers) =>
         $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header.")
 ```
 
@@ -267,7 +293,7 @@ new HttpResponseHeadersValidator(
 ```csharp
 new ServerContentResponseValidator(
     isValid: (byte[] content, HttpContentHeaders contentHeaders) => content.Length < MAX_SIZE_IN_BYTES,
-    errorMessage: (byte[] content, HttpContentHeaders contentHeaders) =>
+    onError: (byte[] content, HttpContentHeaders contentHeaders) =>
         $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")
 ```
 

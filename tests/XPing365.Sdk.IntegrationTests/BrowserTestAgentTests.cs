@@ -2,12 +2,12 @@
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
-using XPing365.Sdk.Availability;
-using XPing365.Sdk.Availability.TestSteps;
+using XPing365.Sdk.Core.Extensions;
+using XPing365.Sdk.Availability.TestActions;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Components.Session;
+using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -54,8 +54,8 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
                 responseBuilder: SimplePageResponseBuilder)
             .ConfigureAwait(false);
 
-        var contentType = session.PropertyBag.GetProperty<HttpResponseMessage>(PropertyBagKeys.HttpResponseMessage)
-            .Content.Headers.ContentType;
+        var contentType = session.GetNonSerializablePropertyBagValue<HttpResponseMessage>(
+            PropertyBagKeys.HttpResponseMessage)!.Content.Headers.ContentType;
 
         // Assert
         Assert.That(contentType, Is.Not.Null);
@@ -96,7 +96,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         Assert.Multiple(() =>
         {
             Assert.That(session.Steps.Any(step => step.Name == DnsLookup.StepName), Is.True);
-            Assert.That(session.PropertyBag.TryGetProperty(expectedBag, out var ipaddresses), Is.True);
+            Assert.That(session.TryGetPropertyBagValue(expectedBag, out PropertyBagValue<string[]>? ips), Is.True);
         });
     }
 
@@ -115,7 +115,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         Assert.Multiple(() =>
         {
             Assert.That(session.Steps.Any(step => step.Name == IPAddressAccessibilityCheck.StepName), Is.True);
-            Assert.That(session.PropertyBag.TryGetProperty(expectedBag, out var ipaddress), Is.True);
+            Assert.That(session.TryGetPropertyBagValue(expectedBag, out PropertyBagValue<string>? ipaddress), Is.True);
         });
     }
 
@@ -201,11 +201,11 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             .ConfigureAwait(false);
 
         // Assert
-        byte[]? byteArray = null;
+        PropertyBagValue<byte[]>? byteArray = null;
 
         Assert.Multiple(() =>
         {
-            Assert.That(session.PropertyBag.TryGetProperty(PropertyBagKeys.HttpContent, out byteArray), Is.True);
+            Assert.That(session.TryGetPropertyBagValue(PropertyBagKeys.HttpContent, out byteArray), Is.True);
             Assert.That(byteArray is not null);
         });
     }
@@ -221,8 +221,8 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
                 responseBuilder: JavascriptPageResponseBuilder)
             .ConfigureAwait(false);
 
-        var byteArray = session.PropertyBag.GetProperty<byte[]>(PropertyBagKeys.HttpContent);
-        var content = Encoding.UTF8.GetString(byteArray);
+        var byteArray = session.GetPropertyBagValue<byte[]>(PropertyBagKeys.HttpContent);
+        var content = Encoding.UTF8.GetString(byteArray!);
 
         // Assert
         Assert.That(content.Contains(expectedText, StringComparison.InvariantCulture), Is.True);
@@ -242,11 +242,18 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             requestReceived ?? RequestReceived, 
             cancellationToken);
 
-        var testAgent = _serviceProvider.GetRequiredService<BrowserTestAgent>();
+        var testAgent = _serviceProvider.GetRequiredKeyedService<TestAgent>(serviceKey: "BrowserClient");
 
         if (component != null)
         {
-            testAgent.Container.AddComponent(component);
+            if (testAgent.Container == null)
+            {
+                testAgent.Container = new Pipeline(components: [component]);
+            }
+            else
+            {
+                testAgent.Container.AddComponent(component);
+            }
         }
 
         TestSession session = await testAgent

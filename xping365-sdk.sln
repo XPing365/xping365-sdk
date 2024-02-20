@@ -17,17 +17,17 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Core", "src\XP
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.IntegrationTests", "tests\XPing365.Sdk.IntegrationTests\XPing365.Sdk.IntegrationTests.csproj", "{FD397829-B952-41A1-B9EF-DB44B55964D4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.UnitTests", "tests\XPing365.Sdk.UnitTests\XPing365.Sdk.UnitTests.csproj", "{6814CE18-75C3-4B0A-864A-13113F732FCA}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Availability", "src\XPing365.Sdk.Availability\XPing365.Sdk.Availability.csproj", "{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{B1313130-03E1-4238-BB93-74BD2E0084C1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleApp", "samples\ConsoleApp\ConsoleApp.csproj", "{29F6A072-EA33-408E-96B0-44934852C7C3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Availability.Browser", "src\XPing365.Sdk.Availability.Browser\XPing365.Sdk.Availability.Browser.csproj", "{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}"
-EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "XPing365.Sdk.Shared", "src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.shproj", "{18AF9728-0693-431B-BB78-0577F98FE560}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Core.UnitTests", "tests\XPing365.Sdk.Core.UnitTests\XPing365.Sdk.Core.UnitTests.csproj", "{BE7F097A-93A6-4597-8904-6350A2343181}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Shared.UnitTests", "tests\XPing365.Sdk.Shared.UnitTests\XPing365.Sdk.Shared.UnitTests.csproj", "{C156C14D-49F5-417F-B455-7C713439CDA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,10 +43,6 @@ Global
 		{FD397829-B952-41A1-B9EF-DB44B55964D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD397829-B952-41A1-B9EF-DB44B55964D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FD397829-B952-41A1-B9EF-DB44B55964D4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6814CE18-75C3-4B0A-864A-13113F732FCA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6814CE18-75C3-4B0A-864A-13113F732FCA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6814CE18-75C3-4B0A-864A-13113F732FCA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6814CE18-75C3-4B0A-864A-13113F732FCA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -55,10 +51,14 @@ Global
 		{29F6A072-EA33-408E-96B0-44934852C7C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{29F6A072-EA33-408E-96B0-44934852C7C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{29F6A072-EA33-408E-96B0-44934852C7C3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BE7F097A-93A6-4597-8904-6350A2343181}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BE7F097A-93A6-4597-8904-6350A2343181}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BE7F097A-93A6-4597-8904-6350A2343181}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BE7F097A-93A6-4597-8904-6350A2343181}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C156C14D-49F5-417F-B455-7C713439CDA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C156C14D-49F5-417F-B455-7C713439CDA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C156C14D-49F5-417F-B455-7C713439CDA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C156C14D-49F5-417F-B455-7C713439CDA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -66,18 +66,18 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{EC960CDD-7EA0-4A2E-BA66-DA05D361014E} = {464CE18C-1C75-473C-812A-E958172BC048}
 		{FD397829-B952-41A1-B9EF-DB44B55964D4} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
-		{6814CE18-75C3-4B0A-864A-13113F732FCA} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
 		{CF9C97AA-FA29-43CD-B45F-76E60A6B1D9A} = {464CE18C-1C75-473C-812A-E958172BC048}
 		{29F6A072-EA33-408E-96B0-44934852C7C3} = {B1313130-03E1-4238-BB93-74BD2E0084C1}
-		{777DCEDB-580F-477D-B2D7-0B7DD299ED5B} = {464CE18C-1C75-473C-812A-E958172BC048}
 		{18AF9728-0693-431B-BB78-0577F98FE560} = {464CE18C-1C75-473C-812A-E958172BC048}
+		{BE7F097A-93A6-4597-8904-6350A2343181} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
+		{C156C14D-49F5-417F-B455-7C713439CDA2} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EAD876E-2071-435E-AEC4-D3DEF2F4A328}
 	EndGlobalSection
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{18af9728-0693-431b-bb78-0577f98fe560}*SharedItemsImports = 13
-		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{777dcedb-580f-477d-b2d7-0b7dd299ed5b}*SharedItemsImports = 5
+		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{c156c14d-49f5-417f-b455-7c713439cda2}*SharedItemsImports = 5
 		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{cf9c97aa-fa29-43cd-b45f-76e60a6b1d9a}*SharedItemsImports = 5
 		src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems*{ec960cdd-7ea0-4a2e-ba66-da05d361014e}*SharedItemsImports = 5
 	EndGlobalSection

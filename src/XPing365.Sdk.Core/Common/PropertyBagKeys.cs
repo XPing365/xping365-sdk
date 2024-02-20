@@ -1,9 +1,8 @@
-﻿using XPing365.Sdk.Core.Common;
-
-namespace XPing365.Sdk.Core;
+﻿namespace XPing365.Sdk.Core.Common;
 
 /// <summary>
-/// This class is used to provide a set of predefined keys that can be used with the <see cref="PropertyBag"/> class.
+/// This class is used to provide a set of predefined keys that can be used with the <see cref="PropertyBag{TValue}"/> 
+/// class.
 /// </summary>
 /// <remarks>
 /// Since the PropertyBagKeys class is a static class, it cannot be instantiated. The class contains the properties
@@ -30,6 +29,9 @@ public static class PropertyBagKeys
     #endregion // DNS Lookup
 
     #region PING 
+
+    public readonly static PropertyBagKey PingReply = new(nameof(PingReply));
+
     /// <summary>
     /// Represents the number of times the ping data can be forwarded.
     /// </summary>
@@ -49,6 +51,11 @@ public static class PropertyBagKeys
 
     #region HTTP
     /// <summary>
+    /// Represents the HTTP response message.
+    /// </summary>
+    public readonly static PropertyBagKey HttpResponseMessage = new(nameof(HttpResponseMessage));
+
+    /// <summary>
     /// Represents the HTTP method.
     /// </summary>
     public readonly static PropertyBagKey HttpMethod = new(nameof(HttpMethod));
@@ -57,12 +64,6 @@ public static class PropertyBagKeys
     /// Represents the HTTP status. 
     /// </summary>
     public readonly static PropertyBagKey HttpStatus = new(nameof(HttpStatus));
-
-    /// <summary>
-    /// Represents the HTTP response message. For more information check 
-    /// <see cref="System.Net.Http.HttpResponseMessage"/>.
-    /// </summary>
-    public readonly static PropertyBagKey HttpResponseMessage = new(nameof(HttpResponseMessage));
 
     /// <summary>
     /// Represents the HTTP reason phrase.
