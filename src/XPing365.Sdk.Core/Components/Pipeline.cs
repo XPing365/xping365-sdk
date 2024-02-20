@@ -2,7 +2,7 @@
 
 /// <summary>
 /// The Pipeline class is a concrete implementation of the <see cref="CompositeTests"/> class that is designed to run 
-/// the test components that have been added.
+/// and manage the test components that have been added.
 /// </summary>
 public class Pipeline : CompositeTests
 {

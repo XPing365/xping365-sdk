@@ -34,7 +34,7 @@ Whenever any of the above steps fail, __XPing365__ makes it easy to find out the
 
 ## High Level Overview
 <hr/>
-Below figure provides a high-level overview of the __XPing365__ architecture. 
+Below figure provides a high-level overview of the <b>XPing365</b> architecture. 
 <br/><br/>
 
 ![XPing365 Architecture](/xping365-sdk/images/architecture-overview.svg)
@@ -49,7 +49,7 @@ XPing365 uses two mechanisms to run automated tests in its HTTP request system: 
 
 Depending on your testing needs, you can choose either or both of these mechanisms to create and run your HTTP requests with XPing365 SDK. You can also configure various parameters and options for each mechanism, such as headers, cookies, protocols, timeouts, etc. For more information, see the documentation and examples on how to use HttpClient and Headless Browsers with XPing365 SDK.
 
-## Test Session Serialization
+## Test Session Serialization System
 
 XPing365 test session serialization is a feature that allows users to convert test sessions into a format that can be stored or transmitted. A test session is a class that represents a test execution and its attributes. These include a state, a start date, and a duration that indicate the overall status of the test session, such as completed, failed, or declined. A test session can store various data related to the test operation, such as resolved IP addresses from DNS lookup, HTTP response headers, HTML content, and captured screenshots from the headless browsers. Test session serialization has several benefits, such as:
 

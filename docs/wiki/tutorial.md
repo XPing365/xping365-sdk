@@ -256,17 +256,17 @@ static Pipeline CreateValidationPipeline() =>
     new(components: [
         new HttpStatusCodeValidator(
             isValid: (HttpStatusCode code) => code == HttpStatusCode.OK,
-            errorMessage: (HttpStatusCode code) =>
+            onError: (HttpStatusCode code) =>
                 $"The HTTP request failed with status code {code}"),
 
         new HttpResponseHeadersValidator(
             isValid: (HttpResponseHeaders headers) => headers.Contains(HeaderNames.Server),
-            errorMessage: (HttpResponseHeaders headers) =>
+            onError: (HttpResponseHeaders headers) =>
                 $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header."),
 
         new ServerContentResponseValidator(
             isValid: (byte[] content, HttpContentHeaders contentHeaders) => content.Length < MAX_SIZE_IN_BYTES,
-            errorMessage: (byte[] content, HttpContentHeaders contentHeaders) =>
+            onError: (byte[] content, HttpContentHeaders contentHeaders) =>
                 $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")]);
 ```
 
@@ -275,7 +275,7 @@ static Pipeline CreateValidationPipeline() =>
 ```csharp
 new HttpStatusCodeValidator(
     isValid: (HttpStatusCode code) => code == HttpStatusCode.OK,
-    errorMessage: (HttpStatusCode code) =>
+    onError: (HttpStatusCode code) =>
         $"The HTTP request failed with status code {code}")
 ```
 
@@ -284,7 +284,7 @@ new HttpStatusCodeValidator(
 ```csharp
 new HttpResponseHeadersValidator(
     isValid: (HttpResponseHeaders headers) => headers.Contains(HeaderNames.Server),
-    errorMessage: (HttpResponseHeaders headers) =>
+    onError: (HttpResponseHeaders headers) =>
         $"The HTTP response headers did not include the expected $'{HeaderNames.Server}' header.")
 ```
 
@@ -293,7 +293,7 @@ new HttpResponseHeadersValidator(
 ```csharp
 new ServerContentResponseValidator(
     isValid: (byte[] content, HttpContentHeaders contentHeaders) => content.Length < MAX_SIZE_IN_BYTES,
-    errorMessage: (byte[] content, HttpContentHeaders contentHeaders) =>
+    onError: (byte[] content, HttpContentHeaders contentHeaders) =>
         $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")
 ```
 

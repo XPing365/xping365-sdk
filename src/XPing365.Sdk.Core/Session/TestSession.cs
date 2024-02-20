@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
-using System.Xml;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Shared;
 
@@ -17,27 +15,13 @@ namespace XPing365.Sdk.Core.Session;
 /// that execute different actions or validations on the URL, such as DNS lookup, HTTP request, HTML parsing, or 
 /// headless browser interaction. A test session has a start date and a duration that indicate when and how long the 
 /// testing took place. It also has a state that indicates the overall status of the test session, such as completed, 
-/// failed, or declined. A test session can store various data related to the test operation in a property bag, which is 
-/// a dictionary of key-value pairs of serializable objects. 
+/// failed, or declined. A test session can store various data related to the test operation in a 
+/// <see cref="PropertyBag{TValue}"/>, which is a dictionary of key-value pairs of serializable objects. 
 /// The property bag can contain data such as resolved IP addresses from DNS lookup, HTTP response headers, HTML 
 /// content, or captured screenshots from the headless browsers.
 /// A test session can be serialized and deserialized to and from XML writers and readers, using the 
 /// DataContractSerializer. This enables the test session to be saved and loaded for further analysis and comparison, 
 /// or transferred between different machines or applications.
-/// <list type="bullet">
-/// <item><description>
-/// It enables the user to save and load test sessions for further analysis and comparison, which can improve the 
-/// testing efficiency and quality.
-/// </description></item>
-/// <item><description>
-/// It allows the user to transfer test sessions between different machines or applications, which can increase the 
-/// portability and interoperability of the XPing365 project.
-/// </description></item>
-/// <item><description>
-/// It simplifies the implementation of other features that might require serialization, such as session replication, 
-/// backup, or migration.
-/// </description></item>
-/// </list>
 /// </remarks>
 [Serializable]
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
@@ -76,21 +60,6 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     /// Returns a read-only collection of the test steps executed within current test session.
     /// </summary>
     public required IReadOnlyCollection<TestStep> Steps { get; init; }
-
-    /// <summary>
-    /// Gets or sets the property bag of the test session.
-    /// </summary>
-    /// <value>
-    /// A PropertyBag&lt;IPropertyBagValue&gt; object that contains key-value pairs of various data related to the test 
-    /// operation, such as resolved IP addresses from DNS lookup, HTTP response headers, HTML content, or captured 
-    /// screenshots from the headless browsers. 
-    /// </value>
-    /// <remarks>
-    /// This property bag requires all objects to inherit from the <see cref="IPropertyBagValue"/> interface, so that they 
-    /// can be serialized and deserialized using the serializers that support the ISerializable interface. This enables 
-    /// the property bag to be saved and loaded to and from XML writers and readers.
-    /// </remarks>
-    //public required PropertyBag<IPropertyBagValue> PropertyBag { get; init; }
 
     /// <summary>
     /// Gets the state of the test session.
@@ -160,42 +129,6 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         DeclineReason = info.GetValue(nameof(DeclineReason), typeof(string)) as string;
     }
 
-    /// <summary>
-    /// Saves the test session to an XML writer using the DataContractSerializer.
-    /// </summary>
-    /// <param name="writer">The XML writer to write the test session to.</param>
-    /// <exception cref="ArgumentNullException">The writer is null.</exception>
-    /// <exception cref="SerializationException">An error occurred during serialization.</exception>
-    public void Save(XmlDictionaryWriter writer)
-    {
-        ArgumentNullException.ThrowIfNull(writer, nameof(writer));
-
-        var dataContractSerializer = new DataContractSerializer(
-            type: typeof(TestSession),
-            knownTypes: GetKnownTypes());
-
-        dataContractSerializer.WriteObject(writer, this);
-    }
-
-    /// <summary>
-    /// Loads a test session from an XML reader using the DataContractSerializer.
-    /// </summary>
-    /// <param name="reader">The XML reader to read the test session from.</param>
-    /// <returns>A TestSession object that represents the test session, or null if the reader is empty.</returns>
-    /// <exception cref="ArgumentNullException">The reader is null.</exception>
-    /// <exception cref="SerializationException">An error occurred during deserialization.</exception>
-    public static TestSession? Load(XmlDictionaryReader reader)
-    {
-        ArgumentNullException.ThrowIfNull(reader, nameof(reader));
-
-        var dataContractSerializer = new DataContractSerializer(
-            type: typeof(TestSession),
-            knownTypes: GetKnownTypes());
-
-        var result = dataContractSerializer.ReadObject(reader, true);
-        return result as TestSession;
-    }
-
     public override string ToString()
     {
         var sb = new StringBuilder();
@@ -212,15 +145,6 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
 
         return sb.ToString();
     }
-
-    private static List<Type> GetKnownTypes() => [
-        typeof(TestStep[]),
-        typeof(PropertyBag<IPropertyBagValue>),
-        typeof(Dictionary<PropertyBagKey, IPropertyBagValue>),
-        typeof(PropertyBagValue<byte[]>),
-        typeof(PropertyBagValue<string>),
-        typeof(PropertyBagValue<string[]>),
-        typeof(PropertyBagValue<Dictionary<string, string>>)];
 
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {

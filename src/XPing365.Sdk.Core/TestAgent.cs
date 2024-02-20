@@ -6,11 +6,51 @@ using XPing365.Sdk.Core.Common;
 namespace XPing365.Sdk.Core;
 
 /// <summary>
-/// The TestAgent class is responsible for executing test components and test compositions, such as single test 
-/// components aggregated in a <see cref="Pipeline"/>. It provides a base implementation for executing tests and 
-/// reporting results. By subclassing the TestAgent class, test agents can focus on implementing specific test 
-/// operations and leave the details of executing tests and reporting results to the base implementation.
+/// The TestAgent class is the main class that performs the testing logic of the XPing365 SDK. It runs test components, 
+/// for example action or validation steps, such as DnsLookup, IPAddressAccessibilityCheck etc., using the HTTP client 
+/// and the headless browser. It also creates a test session object that summarizes the outcome of the test operations.
 /// </summary>
+/// <remarks>
+/// The TestAgent class performs the core testing logic of the XPing365 SDK. It has two methods that can execute test 
+/// components that have been added to a container: <see cref="RunAsync(Uri, TestSettings, CancellationToken)"/> and 
+/// <see cref="ProbeAsync(Uri, TestSettings, CancellationToken)"/>. The former executes the test components and 
+/// creates a test session that summarizes the test operations. The latter serves as a quick check to ensure that the 
+/// test components are properly configured and do not cause any errors. The TestAgent class collects various data 
+/// related to the test execution. It constructs a <see cref="TestSession"/> object that represents the outcome of the 
+/// test operations, which can be serialized, analyzed, or compared. The TestAgent class can be configured with various 
+/// settings, such as the timeout, the retry, and the http headers, using the <see cref="TestSettings"/> class.
+/// <para>
+/// <note type="important">
+/// Please note that the TestAgent class is designed to be used with a dependency injection system and should not be 
+/// instantiated by the user directly. Instead, the user should register the TestAgent class in the dependency injection 
+/// container using one of the supported methods, such as the 
+/// <see cref="DependencyInjection.DependencyInjectionExtension.AddTestAgent(IServiceCollection)"/> extension method for 
+/// the IServiceCollection interface. This way, the TestAgent class can be resolved and injected into other classes that 
+/// depend on it.
+/// </note>
+/// <example>
+/// <code>
+/// Host.CreateDefaultBuilder(args)
+///     .ConfigureServices((services) =>
+///     {
+///         services.AddHttpClients();
+///         services.AddTestAgent(
+///             name: "TestAgent", builder: (TestAgent agent) =>
+///             {
+///                 agent.Container = new Pipeline(
+///                    name: "Availability pipeline",
+///                    components: [
+///                        new DnsLookup(),
+///                        new IPAddressAccessibilityCheck(),
+///                        new HttpClientRequestSender()]
+///                 );
+///                 return agent;
+///             });
+///     });
+/// </code>
+/// </example>
+/// </para>
+/// </remarks>
 /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
 /// <param name="component"><see cref="ITestComponent"/> object which will be used to perform specific test operation.
 /// </param>
@@ -25,7 +65,7 @@ public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent? 
 
     /// <summary>
     /// This method initializes the test context for executing the test component. After the test operation is executed, 
-    /// it constructs a test session that represents the outcome of the operation.
+    /// it constructs a test session that represents the outcome of the tests operations.
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
