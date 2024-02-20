@@ -7,7 +7,7 @@ using XPing365.Sdk.Core.Session;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
 
-namespace XPing365.Sdk.Availability.TestActions;
+namespace XPing365.Sdk.Availability.TestActions.Internals;
 
 /// <summary>
 /// The HeadlessBrowserRequestSender class is a subclass of the TestComponent abstract class that implements the 
@@ -23,10 +23,8 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// factory by implementing the <see cref="IHeadlessBrowserFactory"/> interface and adding its implementation into
 /// services.
 /// </remarks>
-public sealed class HeadlessBrowserRequestSender() : TestComponent(name: StepName, type: TestStepType.ActionStep)
+internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(name, type: TestStepType.ActionStep)
 {
-    public const string StepName = "Headless browser request";
-
     /// <summary>
     /// This method performs the test step operation asynchronously.
     /// </summary>

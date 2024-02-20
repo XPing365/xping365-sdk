@@ -184,7 +184,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             ResponseBuilder, settings: settings).ConfigureAwait(false);
 
         var failedStep = session.Steps.FirstOrDefault(step =>
-            step.Name == HeadlessBrowserRequestSender.StepName &&
+            step.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture) &&
             step.Result == TestStepResult.Failed);
 
         // Assert

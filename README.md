@@ -83,7 +83,7 @@ Host.CreateDefaultBuilder()
                     components: [
                         new DnsLookup(),
                         new IPAddressAccessibilityCheck(),
-                        new HttpClientRequestSender()
+                        new HttpRequestSender()
                     ]);
                 return agent;
             });

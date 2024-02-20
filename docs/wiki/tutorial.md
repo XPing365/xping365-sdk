@@ -83,18 +83,26 @@ class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((services) =>
             {
-                services.AddTransient<IProgress<TestStep>, Progress>();
+                // Register the Progress class as a singleton service
+                services.AddSingleton<IProgress<TestStep>, Progress>();
+                // Add HttpClients using the IHttpClientFactory
                 services.AddHttpClients();
+                // Add a TestAgent service to the service collection and configure its pipeline
                 services.AddTestAgent(
                     name: "TestAgent", builder: (TestAgent agent) =>
                     {
+                        // Set the container of the TestAgent to a new Pipeline object
                         agent.Container = new Pipeline(
                             name: "Availability pipeline",
                             components: [
+                                // Add a DnsLookup component to the pipeline
                                 new DnsLookup(),
+                                // Add an IPAddressAccessibilityCheck component to the pipeline
                                 new IPAddressAccessibilityCheck(),
-                                new HttpClientRequestSender()
+                                // Add an HttpRequestSender component to the pipeline
+                                new HttpRequestSender()
                             ]);
+                        // Return the configured TestAgent object
                         return agent;
                     });
             })
@@ -133,35 +141,45 @@ The `IProgress<TestStep>` interface is implemented by this class, which is calle
 
 The preceding code we added earlier in `Program.cs` does following:
 
-- Creates a default host builder and adds availability test agent. It also configures logging mechanism to filter logs coming out from `HttpClient`. 
+- Creates a host with preconfigured defaults, and then adds the `Progress` class and HttpClients to the service collection. 
 
 ```csharp
 static IHostBuilder CreateHostBuilder(string[] args) =>
     Host.CreateDefaultBuilder(args)
         .ConfigureServices((services) =>
         {
-            services.AddTransient<IProgress<TestStep>, Progress>();
+            // Register the Progress class as a singleton service
+            services.AddSingleton<IProgress<TestStep>, Progress>();
+            // Add HttpClients using the IHttpClientFactory
             services.AddHttpClients();
-            services.AddTestAgent(
-                name: "TestAgent", builder: (TestAgent agent) =>
-                {
-                    agent.Container = new Pipeline(
-                        name: "Availability pipeline",
-                        components: [
-                            new DnsLookup(),
-                            new IPAddressAccessibilityCheck(),
-                            new HttpClientRequestSender()
-                        ]);
-                    return agent;
-                });
+            (...)
         })
-        .ConfigureLogging(logging =>
-        {
-            logging.AddFilter(typeof(HttpClient).FullName, LogLevel.Warning);
-        });
 ```
 
+[!NOTE]
 For more information on how to use dependency injection in .NET please follow this [Dependency Injection Tutorial](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage).
+
+- Adds a named `TestAgent` service to the service collection and configures its pipeline
+
+```csharp
+services.AddTestAgent(
+    name: "TestAgent", builder: (TestAgent agent) =>
+    {
+        // Set the container of the TestAgent to a new Pipeline object
+        agent.Container = new Pipeline(
+            name: "Availability pipeline",
+            components: [
+                // Add a DnsLookup component to the pipeline
+                new DnsLookup(),
+                // Add an IPAddressAccessibilityCheck component to the pipeline
+                new IPAddressAccessibilityCheck(),
+                // Add an HttpRequestSender component to the pipeline
+                new HttpRequestSender()
+            ]);
+        // Return the configured TestAgent object
+        return agent;
+    });
+```
 
 - Creates an option named `--url` of type `Uri` and assigns it to the root command:
 
@@ -188,7 +206,7 @@ command.SetHandler(async (InvocationContext context) =>
 return await command.InvokeAsync(args);
 ```
 
-- Handler method retrieves `HttpClientTestAgent` service and runs availability test operations with default test settings against the `url` value: 
+- Handler method retrieves `TestAgent` service and runs availability test operations with default test settings against the `url` value: 
 
 ```csharp
 
@@ -324,7 +342,7 @@ info: ConsoleApp.Program[0]
       1/28/2024 4:37:37 PM (0ms) [ValidateStep] Server content response validation succeeded.
 
 Summary:
-1/28/2024 4:37:36 PM (545.8241[ms]) Test session completed for http://demoblaze.com/.        
+1/28/2024 4:37:36 PM (545[ms]) Test session completed for http://demoblaze.com/.        
 Total steps: 6, Success: 6, Failures: 0
 ```
 

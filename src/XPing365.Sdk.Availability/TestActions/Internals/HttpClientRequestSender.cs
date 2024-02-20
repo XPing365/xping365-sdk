@@ -6,7 +6,7 @@ using XPing365.Sdk.Core.Configurations;
 using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Core.Session;
 
-namespace XPing365.Sdk.Availability.TestActions;
+namespace XPing365.Sdk.Availability.TestActions.Internals;
 
 /// <summary>
 /// The HttpClientRequestSender class is a concrete implementation of the <see cref="TestComponent"/> class that is used 
@@ -18,10 +18,8 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// <see cref="DependencyInjectionExtension.AddHttpClients(IServiceCollection, Action{IServiceProvider, HttpClientConfiguration}?)(IServiceCollection)"/>
 /// method.
 /// </remarks>
-public sealed class HttpClientRequestSender() : TestComponent(name: StepName, type: TestStepType.ActionStep)
+internal sealed class HttpClientRequestSender(string name) : TestComponent(name, type: TestStepType.ActionStep)
 {
-    public const string StepName = "Send HTTP Request";
-
     /// <summary>
     /// This method performs the test step operation asynchronously.
     /// </summary>

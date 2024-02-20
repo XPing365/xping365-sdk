@@ -33,6 +33,13 @@ public static class Errors
             $"`AddBrowserClients()` to add them before you can use them.");
 
     /// <summary>
+    /// Creates an error when incorrect client type has been given for Http Request System
+    /// </summary>
+    /// <returns>An error with code 1012 and a message instructing to use HttpClient or HeadlessBrowser</returns>
+    public static Error IncorrectClientType =>
+        new("1012", $"The client type is not supported. Please use either HttpClient or HeadlessBrowser.");    
+
+    /// <summary>
     /// Creates an error when there is insufficient data to perform a test step
     /// </summary>
     /// <param name="component">The test component that requires data</param>

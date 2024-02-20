@@ -33,7 +33,7 @@ public static class TestFixtureProvider
                         components: [
                             new DnsLookup(),
                             new IPAddressAccessibilityCheck(),
-                            new HttpClientRequestSender()
+                            new HttpRequestSender(Client.HttpClient)
                         ]);
                     return agent;
                 });
@@ -45,7 +45,7 @@ public static class TestFixtureProvider
                         components: [
                             new DnsLookup(),
                             new IPAddressAccessibilityCheck(),
-                            new HeadlessBrowserRequestSender()
+                            new HttpRequestSender(Client.HeadlessBrowser)
                         ]);
                     return agent;
                 });

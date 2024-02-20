@@ -55,18 +55,26 @@ public sealed class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((services) =>
             {
-                services.AddTransient<IProgress<TestStep>, Progress>();
+                // Register the Progress class as a singleton service
+                services.AddSingleton<IProgress<TestStep>, Progress>();
+                // Add HttpClients using the IHttpClientFactory
                 services.AddHttpClients();
+                // Adds a TestAgent service to the service collection and configures its pipeline
                 services.AddTestAgent(
                     name: "TestAgent", builder: (TestAgent agent) =>
                     {
+                        // Set the container of the TestAgent to a new Pipeline object
                         agent.Container = new Pipeline(
                             name: "Availability pipeline",
                             components: [
+                                // Add a DnsLookup component to the pipeline
                                 new DnsLookup(),
+                                // Add an IPAddressAccessibilityCheck component to the pipeline
                                 new IPAddressAccessibilityCheck(),
-                                new HttpClientRequestSender()
+                                // Add an HttpRequestSender component to the pipeline
+                                new HttpRequestSender()
                             ]);
+                        // Return the configured TestAgent object
                         return agent;
                     });
             })
