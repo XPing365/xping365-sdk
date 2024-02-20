@@ -19,7 +19,7 @@ public abstract class TestComponent : ITestComponent
     /// <summary>
     /// Gets a step name.
     /// </summary>
-    public string Name { get; }
+    public string Name { get; protected set; }
 
     /// <summary>
     /// Gets a step type.

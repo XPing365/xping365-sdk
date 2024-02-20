@@ -146,7 +146,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Assert
         Assert.That(session.Steps.Any(step =>
-            step.Name == HttpClientRequestSender.StepName &&
+            step.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture) &&
             step.Result == TestStepResult.Failed &&
             step.ErrorMessage == expectedErrMsg), Is.True);
     }
