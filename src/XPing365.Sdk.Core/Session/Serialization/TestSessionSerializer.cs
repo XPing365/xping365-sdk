@@ -5,12 +5,29 @@ using XPing365.Sdk.Core.Common;
 
 namespace XPing365.Sdk.Core.Session.Serialization;
 
+
+/// <summary>
+/// A class that provides serialization and deserialization of test sessions
+/// </summary>
+/// <remarks>
+/// This class supports two formats: binary and XML. Users can choose the format that suits their needs and preferences, 
+/// depending on the size, readability, and compatibility of the data.
+/// </remarks>
 public sealed class TestSessionSerializer
 {
     private readonly DataContractSerializer dataContractSerializer = new(
         type: typeof(TestSession),
         knownTypes: GetKnownTypes());
 
+    /// <summary>
+    /// Serializes a test session to a stream using the specified format.
+    /// </summary>
+    /// <param name="session">The test session to serialize</param>
+    /// <param name="stream">The stream to save the serialized data</param>
+    /// <param name="format">The format to use for serialization: Binary or XML</param>
+    /// <param name="ownsStream">
+    /// True to indicate that the stream in closed by the writer when done, otherwise false
+    /// </param>
     public void Serialize(TestSession session, Stream stream, SerializationFormat format, bool ownsStream = false)
     {
         ArgumentNullException.ThrowIfNull(session, nameof(session));
@@ -27,6 +44,13 @@ public sealed class TestSessionSerializer
         dataContractSerializer.WriteObject(writer, session);
     }
 
+    /// <summary>
+    /// Deserializes a test session from a stream using the specified format.
+    /// </summary>
+    /// <param name="stream">The stream to load the serialized data</param>
+    /// <param name="format">The format to use for deserialization: Binary or XML</param>
+    /// <returns>The deserialized test session</returns>
+    /// <exception cref="SerializationException">When incorrect serialization format or data</exception>
     public TestSession? Deserialize(Stream stream, SerializationFormat format)
     {
         ArgumentNullException.ThrowIfNull(stream, nameof(stream));

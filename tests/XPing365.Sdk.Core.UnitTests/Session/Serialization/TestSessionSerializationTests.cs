@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Runtime.Serialization;
+using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using XPing365.Sdk.Core.Common;
@@ -94,7 +95,7 @@ internal class TestSessionSerializationTests
         XPathNodeIterator nodes = navigator.Select("/TestSession/Url");
 
         while (nodes.MoveNext())
-        {  
+        {
             // Assert
             Assert.That(nodes.Current, Is.Not.Null);
             Assert.That(nodes.Current.Value, Is.EqualTo(session.Url.AbsoluteUri));
@@ -139,5 +140,35 @@ internal class TestSessionSerializationTests
         Assert.That(session1.Steps.First().PropertyBag, Is.Not.Null);
         Assert.That(session.Steps.First().StartDate, Is.EqualTo(session1.Steps.First().StartDate));
         Assert.That(session.Steps.First().Type, Is.EqualTo(session1.Steps.First().Type));
+    }
+
+    [Test]
+    public void DeserializerThrowsSerializationExceptionWhenIncorrectSerializationFormatProvided()
+    {
+        // Arrange
+        TestSession session = new()
+        {
+            Url = new Uri("https://test"),
+            StartDate = DateTime.UtcNow,
+            State = TestSessionState.NotStarted,
+            Steps = [new TestStep
+            {
+                Name = "step1",
+                Duration = TimeSpan.Zero,
+                PropertyBag = new PropertyBag<IPropertyBagValue>(),
+                Result = TestStepResult.Failed,
+                StartDate = DateTime.Now,
+                Type = TestStepType.ActionStep
+            }]
+        };
+
+        var serializer = new TestSessionSerializer();
+        using var stream = new MemoryStream();
+
+        // Act
+        serializer.Serialize(session, stream, SerializationFormat.XML);
+        stream.Position = 0;
+
+        Assert.Throws<SerializationException>(() => serializer.Deserialize(stream, SerializationFormat.Binary));
     }
 }

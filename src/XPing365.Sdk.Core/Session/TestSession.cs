@@ -19,9 +19,9 @@ namespace XPing365.Sdk.Core.Session;
 /// <see cref="PropertyBag{TValue}"/>, which is a dictionary of key-value pairs of serializable objects. 
 /// The property bag can contain data such as resolved IP addresses from DNS lookup, HTTP response headers, HTML 
 /// content, or captured screenshots from the headless browsers.
-/// A test session can be serialized and deserialized to and from XML writers and readers, using the 
-/// DataContractSerializer. This enables the test session to be saved and loaded for further analysis and comparison, 
-/// or transferred between different machines or applications.
+/// A test session can be serialized and deserialized to and from stream, using the <see cref="TestSessionSerializer"/>. 
+/// This enables the test session to be saved and loaded for further analysis and comparison, or transferred between 
+/// different machines or applications.
 /// </remarks>
 [Serializable]
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]

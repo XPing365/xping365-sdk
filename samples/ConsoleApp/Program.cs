@@ -1,18 +1,17 @@
 ﻿using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Net;
+using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Core;
-using XPing365.Sdk.Core.DependencyInjection;
-using XPing365.Sdk.Availability.TestActions;
-using System.Xml;
-using XPing365.Sdk.Availability.TestValidators;
-using System.Net;
 using Microsoft.Net.Http.Headers;
-using System.Net.Http.Headers;
+using XPing365.Sdk.Availability.TestActions;
+using XPing365.Sdk.Availability.TestValidators;
+using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Components;
+using XPing365.Sdk.Core.DependencyInjection;
+using XPing365.Sdk.Core.Session;
 
 namespace ConsoleApp;
 
