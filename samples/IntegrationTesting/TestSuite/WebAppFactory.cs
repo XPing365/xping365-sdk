@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using WebApp;
 using WebApp.Data;
 
@@ -15,6 +16,13 @@ namespace NUnitTestProject.TestSuite;
 /// </summary>
 internal sealed class WebAppFactory : WebApplicationFactory<Program>
 {
+    protected override IHost CreateHost(IHostBuilder builder)
+    {
+        var host = builder.Build();
+        Task.Run(() => host.StartAsync()).GetAwaiter().GetResult();
+        return host;
+    }
+
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
