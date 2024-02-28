@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Polly;
 using XPing365.Sdk.Core.Configurations;
+using XPing365.Sdk.Core.DependencyInjection.Internals;
 using XPing365.Sdk.Core.HeadlessBrowser;
 using XPing365.Sdk.Core.HeadlessBrowser.Internals;
 using XPing365.Sdk.Core.Session;
@@ -76,6 +77,15 @@ public static class DependencyInjectionExtension
                 .AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
                     handledEventsAllowedBeforeBreaking: httpClientConfiguration.HandledEventsAllowedBeforeBreaking,
                     durationOfBreak: httpClientConfiguration.DurationOfBreak));
+
+        return services;
+    }
+
+    public static IServiceCollection AddTestServerHttpClient(
+        this IServiceCollection services, Func<HttpClient> httpClientBuilder)
+    {
+        services.AddTransient<IHttpClientFactory>(implementationFactory: 
+            serviceProvider => new TestServerHttpClientFactory(httpClientBuilder()));
 
         return services;
     }

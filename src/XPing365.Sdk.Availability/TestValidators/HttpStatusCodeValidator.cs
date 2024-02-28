@@ -29,7 +29,7 @@ public sealed class HttpStatusCodeValidator(
     public const string StepName = "Http status code validation";
 
     private readonly Func<HttpStatusCode, bool> _isValid = isValid;
-    private readonly Func<HttpStatusCode, string>? _errorMessage = onError;
+    private readonly Func<HttpStatusCode, string>? _onError = onError;
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -38,9 +38,12 @@ public sealed class HttpStatusCodeValidator(
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="context">A <see cref="TestContext"/> object that represents the test context.</param>
     /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
-    /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel this operation.
+    /// <param name="cancellationToken">
+    /// An optional CancellationToken object that can be used to cancel this operation.
     /// </param>
-    /// <returns><see cref="TestStep"/> object.</returns>
+    /// <exception cref="ArgumentNullException">
+    /// If any of the following parameters: url, settings or context is null.
+    /// </exception>
     public override Task HandleAsync(
         Uri url,
         TestSettings settings,
@@ -78,7 +81,7 @@ public sealed class HttpStatusCodeValidator(
                 }
                 else
                 {
-                    string? errmsg = _errorMessage?.Invoke(response.StatusCode);
+                    string? errmsg = _onError?.Invoke(response.StatusCode);
                     testStep = context.SessionBuilder.Build(
                         component: this,
                         instrumentation: instrumentation,

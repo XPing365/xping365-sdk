@@ -13,7 +13,7 @@ using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Core.Session;
 
-namespace ConsoleApp;
+namespace ConsoleAppTesting;
 
 public sealed class Program
 {

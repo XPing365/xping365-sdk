@@ -16,8 +16,8 @@
     </description>
     <releaseNotes></releaseNotes>
     <tags>
-    web api testing, web application testing, .net, open source, automation, monitoring, external pings, 
-    server availability, network connectivity
+    web-api-testing; web-application-testing; .net; open-source; automation; monitoring; external-pings; 
+    server-availability; network-connectivity
     </tags>
     <dependencies>
       <group targetFramework="net8.0">

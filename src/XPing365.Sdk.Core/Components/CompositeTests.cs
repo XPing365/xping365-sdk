@@ -7,7 +7,7 @@ namespace XPing365.Sdk.Core.Components;
 interface ICompositeTests
 {
     void AddComponent(ITestComponent component);
-    void RemoveComponent(ITestComponent component);
+    bool RemoveComponent(ITestComponent component);
     IReadOnlyCollection<ITestComponent> Components { get; }
 }
 

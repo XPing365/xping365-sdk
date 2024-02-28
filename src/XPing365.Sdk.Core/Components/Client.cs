@@ -1,4 +1,4 @@
-﻿namespace XPing365.Sdk.Core;
+﻿namespace XPing365.Sdk.Core.Components;
 
 /// <summary>
 /// An enum that represents the type of client used to send HTTP requests
@@ -6,7 +6,7 @@
 public enum Client
 {
     /// <summary>
-    /// A client that uses the <see cref="HttpClient"> class
+    /// A client that uses the <see cref="System.Net.Http.HttpClient"/> class
     /// </summary>
     HttpClient,
 

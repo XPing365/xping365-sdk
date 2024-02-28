@@ -1,5 +1,4 @@
 ﻿using XPing365.Sdk.Availability.TestActions.Internals;
-using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;

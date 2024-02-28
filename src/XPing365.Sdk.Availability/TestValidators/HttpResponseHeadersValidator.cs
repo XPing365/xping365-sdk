@@ -31,7 +31,7 @@ public class HttpResponseHeadersValidator(
     public const string StepName = "Http response headers validation";
 
     private readonly Func<HttpResponseHeaders, bool> _isValid = isValid;
-    private readonly Func<HttpResponseHeaders, string>? _errorMessage = onError;
+    private readonly Func<HttpResponseHeaders, string>? _onError = onError;
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -40,9 +40,12 @@ public class HttpResponseHeadersValidator(
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="context">A <see cref="TestContext"/> object that represents the test context.</param>
     /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
-    /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
-    /// this operation.</param>
-    /// <returns><see cref="TestStep"/> object.</returns>
+    /// <param name="cancellationToken">
+    /// An optional CancellationToken object that can be used to cancel the this operation.
+    /// </param>
+    /// <exception cref="ArgumentNullException">
+    /// If any of the following parameters: url, settings or context is null.
+    /// </exception>
     public override Task HandleAsync(
         Uri url,
         TestSettings settings,
@@ -80,7 +83,7 @@ public class HttpResponseHeadersValidator(
                 }
                 else
                 {
-                    string? errmsg = _errorMessage?.Invoke(responseMessage.Headers);
+                    string? errmsg = _onError?.Invoke(responseMessage.Headers);
                     testStep = context.SessionBuilder.Build(
                         component: this,
                         instrumentation: instrumentation,

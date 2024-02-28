@@ -84,7 +84,11 @@ public abstract class TestComponent : ITestComponent
     /// Removes the specified instance of the TestComponent class from the current object.
     /// </summary>
     /// <param name="component">The TestComponent instance to remove.</param>
-    public void RemoveComponent(ITestComponent component) => GetComposite()?.RemoveComponent(component);
+    /// <returns>
+    /// <c>true</c> if component is successfully removed; otherwise, <c>false</c>. This method also returns <c>false</c>
+    /// when component was not found.
+    /// </returns>
+    public bool RemoveComponent(ITestComponent component) => GetComposite()?.RemoveComponent(component) ?? false;
 
     /// <summary>
     /// Gets a read-only collection of the child TestComponent instances of the current object.
