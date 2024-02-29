@@ -11,29 +11,18 @@ using XPing365.Sdk.Core.Session;
 namespace NUnitTestProject;
 
 [TestFixture]
-[SingleThreaded]
+[Explicit]
 public partial class IndexPageTests : WebAppIntegrationTestFixture
 {
-    private TestAgent _agent;
-    private ITestComponent? _component;
+    private TestAgent _agent = null!;
 
-    [OneTimeSetUp]
+    [SetUp]
     public void Setup()
     {
         _agent = ServiceProvider.GetRequiredService<TestAgent>();
         _agent.Container = new Pipeline(
             name: "WebAppIntegrationTests",
             components: [new HttpRequestSender()]);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        if (_component != null)
-        {
-            _agent.Container?.RemoveComponent(_component);
-            _component = null;
-        }
     }
 
     [GeneratedRegex("<h1(.*)>Welcome<\\/h1>")]
@@ -43,11 +32,10 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
     public async Task WelcomeTextIsInH1Tag()
     {
         // Arrange
-        _component = new RegexContentValidator(
+         _agent.Container?.AddComponent(new RegexContentValidator(
             regex: WelcomeTextIsH1,
             isValid: (matches) => matches.First().Success,
-            onError: $"The response content did not match the Regex expression: '{WelcomeTextIsH1()}'");
-        _agent.Container?.AddComponent(_component);
+            onError: $"The response content did not match the Regex expression: '{WelcomeTextIsH1()}'"));
 
         // Act
         TestSession session = await _agent.RunAsync(TestServer, TestSettings.DefaultForBrowser).ConfigureAwait(false);
@@ -62,10 +50,9 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
         // Arrange
         const string learnAboutLabel = "Learn about";
 
-        _component = new StringContentValidator(
+         _agent.Container?.AddComponent(new StringContentValidator(
             isValid: (content) => content.Contains(learnAboutLabel, StringComparison.InvariantCulture),
-            onError: $"The response content did not contain the expected '{learnAboutLabel}' text.");
-        _agent.Container?.AddComponent(_component);
+            onError: $"The response content did not contain the expected '{learnAboutLabel}' text."));
 
         // Act
         TestSession session = await _agent.RunAsync(TestServer, TestSettings.DefaultForBrowser).ConfigureAwait(false);
@@ -80,11 +67,10 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
         // Arrange
         var xpath = XPathExpression.Compile("//ul[@class='navbar-nav']/li/a[@href='/Identity/Account/Login']/text()");
 
-        _component = new XPathContentValidator(
+         _agent.Container?.AddComponent(new XPathContentValidator(
             xpath: xpath,
             isValid: (nodes) => nodes.First().InnerText == "Login",
-            onError: $"The HTML document does not match the XPath expression: '{xpath.Expression}'");
-        _agent.Container?.AddComponent(_component);
+            onError: $"The HTML document does not match the XPath expression: '{xpath.Expression}'"));
 
         // Act
         TestSession session = await _agent.RunAsync(TestServer, TestSettings.DefaultForBrowser).ConfigureAwait(false);
