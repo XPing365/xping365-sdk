@@ -51,8 +51,6 @@ public sealed class Program
         return await command.InvokeAsync(args).ConfigureAwait(false);
     }
 
-    // Test
-
     static IHostBuilder CreateHostBuilder(string[] args) =>
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((services) =>
