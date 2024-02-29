@@ -5,6 +5,7 @@ using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Availability.TestActions;
+using Microsoft.Extensions.Logging;
 
 namespace XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -49,6 +50,10 @@ public static class TestFixtureProvider
                         ]);
                     return agent;
                 });
+        });
+        builder.ConfigureLogging(logging =>
+        {
+            logging.AddFilter(typeof(HttpClient).FullName, LogLevel.Warning);
         });
 
         var host = builder.Build();

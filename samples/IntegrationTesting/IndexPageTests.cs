@@ -11,7 +11,6 @@ using XPing365.Sdk.Core.Session;
 namespace NUnitTestProject;
 
 [TestFixture]
-[Explicit]
 public partial class IndexPageTests : WebAppIntegrationTestFixture
 {
     private TestAgent _agent = null!;

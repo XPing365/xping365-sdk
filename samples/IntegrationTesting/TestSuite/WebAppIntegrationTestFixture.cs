@@ -48,7 +48,7 @@ public abstract class WebAppIntegrationTestFixture : IDisposable
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(implementationInstance: Mock.Of<IProgress<TestStep>>());
-            services.AddTestServerHttpClient(() => factory.CreateDefaultClient());
+            services.AddTestServerHttpClient(factory.CreateClient);
             services.AddTestAgent();
         });
 
