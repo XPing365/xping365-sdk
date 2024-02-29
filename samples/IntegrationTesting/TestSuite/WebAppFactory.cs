@@ -16,13 +16,6 @@ namespace NUnitTestProject.TestSuite;
 /// </summary>
 internal sealed class WebAppFactory : WebApplicationFactory<Program>
 {
-    protected override IHost CreateHost(IHostBuilder builder)
-    {
-        var host = builder.Build();
-        Task.Run(() => host.StartAsync()).GetAwaiter().GetResult();
-        return host;
-    }
-
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
         ArgumentNullException.ThrowIfNull(builder, nameof(builder));
