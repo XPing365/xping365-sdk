@@ -12,6 +12,13 @@ internal class TestServerHttpClientFactory(HttpClient httpClient) : IHttpClientF
         return _httpClient;
     }
 
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
     protected virtual void Dispose(bool disposing)
     {
         if (!_disposedValue)
@@ -23,12 +30,5 @@ internal class TestServerHttpClientFactory(HttpClient httpClient) : IHttpClientF
 
             _disposedValue = true;
         }
-    }
-
-    public void Dispose()
-    {
-        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-        Dispose(disposing: true);
-        GC.SuppressFinalize(this);
     }
 }
