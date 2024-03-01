@@ -8,6 +8,10 @@ namespace XPing365.Sdk.Availability.TestValidators;
 
 /// <summary>
 /// Represents a validator that checks if a http response content matches a specified pattern or condition.
+/// <note>
+/// The StringContentValidator component requires the HttpRequestSender component to be registered before it in 
+/// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
+/// </note>
 /// </summary>
 public class StringContentValidator : BaseContentValidator
 {

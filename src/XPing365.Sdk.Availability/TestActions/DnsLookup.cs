@@ -7,7 +7,10 @@ namespace XPing365.Sdk.Availability.TestActions;
 
 /// <summary>
 /// The DnsLookup class is a concrete implementation of the <see cref="TestComponent"/> class that is used to perform 
-/// a DNS lookup. It uses the mechanisms provided by the operating system to perform DNS lookups.
+/// a DNS lookup. It uses the mechanisms provided by the operating system to perform DNS lookups. 
+/// <note>
+/// This component operates without any dependency on other components.
+/// </note>
 /// </summary>
 public sealed class DnsLookup() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {

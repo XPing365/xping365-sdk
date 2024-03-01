@@ -8,7 +8,10 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// <summary>
 /// The HttpRequestSender class is a unified interface for sending HTTP requests using either HttpClient or Headless 
 /// browser. Users can specify the desired client type in the constructor parameter. If no client type is provided, the 
-/// HttpRequestSender class will use HttpClient by default.
+/// HttpRequestSender class will use HttpClient by default. 
+/// <note>
+/// This component operates without any dependency on other components.
+/// </note>
 /// </summary>
 /// <remarks>
 /// <para>

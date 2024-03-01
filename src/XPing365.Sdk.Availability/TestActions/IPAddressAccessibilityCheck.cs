@@ -11,6 +11,10 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// The IPAddressAccessibilityCheck class is a concrete implementation of the <see cref="TestComponent"/> class that 
 /// is used to check the accessibility of an IP address. It uses the mechanisms provided by the operating system to 
 /// check the accessibility of an IP address.
+/// <note>
+/// The IPAddressAccessibilityCheck component requires the DnsLookup component to be registered before it in the 
+/// pipeline, because it depends on the DNS resolution results.
+/// </note>
 /// </summary>
 public sealed class IPAddressAccessibilityCheck() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
