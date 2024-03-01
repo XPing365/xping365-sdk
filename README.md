@@ -110,9 +110,7 @@ That’s it! You’re now ready to start automating your web application tests a
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-
-
-_For more examples, please refer to the `Samples` folder in this repository._
+The `samples` folder in this repository contains various examples of how to use XPing 365 for your testing needs. For a comprehensive guide on how to install, configure, and customize XPing 365, please refer to the documentation website available at [xping365.github.io/xping365-sdk](https://xping365.github.io/xping365-sdk/index.html).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 

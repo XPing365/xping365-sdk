@@ -1,4 +1,6 @@
 - name: Overview
   href: overview.md
+- name: The Testing Pipeline Explained
+  href: pipeline.md
 - name: Tutorial - Get started with XPing365 SDK
   href: tutorial.md

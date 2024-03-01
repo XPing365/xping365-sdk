@@ -12,6 +12,10 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// is used to check the accessibility of an IP address. It uses the mechanisms provided by the operating system to 
 /// check the accessibility of an IP address.
 /// </summary>
+/// <note>
+/// The IPAddressAccessibilityCheck component requires the DnsLookup component to be registered before it in the 
+/// pipeline, as it depends on the DNS resolution results.
+/// </note>
 public sealed class IPAddressAccessibilityCheck() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     public const string StepName = "IPAddress accessibility check";

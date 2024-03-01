@@ -60,9 +60,3 @@ XPing365 test session serialization is a feature that allows users to convert te
 XPing365 test session serialization supports two formats: binary and XML. Users can choose the format that suits their needs and preferences, depending on the size, readability, and compatibility of the data. Users can use the TestSessionSerializer class, which provides two methods to serialize and deserialize test sessions.
 
 XPing365 test session serialization is a powerful and useful feature that enhances the functionality and usability of the XPing365 project. It enables users to store, transfer, and manipulate test sessions in a convenient and efficient way.
-
-## Next Steps
-
-To get started with __XPing365__ SDK, see the following resources:
-
-- [Tutorial: Get started with XPing365 SDK](/xping365-sdk/wiki/tutorial.html)

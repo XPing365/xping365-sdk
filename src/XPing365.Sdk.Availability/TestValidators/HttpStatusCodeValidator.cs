@@ -12,6 +12,10 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// parameter, which is used to validate the HTTP status code. The onError parameter is an optional error message 
 /// that can be used to provide additional information about the validation failure.
 /// </summary>
+/// <note>
+/// The HttpStatusCodeValidator component requires the HttpRequestSender component to be registered before it in 
+/// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
+/// </note>
 /// <example>
 /// <code>
 /// var statusCodeValidator = new HttpStatusCodeValidator(
