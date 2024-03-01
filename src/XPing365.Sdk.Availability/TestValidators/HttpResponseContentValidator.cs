@@ -11,11 +11,11 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// used to validate server content response. It takes a Func&lt;byte[], HttpContentHeaders, bool&gt; delegate as a
 /// parameter, which is used to validate the response content. The onError parameter is an optional error message 
 /// that can be used to provide additional information about the validation failure.
-/// </summary>
 /// <note>
 /// The HttpResponseContentValidator component requires the HttpRequestSender component to be registered before it in 
 /// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
 /// </note>
+/// </summary>
 /// <remarks>
 /// Server response content is received as a byte array and stored as such. If needed, it can be converted to a string 
 /// using the encoding which is available in the <see cref="HttpContentHeaders.ContentEncoding" />.
