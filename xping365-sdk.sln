@@ -33,6 +33,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppTesting", "sample
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPing365.Sdk.Availability.UnitTests", "tests\XPing365.Sdk.Availability.UnitTests\XPing365.Sdk.Availability.UnitTests.csproj", "{33F7600A-124F-46A8-80B5-E1DD3264B24D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTesting", "samples\IntegrationTesting\IntegrationTesting.csproj", "{86A5FC4F-7A18-4319-801F-87F102949276}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -71,6 +73,10 @@ Global
 		{33F7600A-124F-46A8-80B5-E1DD3264B24D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33F7600A-124F-46A8-80B5-E1DD3264B24D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33F7600A-124F-46A8-80B5-E1DD3264B24D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86A5FC4F-7A18-4319-801F-87F102949276}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86A5FC4F-7A18-4319-801F-87F102949276}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86A5FC4F-7A18-4319-801F-87F102949276}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86A5FC4F-7A18-4319-801F-87F102949276}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -85,6 +91,7 @@ Global
 		{7A9E8B2C-4726-45A5-9BC5-DEC16B268368} = {B1313130-03E1-4238-BB93-74BD2E0084C1}
 		{B972A01E-4D7C-4D7A-9A9A-2D81CF621E1E} = {B1313130-03E1-4238-BB93-74BD2E0084C1}
 		{33F7600A-124F-46A8-80B5-E1DD3264B24D} = {E0C3A702-A0A5-4D65-9CBE-B017E76DDC6F}
+		{86A5FC4F-7A18-4319-801F-87F102949276} = {B1313130-03E1-4238-BB93-74BD2E0084C1}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EAD876E-2071-435E-AEC4-D3DEF2F4A328}
