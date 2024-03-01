@@ -15,15 +15,11 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.x
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-    - name: Install Playwright Browsers
-      run: npx playwright install --with-deps
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
       run: dotnet build -c Release --no-restore
+    - name: Ensure browsers are installed
+      run: pwsh ./tests/XPing365.Sdk.IntegrationTests/bin/Release/net8.0/playwright.ps1 install --with-deps
     - name: Test
-      run: dotnet test ./tests/XPing365.Sdk.Core.UnitTests/XPing365.Sdk.Core.UnitTests.csproj -c Release --no-build --verbosity normal 
+      run: dotnet test ./tests/XPing365.Sdk.IntegrationTests/XPing365.Sdk.IntegrationTests.csproj -c Release --no-build --verbosity normal 
