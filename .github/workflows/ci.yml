@@ -23,3 +23,4 @@ jobs:
       run: pwsh ./tests/XPing365.Sdk.IntegrationTests/bin/Release/net8.0/playwright.ps1 install --with-deps
     - name: Test
       run: dotnet test ./tests/XPing365.Sdk.IntegrationTests/XPing365.Sdk.IntegrationTests.csproj -c Release --no-build --verbosity normal 
+# blablabla
