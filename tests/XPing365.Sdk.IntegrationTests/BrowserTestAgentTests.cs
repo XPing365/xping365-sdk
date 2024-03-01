@@ -259,7 +259,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.DefaultForHttpClient,
+                settings: settings ?? TestSettings.DefaultForBrowser,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 
