@@ -137,7 +137,7 @@ class Progress(ILogger<Program> logger) : IProgress<TestStep>
 }
 ```
 
-The `IProgress<TestStep>` interface is implemented by this class, which is called on every test step performed by `HttpClientTestAgent` during its testing operation. This allows to monitor the progress of the test execution.
+The `IProgress<TestStep>` interface is implemented by this class, which is called on every test step performed by `TestAgent` during its testing operation. This allows to monitor the progress of the test execution.
 
 The preceding code we added earlier in `Program.cs` does following:
 
@@ -156,8 +156,8 @@ static IHostBuilder CreateHostBuilder(string[] args) =>
         })
 ```
 
-[!NOTE]
-For more information on how to use dependency injection in .NET please follow this [Dependency Injection Tutorial](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage).
+> [!NOTE]
+> For more information on how to use dependency injection in .NET please follow this [Dependency Injection Tutorial](https://learn.microsoft.com/en-us/dotnet/core/extensions/dependency-injection-usage).
 
 - Adds a named `TestAgent` service to the service collection and configures its pipeline
 
@@ -315,7 +315,7 @@ new ServerContentResponseValidator(
         $"The HTTP response content exceeded the maximum allowed size of {MAX_SIZE_IN_BYTES} bytes.")
 ```
 
-- In the command handler reference the newly added `Pipeline` in the `HttpClientTestAgent` as follows:
+- In the command handler reference the newly added `Pipeline` in the `TestAgent` as follows:
 
 ```csharp
 testAgent.Container.AddComponent(CreateValidationPipeline());
@@ -323,7 +323,7 @@ testAgent.Container.AddComponent(CreateValidationPipeline());
 
 ## Test the new app with validation pipeline
 
-Now if you try to run the app, you get additional test steps performed by the `HttpClientTestAgent` in the order in which they were added:
+Now if you try to run the app, you get additional test steps performed by the `TestAgent` in the order in which they were added:
 
 ```console
 ConsoleApp.exe --url http://demoblaze.com

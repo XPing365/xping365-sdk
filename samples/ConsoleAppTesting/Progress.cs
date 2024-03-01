@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Logging;
 using XPing365.Sdk.Core.Session;
 
-namespace ConsoleApp;
+namespace ConsoleAppTesting;
 
 public sealed class Progress(ILogger<Program> logger) : IProgress<TestStep>
 {

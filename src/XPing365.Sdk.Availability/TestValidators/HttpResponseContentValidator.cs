@@ -64,7 +64,7 @@ public class HttpResponseContentValidator(
     public const string StepName = "Server content response validation";
 
     private readonly Func<byte[], HttpContentHeaders, bool> _isValid = isValid;
-    private readonly Func<byte[], HttpContentHeaders, string>? _errorMessage = onError;
+    private readonly Func<byte[], HttpContentHeaders, string>? _onError = onError;
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -73,10 +73,11 @@ public class HttpResponseContentValidator(
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
     /// <param name="context">A <see cref="TestContext"/> object that represents the test context.</param>
     /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
-    /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel this operation.
+    /// <param name="cancellationToken">
+    /// An optional CancellationToken object that can be used to cancel this operation.
     /// </param>
-    /// <returns><see cref="TestStep"/> object.</returns>
-    /// <exception cref="ArgumentNullException">If any of the following parameters: url, settings or context is null.
+    /// <exception cref="ArgumentNullException">
+    /// If any of the following parameters: url, settings or context is null.
     /// </exception>
     public override Task HandleAsync(
         Uri url,
@@ -116,11 +117,11 @@ public class HttpResponseContentValidator(
                 }
                 else
                 {
-                    string? errmsg = _errorMessage?.Invoke(content, response.Content.Headers);
+                    string? errmsg = _onError?.Invoke(content, response.Content.Headers);
                     testStep = context.SessionBuilder.Build(
                         component: this,
                         instrumentation: instrumentation,
-                        error: Errors.ValidationFailed(component: this));
+                        error: Errors.ValidationFailed(component: this, errmsg));
                 }
             }
         }
@@ -135,6 +136,4 @@ public class HttpResponseContentValidator(
 
         return Task.FromResult(testStep);
     }
-
-
 }
