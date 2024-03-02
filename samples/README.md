@@ -11,8 +11,8 @@ This folder contains various examples of how to use XPing365 SDK for your testin
     <li><a href="#usage">Usage</a></li>
     <li><a href="#samples">Samples</a></li>
     <ul>
-        <li><a href="#consoleapptesting">ConsoleAppTesting</a></li>
-        <li><a href="#integrationtesting">IntegrationTesting</a></li>
+        <li><a href="#consoleapptesting-sample">ConsoleAppTesting</a></li>
+        <li><a href="#integrationtesting-sample">IntegrationTesting</a></li>
     </ul>
   </ol>
 </details> 
@@ -66,7 +66,7 @@ Observe the test results in the console or in the Test Explorer window (if you a
 
 Here is a screenshot of the `ConsoleAppTesting` sample project running in Visual Studio Code:
 
-![](/xping365-sdk/images/vs-code-sample.png)
+![VS Code Running ConsoleAppTesting](/docs/images/vs-code-sample.png)
 
 ## Samples
 
@@ -74,8 +74,8 @@ This folder contains the following sample projects:
 
 |Project|Description|
 |-------|-----------|
-|ConsoleAppTesting|This sample demonstrates you how to use the `XPing365.Availability` NuGet package to test a Web Application or a Web API. It runs as a standalone application and gets a web address of the web application to validate from the command line argument `--url`. This kind of testing can help you test multiple web addresses with the same set of test components, verify if the web application is up and running after deployment, or warm up the web application by hitting its different routes. This sample has more details and features that you can explore by clicking <a href=“#consoleapptesting”>here</a>.|
-|IntegrationTesing|This sample shows you how to test a Web Application or a Web API using the `XPing365.Availability` NuGet package and the `HttpClient` client. It performs integration tests where you can serve the Web Application in memory for testing. This testing will verify if for example the database and the web pages work together correctly and display the right data. This sample has more details and features that you can explore by clicking <a href=“#integrationtesting”>here</a>.|
+|ConsoleAppTesting|This sample demonstrates you how to use the `XPing365.Availability` NuGet package to test a Web Application or a Web API. It runs as a standalone application and gets a web address of the web application to validate from the command line argument `--url`. This kind of testing can help you test multiple web addresses with the same set of test components, verify if the web application is up and running after deployment, or warm up the web application by hitting its different routes. This sample has more details and features that you can explore by clicking <a href="#consoleapptesting-sample">here</a>.|
+|IntegrationTesing|This sample shows you how to test a Web Application or a Web API using the `XPing365.Availability` NuGet package and the `HttpClient` client. It performs integration tests where you can serve the Web Application in memory for testing. This testing will verify if for example the database and the web pages work together correctly and display the right data. This sample has more details and features that you can explore by clicking <a href="#integrationtesting-sample">here</a>.|
 |WebApp|This project is a simple ASP.NET Core Web Application that serves as a testing target for the `IntegrationTesting`. It has a home page that displays a welcome message and login page. You can use this project to test the functionality and integrity of the Web Application using different test components and scenarios. You can also modify the Web Application to create your own testing targets.|
 
 ### ConsoleAppTesting Sample 
