@@ -6,7 +6,7 @@ For example, the `IPAddressAccessibilityCheck` component needs the resolved IP a
 
 The figure below shows a typical testing pipeline for a web application.
 
-<p align="center"><img src="/xping365-sdk/images/testing-pipeline.svg" alt="image" width="50%" height="auto" /></p>
+<p align="center"><img src="/xping365-sdk/images/testing-pipeline.svg" onerror='this.src = "/docs/images/testing-pipeline.svg"' alt="image" width="50%" height="auto" /></p>
 
 You can omit any of these components, but some components require others to be registered. For instance, the validation components that check the response content need the `HttpRequestSender` component. They depend on the HTTP response results from this component.
 
