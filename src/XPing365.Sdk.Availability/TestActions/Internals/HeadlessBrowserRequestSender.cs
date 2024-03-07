@@ -119,6 +119,7 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
             .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(response.StatusText))
             .Build(PropertyBagKeys.HttpResponseHeaders, responseHeadersBag)
             .Build(component: this, instrumentation);
+        context.Progress?.Report(testStep);
 
         // Location HTTP header, specifies the absolute or relative URL of the new resource.
         if (responseHeadersBag.Value.TryGetValue(HeaderNames.Location.ToUpperInvariant(), out string? redirectUrl))
@@ -143,8 +144,6 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
 
         // Restart the instrumentation log after this test step to ensure accurate timing for subsequent steps.
         instrumentation.Restart();
-
-        context.Progress?.Report(testStep);
     }
 
     private static PropertyBagValue<Dictionary<string, string>> GetHeaders(HttpHeaders headers) =>
