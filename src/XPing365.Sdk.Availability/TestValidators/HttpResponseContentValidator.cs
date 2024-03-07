@@ -65,6 +65,12 @@ public class HttpResponseContentValidator(
     Func<byte[], HttpContentHeaders, string>? onError = null) :
         TestComponent(StepName, TestStepType.ValidateStep)
 {
+    /// <summary>
+    /// The name of the test component that represents a HttpResponseContentValidator test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the HttpResponseContentValidator class in the test framework.
+    /// </remarks>
     public const string StepName = "Server content response validation";
 
     private readonly Func<byte[], HttpContentHeaders, bool> _isValid = isValid;

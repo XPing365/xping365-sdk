@@ -29,6 +29,11 @@ public sealed class Error(string code, string message) : IEquatable<Error>
     /// </summary>
     public string Message { get; } = message.RequireNotNullOrEmpty(nameof(message));
 
+    /// <summary>
+    /// Determines whether the current Error object is equal to another Error object.
+    /// </summary>
+    /// <param name="other">The Error object to compare with the current object.</param>
+    /// <returns>true if the current object and other have the same value; otherwise, false.</returns>
     public bool Equals(Error? other)
     {
         if (other is null)
@@ -49,16 +54,33 @@ public sealed class Error(string code, string message) : IEquatable<Error>
         return Code == other.Code;
     }
 
+    /// <summary>
+    /// Determines whether the current Error object is equal to a specified object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns>
+    /// true if the current object and obj are both Error objects and have the same value; otherwise, false.
+    /// </returns>
     public override bool Equals(object? obj)
     {
         return Equals(obj as Error);
     }
 
+    /// <summary>
+    /// Returns the hash code for the current Error object.
+    /// </summary>
+    /// <returns>A 32-bit signed integer hash code.</returns>
     public override int GetHashCode()
     {
         return string.GetHashCode(Code, StringComparison.InvariantCulture);
     }
 
+    /// <summary>
+    /// Determines whether two Error objects have the same value.
+    /// </summary>
+    /// <param name="lhs">The first Error object to compare.</param>
+    /// <param name="rhs">The second Error object to compare.</param>
+    /// <returns>true if lhs and rhs have the same value; otherwise, false.</returns>
     public static bool operator ==(Error? lhs, Error? rhs)
     {
         if (lhs is null || rhs is null)
@@ -69,6 +91,12 @@ public sealed class Error(string code, string message) : IEquatable<Error>
         return lhs.Equals(rhs);
     }
 
+    /// <summary>
+    /// Determines whether two Error objects have different values.
+    /// </summary>
+    /// <param name="lhs">The first Error object to compare.</param>
+    /// <param name="rhs">The second Error object to compare.</param>
+    /// <returns>true if lhs and rhs have different values; otherwise, false.</returns>
     public static bool operator !=(Error? lhs, Error? rhs)
     {
         if (lhs is null || rhs is null)
@@ -79,8 +107,17 @@ public sealed class Error(string code, string message) : IEquatable<Error>
         return !lhs.Equals(rhs);
     }
 
+    /// <summary>
+    /// Converts an Error object to a string representation.
+    /// </summary>
+    /// <param name="error">The Error object to convert.</param>
+    /// <returns>A string that represents the error.</returns>
     public static implicit operator string(Error error) => error.RequireNotNull(nameof(error)).ToString();
 
+    /// <summary>
+    /// Returns a string that represents the current Error object.
+    /// </summary>
+    /// <returns>A string that represents the current object.</returns>
     public override string ToString()
     {
         return $"Error {Code}: {Message}";

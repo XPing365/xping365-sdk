@@ -121,6 +121,10 @@ public sealed record TestStep : ISerializable
         ErrorMessage = info.GetValue(nameof(ErrorMessage), typeof(string)) as string;
     }
 
+    /// <summary>
+    /// Returns a string that represents the current TestStep object.
+    /// </summary>
+    /// <returns>A string that represents the current object.</returns>
     public override string ToString()
     {
         string msg = $"{StartDate} " +

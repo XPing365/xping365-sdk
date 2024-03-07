@@ -3,8 +3,18 @@ using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Core.Extensions;
 
+/// <summary>
+/// Provides extension methods for the TestContext class to access property bag values.
+/// </summary>
 public static class TestContextExtension
 {
+    /// <summary>
+    /// Gets a non-serializable value from the property bag of the test context.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to get.</typeparam>
+    /// <param name="context">The test context to get the value from.</param>
+    /// <param name="key">The key of the value to get.</param>
+    /// <returns>The value associated with the key, or null if not found.</returns>
     public static TValue? GetNonSerializablePropertyBagValue<TValue>(this TestContext context, PropertyBagKey key)
     {
         ArgumentNullException.ThrowIfNull(context);
@@ -18,6 +28,13 @@ public static class TestContextExtension
         return default;
     }
 
+    /// <summary>
+    /// Gets a serializable value from the property bag of the test context.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to get.</typeparam>
+    /// <param name="context">The test context to get the value from.</param>
+    /// <param name="key">The key of the value to get.</param>
+    /// <returns>The value associated with the key, or null if not found.</returns>
     public static TValue? GetPropertyBagValue<TValue>(this TestContext context, PropertyBagKey key)
     {
         ArgumentNullException.ThrowIfNull(context);

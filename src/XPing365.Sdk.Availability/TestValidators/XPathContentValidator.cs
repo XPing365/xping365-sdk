@@ -17,6 +17,12 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// </summary>
 public class XPathContentValidator : BaseContentValidator
 {
+    /// <summary>
+    /// The name of the test component that represents a XPathContentValidator test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the XPathContentValidator class in the test framework.
+    /// </remarks>
     public const string StepName = "Regex content validator";
 
     private readonly XPathExpression _xpath;

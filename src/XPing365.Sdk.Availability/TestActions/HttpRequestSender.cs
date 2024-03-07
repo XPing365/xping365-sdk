@@ -33,18 +33,24 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// separate testing pipelines, one for each client type, and run them independently.
 /// </note>
 /// </remarks>
-public class HttpRequestSender(Client client = Client.HttpClient) : 
+public class HttpRequestSender(Client client = Client.HttpClient) :
     TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     private readonly Lazy<HttpClientRequestSender> _httpClientRequestSender = new(
-        valueFactory: () => new HttpClientRequestSender($"{StepName} ({nameof(Client.HttpClient)})"), 
+        valueFactory: () => new HttpClientRequestSender($"{StepName} ({nameof(Client.HttpClient)})"),
         isThreadSafe: true);
     private readonly Lazy<HeadlessBrowserRequestSender> _headlessBrowserRequestSender = new(
-        valueFactory: () => new HeadlessBrowserRequestSender($"{StepName} ({nameof(Client.HeadlessBrowser)})"), 
+        valueFactory: () => new HeadlessBrowserRequestSender($"{StepName} ({nameof(Client.HeadlessBrowser)})"),
         isThreadSafe: true);
-    
+
     private readonly Client _client = client;
 
+    /// <summary>
+    /// The name of the test component that represents a HttpRequestSender test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the HttpRequestSender class in the test framework.
+    /// </remarks>
     public const string StepName = "Http request sender";
 
     /// <summary>

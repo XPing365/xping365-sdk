@@ -34,6 +34,12 @@ public class HttpResponseHeadersValidator(
     Func<HttpResponseHeaders, bool> isValid,
     Func<HttpResponseHeaders, string>? onError = null) : TestComponent(StepName, TestStepType.ValidateStep)
 {
+    /// <summary>
+    /// The name of the test component that represents a HttpResponseHeadersValidator test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the HttpResponseHeadersValidator class in the test framework.
+    /// </remarks>
     public const string StepName = "Http response headers validation";
 
     private readonly Func<HttpResponseHeaders, bool> _isValid = isValid;

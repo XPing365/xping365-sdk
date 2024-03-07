@@ -8,6 +8,9 @@ using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Core.DependencyInjection;
 
+/// <summary>
+/// Provides extension methods for the IServiceCollection interface to register test-related services.
+/// </summary>
 public static class DependencyInjectionExtension
 {
     /// <summary>
@@ -44,10 +47,16 @@ public static class DependencyInjectionExtension
         return services;
     }
 
+    /// <summary>
+    /// Adds a test server HttpClient produced by WebAppFactory to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add the service to.</param>
+    /// <param name="httpClientBuilder">A function that creates an HttpClient instance.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddTestServerHttpClient(
         this IServiceCollection services, Func<HttpClient> httpClientBuilder)
     {
-        services.AddTransient<IHttpClientFactory>(implementationFactory: 
+        services.AddTransient<IHttpClientFactory>(implementationFactory:
             serviceProvider => new TestServerHttpClientFactory(httpClientBuilder()));
 
         return services;
@@ -67,6 +76,13 @@ public static class DependencyInjectionExtension
         return services;
     }
 
+    /// <summary>
+    /// Adds a named test agent to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add the service to.</param>
+    /// <param name="name">The name of the test agent.</param>
+    /// <param name="builder">A function that configures the test agent instance.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddTestAgent(
         this IServiceCollection services,
         string name,
@@ -84,6 +100,11 @@ public static class DependencyInjectionExtension
         return services;
     }
 
+    /// <summary>
+    /// Adds a default test agent to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add the service to.</param>
+    /// <returns>The same service collection.</returns>
     public static IServiceCollection AddTestAgent(this IServiceCollection services)
     {
         services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();

@@ -25,17 +25,31 @@ public sealed class PropertyBag<TValue> : ISerializable
     /// </summary>
     public ReadOnlyCollection<PropertyBagKey> Keys => _properties.Keys.ToList().AsReadOnly();
 
+    /// <summary>
+    /// Initializes a new instance of the PropertyBag class.
+    /// </summary>
+    /// <param name="properties">An optional dictionary of properties to initialize the property bag with.</param>
     public PropertyBag(IDictionary<PropertyBagKey, TValue>? properties = null)
     {
         _properties = properties?.ToDictionary() ?? [];
-    } 
+    }
 
-    // Constructor for deserialization
+    /// <summary>
+    /// Initializes a new instance of the PropertyBag class with serialized data.
+    /// </summary>
+    /// <param name="info">The SerializationInfo that holds the serialized object data.</param>
+    /// <param name="context">
+    /// The StreamingContext that contains contextual information about the source or destination.
+    /// </param>
+    /// <remarks>
+    /// The PropertyBag class implements the ISerializable interface and can be serialized and deserialized using binary 
+    /// or XML formatters.
+    /// </remarks>
     public PropertyBag(SerializationInfo info, StreamingContext context)
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
-        if (info.GetValue(SerializableEntryName, typeof(Dictionary<PropertyBagKey, TValue>)) 
+        if (info.GetValue(SerializableEntryName, typeof(Dictionary<PropertyBagKey, TValue>))
             is Dictionary<PropertyBagKey, TValue> properties)
         {
             _properties = properties;
