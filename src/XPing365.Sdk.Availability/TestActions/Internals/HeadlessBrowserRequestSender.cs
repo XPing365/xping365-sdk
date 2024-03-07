@@ -6,6 +6,7 @@ using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
 using Microsoft.Extensions.DependencyInjection;
 using System.Net.Http.Headers;
+using System.Net;
 
 namespace XPing365.Sdk.Availability.TestActions.Internals;
 
@@ -25,6 +26,8 @@ namespace XPing365.Sdk.Availability.TestActions.Internals;
 /// </remarks>
 internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(name, type: TestStepType.ActionStep)
 {
+    private readonly OrderedHttpRedirections _visitedUrls = new();
+
     /// <summary>
     /// This method performs the test step operation asynchronously.
     /// </summary>
@@ -46,6 +49,8 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
         ArgumentNullException.ThrowIfNull(context, nameof(context));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
+        _visitedUrls.Clear();
+
         using IHeadlessBrowserFactory? headlessBrowserFactory = 
             serviceProvider.GetService<IHeadlessBrowserFactory>() ?? 
             throw new InvalidProgramException(Errors.HeadlessBrowserNotFound);
@@ -58,17 +63,23 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
 
         using var instrumentation = new InstrumentationLog(startStopwatch: true);
 
+        void OnHttpRedirection(IResponse response)
+        {
+            BuildHttpRedirectionStep(url, response, context, settings, instrumentation);
+        }
+
         TestStep testStep = null!;
         try
-        { 
-            WebPage webPage = await browser.GetAsync(url).ConfigureAwait(false);
+        {
+            _visitedUrls.Add(url.AbsoluteUri);
+            WebPage webPage = await browser.GetAsync(url, onHttpRedirection: OnHttpRedirection).ConfigureAwait(false);
             byte[] buffer = await ReadAsByteArrayAsync(
                     webPage.HttpResponseMessage.Content, 
                     cancellationToken)
                 .ConfigureAwait(false);
             HttpResponseMessage Response() => webPage.HttpResponseMessage;
             testStep = context.SessionBuilder
-                .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{Response().StatusCode}"))
+                .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{(int)Response().StatusCode}"))
                 .Build(PropertyBagKeys.HttpVersion, new PropertyBagValue<string>($"{Response().Version}"))
                 .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(Response().ReasonPhrase))
                 .Build(PropertyBagKeys.HttpResponseHeaders, GetHeaders(Response().Headers))
@@ -88,6 +99,54 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
         }
     }
 
+    private void BuildHttpRedirectionStep(
+        Uri url,
+        IResponse response,
+        TestContext context,
+        TestSettings settings,
+        InstrumentationLog instrumentation)
+    {
+        var responseHeadersBag = new PropertyBagValue<Dictionary<string, string>>(
+            response.Headers.ToDictionary(
+                pair => pair.Key.ToUpperInvariant(),
+                pair => pair.Value
+        ));
+
+        var httpStatucCode = Enum.Parse<HttpStatusCode>($"{response.Status}", ignoreCase: true);
+
+        var testStep = context.SessionBuilder
+            .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{(int)httpStatucCode}"))
+            .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(response.StatusText))
+            .Build(PropertyBagKeys.HttpResponseHeaders, responseHeadersBag)
+            .Build(component: this, instrumentation);
+
+        // Location HTTP header, specifies the absolute or relative URL of the new resource.
+        if (responseHeadersBag.Value.TryGetValue(HeaderNames.Location.ToUpperInvariant(), out string? redirectUrl))
+        {
+            if (_visitedUrls.Add(redirectUrl) == false)
+            {
+                // Circular dependency detected
+                throw new InvalidOperationException(
+                    $"A circular dependency was detected for the URL {redirectUrl}. " +
+                    $"The redirection chain is: {string.Join(" -> ", _visitedUrls)}");
+            }
+        }
+
+        // Throw an exception if the max number of redirects has been reached
+        if (_visitedUrls.Count > settings.MaxRedirections)
+        {
+            throw new TooManyRedirectsException(
+                $"The maximum number of redirects ({settings.MaxRedirections}) has been exceeded for the URL " +
+                $"{url}. The last redirect URL was " +
+                $"{_visitedUrls.FindLastMatchingItem(str => !string.IsNullOrEmpty(str))}.");
+        }
+
+        // Restart the instrumentation log after this test step to ensure accurate timing for subsequent steps.
+        instrumentation.Restart();
+
+        context.Progress?.Report(testStep);
+    }
+
     private static PropertyBagValue<Dictionary<string, string>> GetHeaders(HttpHeaders headers) =>
         new(headers.ToDictionary(h => h.Key.ToUpperInvariant(), h => string.Join(";", h.Value)));
 
@@ -100,6 +159,8 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
             Timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout),
             UserAgent = values?.FirstOrDefault(),
             Type = settings.BrowserType,
+            MaxRedirections = settings.MaxRedirections,
+            FollowHttpRedirectionResponses = settings.FollowHttpRedirectionResponses,
             ViewportSize = settings.BrowserViewportSize != null ? new ViewportSize
             {
                 Height = settings.BrowserViewportSize.Value.Height,
@@ -118,5 +179,6 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
         // specify the character encoding to use.
         return await httpContent.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
     }
+
 }
  

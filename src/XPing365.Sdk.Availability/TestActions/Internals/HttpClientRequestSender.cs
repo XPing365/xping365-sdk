@@ -1,4 +1,5 @@
-﻿using System.Net.Http.Headers;
+﻿using System.Net;
+using System.Net.Http.Headers;
 using Microsoft.Extensions.DependencyInjection;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
@@ -20,6 +21,8 @@ namespace XPing365.Sdk.Availability.TestActions.Internals;
 /// </remarks>
 internal sealed class HttpClientRequestSender(string name) : TestComponent(name, type: TestStepType.ActionStep)
 {
+    private readonly OrderedHttpRedirections _visitedUrls = new();
+
     /// <summary>
     /// This method performs the test step operation asynchronously.
     /// </summary>
@@ -41,6 +44,8 @@ internal sealed class HttpClientRequestSender(string name) : TestComponent(name,
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
 
+        _visitedUrls.Clear();
+
         IHttpClientFactory httpClientFactory =
             serviceProvider.GetService<IHttpClientFactory>() ??
             throw new InvalidProgramException(Errors.HttpClientsNotFound);
@@ -58,13 +63,13 @@ internal sealed class HttpClientRequestSender(string name) : TestComponent(name,
         TestStep testStep = null!;
         try
         {
-            using HttpResponseMessage response = await httpClient
-                .SendAsync(request, cancellationToken)
+            using HttpResponseMessage response = await SendRequestAsync(
+                    httpClient, request, settings, context, cancellationToken)
                 .ConfigureAwait(false);
 
             byte[] buffer = await ReadAsByteArrayAsync(response.Content, cancellationToken).ConfigureAwait(false);
             testStep = context.SessionBuilder
-                .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{response.StatusCode}"))
+                .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{(int)response.StatusCode}"))
                 .Build(PropertyBagKeys.HttpVersion, new PropertyBagValue<string>($"{response.Version}"))
                 .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(response.ReasonPhrase))
                 .Build(PropertyBagKeys.HttpResponseHeaders, GetHeaders(response.Headers))
@@ -101,25 +106,15 @@ internal sealed class HttpClientRequestSender(string name) : TestComponent(name,
     private static HttpClient CreateHttpClient(TestSettings settings, IHttpClientFactory httpClientFactory)
     {
         HttpClient httpClient = null!;
-        if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == true)
-        {
-            httpClient = httpClientFactory.CreateClient(
-                HttpClientConfiguration.HttpClientWithRetryAndFollowRedirect);
-        }
-        else if (settings.RetryHttpRequestWhenFailed == true && settings.FollowHttpRedirectionResponses == false)
+        if (settings.RetryHttpRequestWhenFailed == true)
         {
             httpClient = httpClientFactory.CreateClient(
                 HttpClientConfiguration.HttpClientWithRetryAndNoFollowRedirect);
         }
-        else if (settings.RetryHttpRequestWhenFailed == false && settings.FollowHttpRedirectionResponses == false)
+        else if (settings.RetryHttpRequestWhenFailed == false)
         {
             httpClient = httpClientFactory.CreateClient(
                 HttpClientConfiguration.HttpClientWithNoRetryAndNoFollowRedirect);
-        }
-        else if (settings.RetryHttpRequestWhenFailed == false && settings.FollowHttpRedirectionResponses == true)
-        {
-            httpClient = httpClientFactory.CreateClient(
-                HttpClientConfiguration.HttpClientWithNoRetryAndFollowRedirect);
         }
 
         httpClient.Timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout);
@@ -135,5 +130,104 @@ internal sealed class HttpClientRequestSender(string name) : TestComponent(name,
             Method = settings.GetHttpMethod(),
             Content = settings.GetHttpContent()
         };
+    }
+
+    private async Task<HttpResponseMessage> SendRequestAsync(
+        HttpClient httpClient,
+        HttpRequestMessage request,
+        TestSettings settings,
+        TestContext context,
+        CancellationToken cancellationToken)
+    {
+        if (settings.FollowHttpRedirectionResponses)
+        {
+            if (request.RequestUri != null)
+            {
+                _visitedUrls.Add(request.RequestUri.AbsoluteUri);
+            }
+
+            using var instrumentation = new InstrumentationLog(startStopwatch: true);
+
+            var response = await httpClient
+                .SendAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+
+            while (!response.IsSuccessStatusCode && _visitedUrls.Count <= settings.MaxRedirections)
+            {
+                // It is not recommended to handle redirects by checking if HTTP status code is between 300 and 399,
+                // because it does not account for the different types of redirections and their implications. For
+                // example, some redirects may change the request method from POST to GET, or require user confirmation
+                // before proceeding. Therefore, it is better to use the StatusCode property of the HttpResponseMessage
+                // class, which returns a value of the HttpStatusCode enum. This way, we can handle each redirection
+                // type appropriately and follow the best practices.
+
+                // Manually check if the response is a redirection
+                if (response.StatusCode == HttpStatusCode.Redirect ||
+                    response.StatusCode == HttpStatusCode.MovedPermanently ||
+                    response.StatusCode == HttpStatusCode.Found ||
+                    response.StatusCode == HttpStatusCode.SeeOther ||
+                    response.StatusCode == HttpStatusCode.TemporaryRedirect)
+                {
+                    TestStep testStep = context.SessionBuilder
+                        .Build(PropertyBagKeys.HttpStatus, new PropertyBagValue<string>($"{(int)response.StatusCode}"))
+                        .Build(PropertyBagKeys.HttpVersion, new PropertyBagValue<string>($"{response.Version}"))
+                        .Build(PropertyBagKeys.HttpReasonPhrase, new PropertyBagValue<string?>(response.ReasonPhrase))
+                        .Build(PropertyBagKeys.HttpResponseHeaders, GetHeaders(response.Headers))
+                        .Build(PropertyBagKeys.HttpResponseTrailingHeaders, GetHeaders(response.TrailingHeaders))
+                        .Build(PropertyBagKeys.HttpContentHeaders, GetHeaders(response.Content.Headers))
+                        .Build(component: this, instrumentation);
+                    context.Progress?.Report(testStep);
+
+                    // Location HTTP header, specifies the absolute or relative URL of the new resource.
+                    Uri? redirectUrl = response.Headers.Location;
+
+                    if (redirectUrl != null)
+                    {
+                        if (!redirectUrl.IsAbsoluteUri)
+                        {
+                            string lastAbsoluteUri =
+                                _visitedUrls.FindLastMatchingItem(url => new Uri(url).IsAbsoluteUri) ??
+                                throw new InvalidOperationException("Invalid Redirection Attempt Detected. The server "+
+                                "attempted to redirect to an invalid or unrecognized location. Please check the URL "+
+                                "or contact the site administrator for assistance.");
+
+                            redirectUrl = new Uri(baseUri: new Uri(lastAbsoluteUri), relativeUri: redirectUrl);
+                        }
+
+                        if (_visitedUrls.Add(redirectUrl.ToString()) == false)
+                        {
+                            // Circular dependency detected
+                            throw new InvalidOperationException(
+                                $"A circular dependency was detected for the URL {redirectUrl}. " +
+                                $"The redirection chain is: {string.Join(" -> ", _visitedUrls)}");
+                        }
+
+                        using HttpRequestMessage redirectRequest = CreateHttpRequestMessage(redirectUrl, settings);
+
+                        response = await httpClient
+                            .SendAsync(redirectRequest, cancellationToken)
+                            .ConfigureAwait(false);
+                    }
+                }
+            }
+
+            // Throw an exception if the max number of redirects has been reached
+            if (_visitedUrls.Count > settings.MaxRedirections)
+            {
+                throw new WebException(
+                    $"The maximum number of redirects ({settings.MaxRedirections}) has been exceeded for the URL " +
+                    $"{request.RequestUri}. The last redirect URL was " +
+                    $"{_visitedUrls.FindLastMatchingItem(str => !string.IsNullOrEmpty(str))}.",
+                    WebExceptionStatus.ProtocolError);
+            }
+
+            return response;
+        }
+        else
+        {
+            return await httpClient
+                .SendAsync(request, cancellationToken)
+                .ConfigureAwait(false);
+        }
     }
 }

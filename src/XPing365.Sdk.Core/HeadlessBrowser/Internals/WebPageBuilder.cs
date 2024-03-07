@@ -41,7 +41,10 @@ internal sealed partial class WebPageBuilder
         var responseMessage = new HttpResponseMessage
         {
             StatusCode = (HttpStatusCode)_response.Status,
-            Content = new StringContent(await _page.ContentAsync().ConfigureAwait(false))
+            Content = new StringContent(await _page.ContentAsync().ConfigureAwait(false)),
+            RequestMessage = new HttpRequestMessage(
+                HttpMethod.Parse(_response.Request.Method),
+                new Uri(_page.Url))
         };
 
         foreach (var httpHeader in _response.Headers)

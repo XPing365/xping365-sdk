@@ -78,3 +78,39 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
         Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);
     }
 }
+
+
+/* Suggested test structure with helper methods to simplify testing
+
+public class ConsoleAppTesting : TestBase
+{
+    public ConsoleAppTesting() : base()
+    {
+        // Register the components for the testing pipeline
+        RegisterComponent(new HttpRequestSender());
+        RegisterComponent(new ResponseContentValidator());
+        RegisterComponent(new ResponseStatusCodeValidator());
+    }
+
+    [Test]
+    public void TestWebAddress()
+    {
+        // Get the web address from the command line argument
+        string webAddress = GetArgumentValue("--url");
+
+        // Set the request URL
+        SetRequestUrl(webAddress);
+
+        // Set the expected response content
+        SetExpectedResponseContent("Welcome to XPing365");
+
+        // Set the expected response status code
+        SetExpectedResponseStatusCode(200);
+
+        // Run the testing pipeline
+        RunPipeline();
+    }
+}
+
+
+*/

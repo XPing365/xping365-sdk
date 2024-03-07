@@ -1,4 +1,6 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
+using System.Net;
 using Microsoft.Playwright;
 using XPing365.Sdk.Core.HeadlessBrowser.Internals;
 
@@ -48,23 +50,32 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
     /// A Task&lt;WebPage&gt; object that represents the asynchronous operation. The result of the task is a 
     /// <see cref="WebPage"/> object that represents the web page response.
     /// </returns>
-    public async Task<WebPage> GetAsync(Uri url)
+    public async Task<WebPage> GetAsync(Uri url, Action<IResponse>? onHttpRedirection = null)
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
 
         var options = new BrowserNewPageOptions
         {
-            UserAgent = Context.UserAgent, 
+            UserAgent = Context.UserAgent,
             ViewportSize = Context.ViewportSize
         };
 
         var page = await _browser.NewPageAsync(options).ConfigureAwait(false);
 
-        // Navigate to the website and wait for the response
+        // Listen for all responses
+        page.Response += (_, response) =>
+        {
+            if (response.Status >= 300 && response.Status <= 399)
+            {
+                onHttpRedirection?.Invoke(response);
+            }
+        };
+
         var response = await page.GotoAsync(
-            url: url.AbsoluteUri, 
+            url: url.AbsoluteUri,
             options: new PageGotoOptions { Timeout = (float)Context.Timeout.TotalMilliseconds })
             .ConfigureAwait(false);
+
         var webpage = await new WebPageBuilder()
             .Build(page)
             .Build(response)

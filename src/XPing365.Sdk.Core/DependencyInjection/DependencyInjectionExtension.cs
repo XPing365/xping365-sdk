@@ -27,50 +27,13 @@ public static class DependencyInjectionExtension
         services.AddHttpClient(HttpClientConfiguration.HttpClientWithNoRetryAndNoFollowRedirect)
                 .ConfigurePrimaryHttpMessageHandler(configureHandler =>
                 {
-                    return new SocketsHttpHandler
-                    {
-                        PooledConnectionLifetime = httpClientConfiguration.PooledConnectionLifetime,
-                        AllowAutoRedirect = false,
-                        UseCookies = false, // Set the cookie manually instead from the CookieContainer
-                    };
-                });
-
-        services.AddHttpClient(HttpClientConfiguration.HttpClientWithNoRetryAndFollowRedirect)
-                .ConfigurePrimaryHttpMessageHandler(configureHandler =>
-                {
-                    return new SocketsHttpHandler
-                    {
-                        PooledConnectionLifetime = httpClientConfiguration.PooledConnectionLifetime,
-                        AllowAutoRedirect = true,
-                        UseCookies = false, // Set the cookie manually instead from the CookieContainer
-                    };
+                    return CreateSocketsHttpHandler(httpClientConfiguration);
                 });
 
         services.AddHttpClient(HttpClientConfiguration.HttpClientWithRetryAndNoFollowRedirect)
                 .ConfigurePrimaryHttpMessageHandler(configureHandler =>
                 {
-                    return new SocketsHttpHandler
-                    {
-                        PooledConnectionLifetime = httpClientConfiguration.PooledConnectionLifetime,
-                        AllowAutoRedirect = false,
-                        UseCookies = false, // Set the cookie manually instead from the CookieContainer
-                    };
-                })
-                .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(
-                    sleepDurations: httpClientConfiguration.SleepDurations))
-                .AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
-                    handledEventsAllowedBeforeBreaking: httpClientConfiguration.HandledEventsAllowedBeforeBreaking,
-                    durationOfBreak: httpClientConfiguration.DurationOfBreak));
-
-        services.AddHttpClient(HttpClientConfiguration.HttpClientWithRetryAndFollowRedirect)
-                .ConfigurePrimaryHttpMessageHandler(configureHandler =>
-                {
-                    return new SocketsHttpHandler
-                    {
-                        PooledConnectionLifetime = httpClientConfiguration.PooledConnectionLifetime,
-                        AllowAutoRedirect = true,
-                        UseCookies = false, // Set the cookie manually instead from the CookieContainer
-                    };
+                    return CreateSocketsHttpHandler(httpClientConfiguration);
                 })
                 .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(
                     sleepDurations: httpClientConfiguration.SleepDurations))
@@ -128,4 +91,14 @@ public static class DependencyInjectionExtension
 
         return services;
     }
+
+
+    private static SocketsHttpHandler CreateSocketsHttpHandler(
+        HttpClientConfiguration httpClientConfiguration) => new()
+        {
+            PooledConnectionLifetime = httpClientConfiguration.PooledConnectionLifetime,
+            AutomaticDecompression = httpClientConfiguration.AutomaticDecompression,
+            AllowAutoRedirect = false, // We implement custom redirection mechanism
+            UseCookies = false, // Set the cookie manually instead from the CookieContainer
+        };
 }
