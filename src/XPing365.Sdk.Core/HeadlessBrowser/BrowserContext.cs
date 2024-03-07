@@ -27,6 +27,17 @@ public class BrowserContext
     public string? UserAgent { get; set; }
 
     /// <summary>
+    /// Gets or sets the maximum number of allowed HTTP redirects. Default is 50.
+    /// </summary>
+    public int MaxRedirections { get; set; } = 50;
+
+    /// <summary>
+    /// Gets or sets a boolean value which determines whether to follow HTTP redirection responses. Default is true, 
+    /// unless specified differently in <see cref="DefaultForHttpClient"/>.
+    /// </summary>
+    public bool FollowHttpRedirectionResponses { get; set; } = true;
+
+    /// <summary>
     /// Emulates consistent viewport for each page. Defaults to an 1280x720 viewport.
     /// Learn more about <a href="https://playwright.dev/dotnet/docs/emulation#viewport">viewport emulation</a>.
     /// </summary>

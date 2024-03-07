@@ -88,7 +88,7 @@ This folder contains the following sample projects:
 - It verifies if the web application is up and running after deployment, which ensures the quality and reliability of your product. You can set the expected response content and status code in the code and compare them with the actual response from the web address. For example, you can set the expected response content to `"Welcome to XPing365"` and the expected response status code to `200` and check if they match the actual response from the web address.
 - It warms up the web application by hitting different routes, which improves the performance and user experience of your product right after deployment. You can provide web addresses with different paths that access different parts of your web application and make sure they are loaded and ready to use. For example, you can provide web addresses like https://example.com/home, https://example.com/about, and https://example.com/contact.
 
-I hope this project helps you with your testing needs. If you have any feedback or questions, please let me know [here](https://github.com/XPing365/xping365-sdk/discussions/29). 😊
+We hope this project helps you with your testing needs. If you have any feedback or questions, please let us know [here](https://github.com/XPing365/xping365-sdk/discussions/29). 😊
 
 ### IntegrationTesting Sample
 
@@ -101,4 +101,4 @@ With this project, you can:
 > [!NOTE] 
 > Running the Web Application in memory prevents you from using headless browsers in this testing scenario.
 
-I hope this project helps you with your testing needs. If you have any feedback or questions, please let me know [here](https://github.com/XPing365/xping365-sdk/discussions/29). 😊
+We hope this project helps you with your testing needs. If you have any feedback or questions, please let us know [here](https://github.com/XPing365/xping365-sdk/discussions/29). 😊

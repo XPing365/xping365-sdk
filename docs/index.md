@@ -24,6 +24,6 @@ To get started with <b>XPing365</b> SDK, please refer to the following resources
 
 3. [Samples](https://github.com/XPing365/xping365-sdk/tree/main/samples): The <b>XPing365</b> SDK repository contains several samples that demonstrate how to use <b>XPing365</b> in various scenarios. You can find the samples in the `samples` directory of the repository.
 
-We hope that you find XPing365 useful for your web application testing needs. If you have any questions or feedback, please don’t hesitate to reach out to us [here](https://github.com/XPing365/xping365-sdk/issues)!
+We hope that you find XPing365 useful for your web application testing needs. If you have any questions or feedback, please don’t hesitate to reach out to us [here](https://github.com/XPing365/xping365-sdk/discussions)!
 
 Thank you for using <b>XPing365</b>!

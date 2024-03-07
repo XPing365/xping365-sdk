@@ -33,6 +33,11 @@ public sealed class TestSettings
     public bool FollowHttpRedirectionResponses { get; set; } = true;
 
     /// <summary>
+    /// Gets or sets the maximum number of allowed HTTP redirects. Default is 50.
+    /// </summary>
+    public int MaxRedirections { get; set; } = 50;
+
+    /// <summary>
     /// Gets or sets a value indicating whether to continue running all tests regardless of their results. Default is 
     /// false.
     /// </summary>

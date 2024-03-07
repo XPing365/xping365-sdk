@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core.Configurations;
+﻿using System.Net;
+
+namespace XPing365.Sdk.Core.Configurations;
 
 /// <summary>
 /// The HttpClientConfiguration class is used to provide a set of properties for various features of 
@@ -7,10 +9,8 @@
 /// </summary>
 public class HttpClientConfiguration
 {
-    public const string HttpClientWithNoRetryAndFollowRedirect = nameof(HttpClientWithNoRetryAndFollowRedirect);
     public const string HttpClientWithNoRetryAndNoFollowRedirect = nameof(HttpClientWithNoRetryAndNoFollowRedirect);
     public const string HttpClientWithRetryAndNoFollowRedirect = nameof(HttpClientWithRetryAndNoFollowRedirect);
-    public const string HttpClientWithRetryAndFollowRedirect = nameof(HttpClientWithRetryAndFollowRedirect);
 
     /// <summary>
     /// Gets or sets how long a connection can be in the pool to be considered reusable. Default is 1 minute.
@@ -40,4 +40,10 @@ public class HttpClientConfiguration
     /// See the remarks on <see cref="Microsoft.Extensions.Http.PolicyHttpMessageHandler"/>.
     /// </summary>
     public TimeSpan DurationOfBreak { get; set; } = TimeSpan.FromSeconds(30);
+
+    /// <summary>
+    /// Gets or sets a type of decompression method used by the handler for automatic decompression of the HTTP content
+    /// response. Default is All.
+    /// </summary>
+    public DecompressionMethods AutomaticDecompression { get; set; } = DecompressionMethods.All;
 }
