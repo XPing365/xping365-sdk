@@ -32,5 +32,6 @@
     <file src="README.md" target="docs" />
     <file src="..\docs\images\icon.png" target="images\" />
     <file src="..\src\XPing365.Sdk.Availability\bin\Release\net8.0\XPing365.Sdk.Availability.dll" target="lib\net8.0\XPing365.Sdk.Availability.dll" />
+    <file src="..\src\XPing365.Sdk.Availability\bin\Release\net8.0\XPing365.Sdk.Availability.xml" target="lib\net8.0\XPing365.Sdk.Availability.xml" />
   </files>
 </package>

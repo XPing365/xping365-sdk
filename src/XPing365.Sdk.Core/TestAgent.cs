@@ -51,17 +51,27 @@ namespace XPing365.Sdk.Core;
 /// </example>
 /// </para>
 /// </remarks>
-/// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
-/// <param name="component"><see cref="ITestComponent"/> object which will be used to perform specific test operation.
-/// </param>
-public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent? component = null)
+public sealed class TestAgent
 {
-    private readonly IServiceProvider _serviceProvider = serviceProvider;
+    private readonly IServiceProvider _serviceProvider;
 
     /// <summary>
     /// Gets the <see cref="ITestComponent"/> instance that represents the container of the current object.
     /// </summary>
-    public ITestComponent? Container { get; set; } = component;
+    public ITestComponent? Container { get; set; }
+
+    /// <summary>
+    /// Initializes new instance of the TestAgent class. For internal use only.
+    /// </summary>
+    /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
+    /// <param name="component">
+    /// <see cref="ITestComponent"/> object which will be used to perform specific test operation.
+    /// </param>
+    public TestAgent(IServiceProvider serviceProvider, ITestComponent? component = null)
+    {
+        _serviceProvider = serviceProvider;
+        Container = component;
+    }
 
     /// <summary>
     /// This method initializes the test context for executing the test component. After the test operation is executed, 
@@ -108,6 +118,16 @@ public sealed class TestAgent(IServiceProvider serviceProvider, ITestComponent? 
         return testSession;
     }
 
+    /// <summary>
+    /// Asynchronously probes a test components registered in the current instance of the Container using the specified 
+    /// URL and settings.
+    /// </summary>
+    /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
+    /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
+    /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
+    /// validation process.</param>
+    /// <returns>A task that represents the asynchronous operation. The task result contains a boolean value indicating 
+    /// whether the probe was successful or not.</returns>
     public async Task<bool> ProbeAsync(
         Uri url,
         TestSettings settings,

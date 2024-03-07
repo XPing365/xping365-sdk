@@ -46,6 +46,9 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
     /// page content and functionality.
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the web page to request.</param>
+    /// <param name="onHttpRedirection">
+    /// An optional action that will be invoked when an HTTP redirection response is received.
+    /// </param>
     /// <returns>
     /// A Task&lt;WebPage&gt; object that represents the asynchronous operation. The result of the task is a 
     /// <see cref="WebPage"/> object that represents the web page response.
@@ -85,6 +88,9 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
         return webpage;
     }
 
+    /// <summary>
+    /// Releases the resources used by the HeadlessBrowserClient instance.
+    /// </summary>
     public void Dispose()
     {
         // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
@@ -92,6 +98,10 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Asynchronously releases the resources used by the headless browser client.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
     public async ValueTask DisposeAsync()
     {
         await DisposeAsyncCore().ConfigureAwait(false);
@@ -100,6 +110,11 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
         GC.SuppressFinalize(this);
     }
 
+    /// <summary>
+    /// Releases the unmanaged resources used by the headless browser client and optionally releases the managed 
+    /// resources.
+    /// </summary>
+    /// <param name="disposing">A flag indicating whether to release the managed resources.</param>
     protected virtual void Dispose(bool disposing)
     {
         if (disposing)
@@ -112,6 +127,10 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
         }
     }
 
+    /// <summary>
+    /// Asynchronously performs the core logic of disposing the headless browser client.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
     protected virtual async ValueTask DisposeAsyncCore()
     {
         if (_browser is not null)

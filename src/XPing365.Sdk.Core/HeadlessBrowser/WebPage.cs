@@ -16,6 +16,10 @@ public class WebPage
 {
     private readonly HttpResponseMessage _responseMessage;
 
+    /// <summary>
+    /// Initializes new instance of the WebPage object.
+    /// </summary>
+    /// <param name="responseMessage">An HttpResponseMessage object for the WebPage.</param>
     public WebPage(HttpResponseMessage responseMessage)
     {
         _responseMessage = responseMessage;

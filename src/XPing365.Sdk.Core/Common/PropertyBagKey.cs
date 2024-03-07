@@ -17,16 +17,32 @@ public class PropertyBagKey(string key) : IEquatable<PropertyBagKey?>
 {
     private readonly string _key = key.RequireNotNullOrEmpty(nameof(key));
 
+    /// <summary>
+    /// Determines whether the current PropertyBagKey object is equal to a specified object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns>
+    /// true if the current object and obj are both PropertyBagKey objects and have the same value; otherwise, false.
+    /// </returns>
     public override bool Equals(object? obj)
     {
         return Equals(obj as PropertyBagKey);
     }
 
+    /// <summary>
+    /// Determines whether the current PropertyBagKey object is equal to another PropertyBagKey object.
+    /// </summary>
+    /// <param name="other">The PropertyBagKey object to compare with the current object.</param>
+    /// <returns>true if the current object and other have the same value; otherwise, false.</returns>
     public bool Equals(PropertyBagKey? other)
     {
         return other is not null && _key == other._key;
     }
 
+    /// <summary>
+    /// Returns the hash code for the current PropertyBagKey object.
+    /// </summary>
+    /// <returns>A 32-bit signed integer hash code.</returns>
     public override int GetHashCode()
     {
         return HashCode.Combine(_key);
@@ -56,6 +72,10 @@ public class PropertyBagKey(string key) : IEquatable<PropertyBagKey?>
         return !(left == right);
     }
 
+    /// <summary>
+    /// Returns a string that represents the current Error object.
+    /// </summary>
+    /// <returns>A string that represents the current object.</returns>
     public override string ToString() => _key;
 
     private string GetDebuggerDisplay() => _key;

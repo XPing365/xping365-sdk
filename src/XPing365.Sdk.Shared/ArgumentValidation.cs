@@ -15,7 +15,11 @@ internal static class ArgumentValidation
     /// <typeparam name="T">The instance type</typeparam>
     /// <param name="obj">The parameter instance to verify</param>
     /// <param name="parameterName">The parameter name to verify</param>
+    /// <param name="memberName">The name of the method or property that calls this method.</param>
+    /// <param name="sourceFilePath">The path of the source file that contains the caller.</param>
+    /// <param name="sourceLineNumber">The line number in the source file at which this method is called.</param>
     /// <returns>The instance that was passed to verify</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the parameter is null.</exception>
     public static T RequireNotNull<T>(
         this T? obj, 
         string parameterName, 
@@ -44,7 +48,11 @@ internal static class ArgumentValidation
     /// <param name="condition">The condition to test for</param>
     /// <param name="parameterName">The parameter name to verify</param>
     /// <param name="message">The message to post when the parameter instance fails validation</param>
+    /// <param name="memberName">The name of the method or property that calls this method.</param>
+    /// <param name="sourceFilePath">The path of the source file that contains the caller.</param>
+    /// <param name="sourceLineNumber">The line number in the source file at which this method is called.</param>
     /// <returns>The instance that was passed to verify</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the condition is not met.</exception>
     public static T RequireCondition<T>(
         this T obj,
         Func<T, bool> condition,
@@ -74,7 +82,11 @@ internal static class ArgumentValidation
     /// </summary>
     /// <param name="obj">The parameter instance to verify</param>
     /// <param name="parameterName">The parameter name to verify</param>
+    /// <param name="memberName">The name of the method or property that calls this method.</param>
+    /// <param name="sourceFilePath">The path of the source file that contains the caller.</param>
+    /// <param name="sourceLineNumber">The line number in the source file at which this method is called.</param>
     /// <returns>The instance that was passed to verify</returns>
+    /// <exception cref="ArgumentNullException">Thrown when the parameter is null or whitespace.</exception>
     public static string RequireNotNullOrWhiteSpace(
         this string? obj,
         string parameterName,
@@ -100,7 +112,11 @@ internal static class ArgumentValidation
     /// </summary>
     /// <param name="obj">The parameter instance to verify</param>
     /// <param name="parameterName">The parameter name to verify</param>
+    /// <param name="memberName">The name of the method or property that calls this method.</param>
+    /// <param name="sourceFilePath">The path of the source file that contains the caller.</param>
+    /// <param name="sourceLineNumber">The line number in the source file at which this method is called.</param>
     /// <returns>The instance that was passed to verify</returns>
+    /// <exception cref="ArgumentException">Thrown when the string parameter is null or empty.</exception>
     public static string RequireNotNullOrEmpty(
         this string? obj,
         string parameterName,

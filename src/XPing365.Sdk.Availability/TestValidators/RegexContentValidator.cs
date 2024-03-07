@@ -16,6 +16,12 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// </summary>
 public class RegexContentValidator : BaseContentValidator
 {
+    /// <summary>
+    /// The name of the test component that represents a RegexContentValidator test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the RegexContentValidator class in the test framework.
+    /// </remarks>
     public const string StepName = "Regex content validator";
 
     private readonly Func<Regex> GetRegex;

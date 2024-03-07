@@ -3,8 +3,18 @@ using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Core.Extensions;
 
+/// <summary>
+/// Provides extension methods for the TestSession class to access property bag values.
+/// </summary>
 public static class TestSessionExtension
 {
+    /// <summary>
+    /// Gets a non-serializable value from the property bag of the test session.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to get.</typeparam>
+    /// <param name="session">The test session to get the value from.</param>
+    /// <param name="key">The key of the value to get.</param>
+    /// <returns>The value associated with the key, or null if not found.</returns>
     public static TValue? GetNonSerializablePropertyBagValue<TValue>(this TestSession session, PropertyBagKey key)
     {
         ArgumentNullException.ThrowIfNull(session);
@@ -18,6 +28,13 @@ public static class TestSessionExtension
         return default;
     }
 
+    /// <summary>
+    /// Gets a serializable value from the property bag of the test session.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to get.</typeparam>
+    /// <param name="session">The test session to get the value from.</param>
+    /// <param name="key">The key of the value to get.</param>
+    /// <returns>The value associated with the key, or null if not found.</returns>
     public static TValue? GetPropertyBagValue<TValue>(this TestSession session, PropertyBagKey key)
     {
         ArgumentNullException.ThrowIfNull(session);
@@ -31,6 +48,14 @@ public static class TestSessionExtension
         return default;
     }
 
+    /// <summary>
+    /// Tries to get a serializable value from the property bag of the test session.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to get.</typeparam>
+    /// <param name="session">The test session to get the value from.</param>
+    /// <param name="key">The key of the value to get.</param>
+    /// <param name="value">The output parameter that will receive the value if found.</param>
+    /// <returns>True if the value was found, false otherwise.</returns>
     public static bool TryGetPropertyBagValue<TValue>(
         this TestSession session,
         PropertyBagKey key,
@@ -53,6 +78,14 @@ public static class TestSessionExtension
         return false;
     }
 
+    /// <summary>
+    /// Tries to get a non-serializable value from the property bag of the test session.
+    /// </summary>
+    /// <typeparam name="TValue">The type of the value to get.</typeparam>
+    /// <param name="session">The test session to get the value from.</param>
+    /// <param name="key">The key of the value to get.</param>
+    /// <param name="value">The output parameter that will receive the value if found.</param>
+    /// <returns>True if the value was found, false otherwise.</returns>
     public static bool TryGetPropertyBagValue<TValue>(
         this TestSession session,
         PropertyBagKey key,

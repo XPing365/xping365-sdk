@@ -15,6 +15,12 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// </summary>
 public class StringContentValidator : BaseContentValidator
 {
+    /// <summary>
+    /// The name of the test component that represents a StringContentValidator test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the StringContentValidator class in the test framework.
+    /// </remarks>
     public const string StepName = "String content validator";
 
     private readonly Func<string, bool> _isValid;

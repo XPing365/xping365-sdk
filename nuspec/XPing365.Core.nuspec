@@ -30,5 +30,6 @@
     <file src="README.md" target="docs" />
     <file src="..\docs\images\icon.png" target="images\" />
     <file src="..\src\XPing365.Sdk.Core\bin\Release\net8.0\XPing365.Sdk.Core.dll" target="lib\net8.0\XPing365.Sdk.Core.dll" />
+    <file src="..\src\XPing365.Sdk.Core\bin\Release\net8.0\XPing365.Sdk.Core.xml" target="lib\net8.0\XPing365.Sdk.Core.xml" />
   </files>
 </package>

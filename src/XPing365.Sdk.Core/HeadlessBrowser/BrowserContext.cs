@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Core.HeadlessBrowser;
 
@@ -33,7 +34,7 @@ public class BrowserContext
 
     /// <summary>
     /// Gets or sets a boolean value which determines whether to follow HTTP redirection responses. Default is true, 
-    /// unless specified differently in <see cref="DefaultForHttpClient"/>.
+    /// unless specified differently in <see cref="TestSettings.DefaultForHttpClient"/>.
     /// </summary>
     public bool FollowHttpRedirectionResponses { get; set; } = true;
 

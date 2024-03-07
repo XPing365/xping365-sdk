@@ -10,6 +10,11 @@ namespace XPing365.Sdk.Core.Components;
 /// </summary>
 public abstract class TestComponent : ITestComponent
 {
+    /// <summary>
+    /// Initiazlies new instance of the TestComponent class.
+    /// </summary>
+    /// <param name="name">Name of the test component.</param>
+    /// <param name="type">Type of the test component.</param>
     protected TestComponent(string name, TestStepType type)
     {
         Name = name.RequireNotNullOrEmpty(nameof(name));
@@ -22,7 +27,7 @@ public abstract class TestComponent : ITestComponent
     public string Name { get; protected set; }
 
     /// <summary>
-    /// Gets a step type.
+    /// Gets a test component type.
     /// </summary>
     public TestStepType Type { get; }
 
@@ -32,7 +37,7 @@ public abstract class TestComponent : ITestComponent
     /// </summary>
     /// <param name="url">A Uri object that represents the URL of the page being validated.</param>
     /// <param name="settings">A <see cref="TestSettings"/> object that contains the settings for the test.</param>
-    /// <param name="session">A <see cref="TestContext"/> object that represents the test session.</param>
+    /// <param name="context">A <see cref="TestContext"/> object that represents the test context.</param>
     /// <param name="serviceProvider">An instance object of a mechanism for retrieving a service object.</param>
     /// <param name="cancellationToken">An optional CancellationToken object that can be used to cancel the 
     /// this operation.</param>

@@ -34,7 +34,7 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     /// <summary>
     /// A Uri object that represents the URL of the page being validated.
     /// </summary>
-    public required Uri Url 
+    public required Uri Url
     {
         get => _url;
         init => _url = value ?? throw new ArgumentNullException(nameof(Url), Errors.MissingUrlInTestSession);
@@ -130,6 +130,10 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         DeclineReason = info.GetValue(nameof(DeclineReason), typeof(string)) as string;
     }
 
+    /// <summary>
+    /// Returns a string that represents the current TestSession object.
+    /// </summary>
+    /// <returns>A string that represents the current object.</returns>
     public override string ToString()
     {
         var sb = new StringBuilder();

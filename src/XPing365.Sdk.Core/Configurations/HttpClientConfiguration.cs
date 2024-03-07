@@ -9,7 +9,19 @@ namespace XPing365.Sdk.Core.Configurations;
 /// </summary>
 public class HttpClientConfiguration
 {
+    /// <summary>
+    /// The name of the HttpClient that does not perform any retry policies.
+    /// </summary>
+    /// <remarks>
+    /// This constant can be used to create or resolve a named HttpClient in the DependencyInjection service collection.
+    /// </remarks>
     public const string HttpClientWithNoRetryAndNoFollowRedirect = nameof(HttpClientWithNoRetryAndNoFollowRedirect);
+    /// <summary>
+    /// The name of the HttpClient that performs retry policies.
+    /// </summary>
+    /// <remarks>
+    /// This constant can be used to create or resolve a named HttpClient in the DependencyInjection service collection.
+    /// </remarks>
     public const string HttpClientWithRetryAndNoFollowRedirect = nameof(HttpClientWithRetryAndNoFollowRedirect);
 
     /// <summary>
@@ -23,7 +35,7 @@ public class HttpClientConfiguration
     /// 10[s] on 3rd retry. See the remarks on <see cref="Microsoft.Extensions.Http.PolicyHttpMessageHandler"/>.
     /// </summary>
     public IEnumerable<TimeSpan> SleepDurations { get; set; } = new[]
-    { 
+    {
         TimeSpan.FromSeconds(1),
         TimeSpan.FromSeconds(5),
         TimeSpan.FromSeconds(10)

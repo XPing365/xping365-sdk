@@ -24,6 +24,11 @@ public sealed class InstrumentationLog : IDisposable
     private readonly Action<InstrumentationLog>? _callback;
     private DateTime _startTime = DateTime.Today;
 
+    /// <summary>
+    /// Initializes a new instance of the InstrumentationLog class.
+    /// </summary>
+    /// <param name="callback">An optional callback action that will be invoked when the instance is disposed.</param>
+    /// <param name="startStopwatch">A flag indicating whether to start the stopwatch automatically.</param>
     public InstrumentationLog(Action<InstrumentationLog>? callback = null, bool startStopwatch = true)
     {
         _callback = callback;
@@ -70,6 +75,12 @@ public sealed class InstrumentationLog : IDisposable
         _stopwatch.Restart();
     }
 
+    /// <summary>
+    /// Releases the resources used by the InstrumentationLog instance.
+    /// </summary>
+    /// <remarks>
+    /// This method stops the stopwatch and invokes the callback action if provided.
+    /// </remarks>
     public void Dispose()
     {
         Dispose(true);

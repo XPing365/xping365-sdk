@@ -32,6 +32,12 @@ public sealed class HttpStatusCodeValidator(
     Func<HttpStatusCode, bool> isValid,
     Func<HttpStatusCode, string>? onError = null) : TestComponent(StepName, TestStepType.ValidateStep)
 {
+    /// <summary>
+    /// The name of the test component that represents a HttpStatusCodeValidator test operation.
+    /// </summary>
+    /// <remarks>
+    /// This constant is used to register the HttpStatusCodeValidator class in the test framework.
+    /// </remarks>
     public const string StepName = "Http status code validation";
 
     private readonly Func<HttpStatusCode, bool> _isValid = isValid;
