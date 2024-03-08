@@ -32,6 +32,14 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     private readonly DateTime _startDate;
 
     /// <summary>
+    /// Gets the unique identifier of the test session.
+    /// </summary>
+    /// <value>
+    /// A <see cref="Guid"/> value that represents the test session ID.
+    /// </value>
+    public Guid Id { get; private set; }
+
+    /// <summary>
     /// A Uri object that represents the URL of the page being validated.
     /// </summary>
     public required Uri Url
@@ -107,7 +115,9 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     /// Initializes a new instance of the <see cref="TestSession"/> class.
     /// </summary>
     public TestSession()
-    { }
+    {
+        Id = Guid.NewGuid();
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="TestSession"/> class with serialized data.
@@ -122,6 +132,7 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     {
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
+        Id = (Guid)info.GetValue(nameof(Id), typeof(Guid)).RequireNotNull(nameof(Id));
         Url = (Uri)info.GetValue(nameof(Url), typeof(Uri)).RequireNotNull(nameof(Url));
         StartDate = (DateTime)info.GetValue(nameof(StartDate), typeof(DateTime)).RequireNotNull(nameof(StartDate));
         Steps = info.GetValue(nameof(Steps), typeof(TestStep[])) as TestStep[] ?? [];
@@ -153,6 +164,7 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
 
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
+        info.AddValue(nameof(Id), Id, typeof(Guid));
         info.AddValue(nameof(Url), Url, typeof(Uri));
         info.AddValue(nameof(StartDate), StartDate, typeof(DateTime));
         info.AddValue(nameof(Steps), Steps.ToArray(), typeof(TestStep[]));

@@ -1,5 +1,4 @@
 ﻿using System.Runtime.Serialization;
-using System.Text;
 using System.Xml;
 using System.Xml.XPath;
 using XPing365.Sdk.Core.Common;
@@ -63,6 +62,35 @@ internal class TestSessionSerializationTests
     }
 
     [Test]
+    public void TestSessionIdIsSerialized()
+    {
+        // Arrange
+        TestSession session = new()
+        {
+            Url = new Uri("https://test"),
+            StartDate = DateTime.UtcNow,
+            State = TestSessionState.NotStarted,
+            Steps = []
+        };
+        var serializer = new TestSessionSerializer();
+        using var stream = new MemoryStream();
+        
+        // Act
+        serializer.Serialize(session, stream, SerializationFormat.XML);
+        stream.Position = 0;
+
+        using XmlReader xmlReader = XmlReader.Create(stream);
+        var document = new XPathDocument(xmlReader);
+        XPathNavigator navigator = document.CreateNavigator();
+        XPathNodeIterator nodes = navigator.Select(XPathExpression.Compile("//TestSession/Id"));
+
+        // Assert
+        Assert.That(nodes.MoveNext(), Is.True);
+        Assert.That(nodes.Current, Is.Not.Null);
+        Assert.That(nodes.Current.Value, Is.EqualTo(session.Id.ToString()));
+    }
+
+    [Test]
     public void TestSessionInstanceIsCorrectlySerializedToXml()
     {
         // Arrange
@@ -94,12 +122,10 @@ internal class TestSessionSerializationTests
         XPathNavigator navigator = document.CreateNavigator();
         XPathNodeIterator nodes = navigator.Select("/TestSession/Url");
 
-        while (nodes.MoveNext())
-        {
-            // Assert
-            Assert.That(nodes.Current, Is.Not.Null);
-            Assert.That(nodes.Current.Value, Is.EqualTo(session.Url.AbsoluteUri));
-        }
+        // Assert
+        Assert.That(nodes.MoveNext(), Is.True);
+        Assert.That(nodes.Current, Is.Not.Null);
+        Assert.That(nodes.Current.Value, Is.EqualTo(session.Url.AbsoluteUri));
     }
 
     [Test]

@@ -33,6 +33,23 @@ public sealed class TestSessionTests
         };
 
     [Test]
+    public void ConstructorAssignsGUIDWhenAnObjectIsInstantiated()
+    {
+        // Act
+        var session = new TestSession
+        {
+            Url = new Uri("http://localhost"),
+            StartDate = DateTime.UtcNow,
+            Steps = [],
+            State = TestSessionState.NotStarted
+        };
+
+        // Assert
+        Assert.That(session.Id, Is.Not.EqualTo(Guid.Empty));
+    }
+
+
+    [Test]
     public void ThrowsArgumentNullExceptionWhenInstantiatedWithNullUri()
     {
         // Assert
