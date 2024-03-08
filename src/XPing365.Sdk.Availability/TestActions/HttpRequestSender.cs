@@ -9,11 +9,11 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// The HttpRequestSender class is a unified interface for sending HTTP requests using either HttpClient or Headless 
 /// browser. Users can specify the desired client type in the constructor parameter. If no client type is provided, the 
 /// HttpRequestSender class will use HttpClient by default. 
+/// </summary>
+/// <remarks>
 /// <note>
 /// This component operates without any dependency on other components.
 /// </note>
-/// </summary>
-/// <remarks>
 /// <para>
 /// HttpClient is a .NET class that provides a high-level abstraction for sending and receiving HTTP requests and 
 /// responses. It is fast, lightweight, and easy to use. However, it does not process HTML responses or run JavaScript 

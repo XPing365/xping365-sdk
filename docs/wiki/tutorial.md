@@ -1,6 +1,8 @@
 # Tutorial: Get started with XPing365 SDK
 
-This tutorial demonstrates how to create a .NET console application that utilizes the XPing365.Availability library. You will start by creating a basic test agent and adding a reporting service. Then, you will build upon that foundation by creating a validation pipeline that contains multiple test components which will run test operations to validate server response.
+This tutorial demonstrates how to create a .NET console application that utilizes the XPing365.Availability library. You will start by creating a basic test agent and adding a reporting service. Then, you will build upon that foundation by creating a validation pipeline that contains multiple test components which will run test operations to validate server response. 
+
+Check out the Samples folder on our GitHub repository [xping365-sdk/tree/main/samples](https://github.com/XPing365/xping365-sdk/tree/main/samples) to discover more amazing examples and learn how they can benefit you.
 
 ## Prerequisites
 
