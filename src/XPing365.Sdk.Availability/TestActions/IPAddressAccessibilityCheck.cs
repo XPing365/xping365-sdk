@@ -17,7 +17,7 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// The IPAddressAccessibilityCheck component requires the DnsLookup component to be registered before it in the 
 /// pipeline, because it depends on the DNS resolution results.
 /// </note>
-/// The IPAddressAccessibilityCheck component uses the <see cref="Ping"> class to send an Internet Control Message 
+/// The IPAddressAccessibilityCheck component uses the <see cref="Ping"/> class to send an Internet Control Message 
 /// Protocol (ICMP) echo request to the IP address and receive an echo reply. The Ping class can handle both synchronous 
 /// and asynchronous operations, and can also provide information such as the round-trip time, the time-to-live, and the 
 /// buffer size of the ICMP packets. The IPAddressAccessibilityCheck component can use these information to determine 
