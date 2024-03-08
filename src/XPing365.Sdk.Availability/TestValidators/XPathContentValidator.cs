@@ -10,11 +10,13 @@ namespace XPing365.Sdk.Availability.TestValidators;
 
 /// <summary>
 /// Represents a validator that checks if an HTML document or a node is valid according to a specified XPath expression.
+/// </summary>
+/// <remarks>
 /// <note>
 /// The XPathContentValidator component requires the HttpRequestSender component to be registered before it in 
 /// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
 /// </note>
-/// </summary>
+/// </remarks>
 public class XPathContentValidator : BaseContentValidator
 {
     /// <summary>

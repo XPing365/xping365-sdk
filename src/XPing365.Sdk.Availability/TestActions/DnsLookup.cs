@@ -8,10 +8,20 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// <summary>
 /// The DnsLookup class is a concrete implementation of the <see cref="TestComponent"/> class that is used to perform 
 /// a DNS lookup. It uses the mechanisms provided by the operating system to perform DNS lookups. 
+/// </summary>
+/// <remarks>
 /// <note>
 /// This component operates without any dependency on other components.
 /// </note>
-/// </summary>
+/// The DnsLookup mechanism works by sending a query to a DNS server and receiving a response that contains the IP 
+/// address of the requested domain name. The query can be either recursive or iterative, depending on the configuration 
+/// of the DNS server. A recursive query instructs the DNS server to return the final answer or an error, while an 
+/// iterative query instructs the DNS server to return the best answer it has or a referral to another DNS server. 
+/// The DnsLookup component uses the mechanisms provided by the operating system to perform DNS lookups. This means that 
+/// it can handle both iterative and recursive queries, depending on the configuration of the DNS server. The DNS lookup
+/// method can also follow the referrals until it reaches the authoritative DNS server that has the definitive answer. 
+/// However, the component does not expose any option to specify the query type or the DNS server to use.
+/// </remarks>
 public sealed class DnsLookup() : TestComponent(name: StepName, type: TestStepType.ActionStep)
 {
     /// <summary>

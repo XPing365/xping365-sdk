@@ -9,11 +9,13 @@ namespace XPing365.Sdk.Availability.TestValidators;
 
 /// <summary>
 /// Represents a validator that checks the http response content against a regular expression.
+/// </summary>
+/// <remarks>
 /// <note>
 /// The RegexContentValidator component requires the HttpRequestSender component to be registered before it in 
 /// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
 /// </note>
-/// </summary>
+/// </remarks>
 public class RegexContentValidator : BaseContentValidator
 {
     /// <summary>

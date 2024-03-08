@@ -11,18 +11,21 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// used to validate server content response. It takes a Func&lt;byte[], HttpContentHeaders, bool&gt; delegate as a
 /// parameter, which is used to validate the response content. The onError parameter is an optional error message 
 /// that can be used to provide additional information about the validation failure.
+/// </summary>
+/// <remarks>
 /// <note>
 /// The HttpResponseContentValidator component requires the HttpRequestSender component to be registered before it in 
 /// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
 /// </note>
-/// </summary>
-/// <remarks>
+/// <para>
 /// Server response content is received as a byte array and stored as such. If needed, it can be converted to a string 
 /// using the encoding which is available in the <see cref="HttpContentHeaders.ContentEncoding" />.
-/// <note>
+/// </para>
+/// <para>
 /// When storing the server response content, it is generally recommended to store it as a byte array rather than a 
 /// string. This is because the response content may contain binary data that cannot be represented as a string.
-/// </note>
+/// </para>
+/// <para>
 /// When an HTTP response contains multiple content encodings, the <see cref="HttpContentHeaders.ContentEncoding" /> 
 /// property returns a collection of strings that represents the content encoding of the response content. The order of 
 /// the encodings in the collection indicates the order in which they were applied to the response content.
@@ -30,6 +33,7 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// To determine the correct content encoding to use, you should start with the first encoding in the collection and 
 /// work your way down until you find an encoding that you can decode. If you are unable to decode any of the encodings, 
 /// you should return an error.
+/// </para>
 /// <example>
 /// <code>
 /// var serverContentValidator = new HttpResponseContentValidator(

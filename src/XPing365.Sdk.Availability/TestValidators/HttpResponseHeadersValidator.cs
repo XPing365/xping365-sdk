@@ -11,12 +11,12 @@ namespace XPing365.Sdk.Availability.TestValidators;
 /// is used to validate the response headers of an HTTP response. It takes a Func&lt;HttpResponseHeaders, bool&gt; 
 /// delegate as a parameter, which is used to validate the response headers. The onError parameter is an optional 
 /// error message that can be used to provide additional information about the validation failure.
+/// </summary>
+/// <remarks>
 /// <note>
 /// The HttpResponseHeadersValidator component requires the HttpRequestSender component to be registered before it in 
 /// the pipeline, because it depends on the HTTP response results from the HttpRequestSender component.
 /// </note>
-/// </summary>
-/// <remarks>
 /// <example>
 /// <code>
 /// var responseHeadersValidator = new HttpResponseHeadersValidator(
