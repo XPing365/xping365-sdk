@@ -1,4 +1,5 @@
 ﻿using XPing365.Sdk.Core.Session;
+using XPing365.Sdk.Core.Session.Serialization;
 
 namespace XPing365.Sdk.UnitTests.Session;
 
@@ -24,6 +25,7 @@ public sealed class TestSessionTests
         string? errorMessage = null) => new()
         {
             Name = name,
+            TestComponentIteration = 1,
             StartDate = startDate ?? DateTime.UtcNow,
             Duration = duration ?? TimeSpan.Zero,
             Type = type,
@@ -153,5 +155,22 @@ public sealed class TestSessionTests
         // Assert
         Assert.That(testSession.Duration,
             Is.EqualTo(TimeSpan.FromSeconds(testStepCount * testStepDurationInSeconds)));
+    }
+
+    [Test]
+    public void IsEqualToOtherTestSessionWithTheSameId()
+    {
+        // Arrange
+        TestSession session1 = CreateTestSessionUnderTest();
+        var serializer = new TestSessionSerializer();
+        
+        using var stream = new MemoryStream();
+        serializer.Serialize(session1, stream, SerializationFormat.XML);
+        stream.Position = 0;
+
+        TestSession? session2 = serializer.Deserialize(stream, SerializationFormat.XML);
+
+        // Assert
+        Assert.That(session1.Equals(session2), Is.True);
     }
 }

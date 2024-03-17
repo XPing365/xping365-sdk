@@ -111,6 +111,7 @@ internal class TestSessionSerializationTests
             Steps = [new TestStep
             {
                 Name = "step1",
+                TestComponentIteration = 1,
                 Duration = TimeSpan.Zero,
                 PropertyBag = new PropertyBag<IPropertyBagValue>(),
                 Result = TestStepResult.Failed,
@@ -158,6 +159,7 @@ internal class TestSessionSerializationTests
             Steps = [new TestStep
             {
                 Name = "step1",
+                TestComponentIteration = 1,
                 Duration = TimeSpan.Zero,
                 PropertyBag = new PropertyBag<IPropertyBagValue>(),
                 Result = TestStepResult.Failed,
@@ -225,6 +227,7 @@ internal class TestSessionSerializationTests
             Steps = [new TestStep
             {
                 Name = "step1",
+                TestComponentIteration = 1,
                 Duration = TimeSpan.Zero,
                 PropertyBag = new PropertyBag<IPropertyBagValue>(),
                 Result = TestStepResult.Failed,

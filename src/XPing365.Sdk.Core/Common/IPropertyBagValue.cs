@@ -8,7 +8,5 @@
 /// process. Its main function is to store data during the <see cref="PropertyBag{TValue}"/> lifecycle and to transfer 
 /// data among various objects that do not need this data to be serialized.
 /// </summary>
-[System.Diagnostics.CodeAnalysis.SuppressMessage(
-    "Design", "CA1040:Avoid empty interfaces", Justification = "Issue#18")]
-public interface IPropertyBagValue
+public interface IPropertyBagValue : IEquatable<IPropertyBagValue>
 {}

@@ -13,6 +13,8 @@ namespace XPing365.Sdk.Core.Session;
 public class TestSessionBuilder : ITestSessionBuilder
 {
     private readonly List<TestStep> _steps = [];
+    private readonly Dictionary<ITestComponent, int> _componentStepCounts = [];
+
     private DateTime _startDate = DateTime.MinValue;
     private Error? _error;
     private Uri? _url;
@@ -81,9 +83,14 @@ public class TestSessionBuilder : ITestSessionBuilder
         ArgumentNullException.ThrowIfNull(component, nameof(component));
         ArgumentNullException.ThrowIfNull(instrumentation, nameof(instrumentation));
 
+        // Increment the step count for the given ITestComponent instance to ensure each component step is accurately
+        // named based on its number of steps within the test session.
+        _componentStepCounts[component] = _componentStepCounts.TryGetValue(component, out int count) ? count + 1 : 1;
+
         var testStep = new TestStep
         {
             Name = component.Name,
+            TestComponentIteration = _componentStepCounts[component],
             StartDate = instrumentation.StartTime,
             Duration = instrumentation.ElapsedTime,
             Type = component.Type,
@@ -113,9 +120,14 @@ public class TestSessionBuilder : ITestSessionBuilder
         ArgumentNullException.ThrowIfNull(instrumentation, nameof(instrumentation));
         ArgumentNullException.ThrowIfNull(error, nameof(error));
 
+        // Increment the step count for the given ITestComponent instance to ensure each component step is accurately
+        // named based on its number of steps within the test session.
+        _componentStepCounts[component] = _componentStepCounts.TryGetValue(component, out int count) ? count + 1 : 1;
+
         var testStep = new TestStep
         {
             Name = component.Name,
+            TestComponentIteration = _componentStepCounts[component],
             StartDate = instrumentation.StartTime,
             Duration = instrumentation.ElapsedTime,
             Type = component.Type,
@@ -146,9 +158,14 @@ public class TestSessionBuilder : ITestSessionBuilder
         ArgumentNullException.ThrowIfNull(instrumentation, nameof(instrumentation));
         ArgumentNullException.ThrowIfNull(exception, nameof(exception));
 
+        // Increment the step count for the given ITestComponent instance to ensure each component step is accurately
+        // named based on its number of steps within the test session.
+        _componentStepCounts[component] = _componentStepCounts.TryGetValue(component, out int count) ? count + 1 : 1;
+
         var testStep = new TestStep
         {
             Name = component.Name,
+            TestComponentIteration = _componentStepCounts[component],
             StartDate = instrumentation.StartTime,
             Duration = instrumentation.ElapsedTime,
             Type = component.Type,

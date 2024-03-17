@@ -11,6 +11,7 @@ public sealed class TestStepTests
         Assert.Throws<ArgumentException>(() => new TestStep()
         {
             Name = "TestStepName",
+            TestComponentIteration = 1,
             StartDate = DateTime.UtcNow - TimeSpan.FromDays(2),
             Duration = TimeSpan.Zero,
             Type = TestStepType.ActionStep,
@@ -27,6 +28,7 @@ public sealed class TestStepTests
         Assert.DoesNotThrow(() => new TestStep()
         {
             Name = "TestStepName",
+            TestComponentIteration = 1,
             StartDate = DateTime.Today,
             Duration = TimeSpan.Zero,
             Type = TestStepType.ActionStep,
@@ -43,6 +45,7 @@ public sealed class TestStepTests
         Assert.Throws<ArgumentNullException>(() => new TestStep()
         {
             Name = null!,
+            TestComponentIteration = 1,
             StartDate = DateTime.UtcNow,
             Duration = TimeSpan.Zero,
             Type = TestStepType.ActionStep,
@@ -59,6 +62,7 @@ public sealed class TestStepTests
         Assert.DoesNotThrow(() => new TestStep()
         {
             Name = "TestStepName",
+            TestComponentIteration = 1,
             StartDate = DateTime.UtcNow,
             Duration = TimeSpan.Zero,
             Type = TestStepType.ActionStep,
@@ -76,6 +80,7 @@ public sealed class TestStepTests
         Assert.Throws<ArgumentException>(() => new TestStep()
         {
             Name = "TestStepName",
+            TestComponentIteration = 1,
             StartDate = DateTime.UtcNow,
             Duration = TimeSpan.Zero,
             Type = TestStepType.ActionStep,
@@ -93,6 +98,7 @@ public sealed class TestStepTests
         var testStep = new TestStep()
         {
             Name = "TestStepName",
+            TestComponentIteration = 1,
             StartDate = DateTime.UtcNow,
             Duration = TimeSpan.Zero,
             Type = TestStepType.ActionStep,

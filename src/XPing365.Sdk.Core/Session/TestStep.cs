@@ -27,6 +27,15 @@ public sealed record TestStep : ISerializable
     }
 
     /// <summary>
+    /// Gets the iteration count of the test component that created this test step.
+    /// </summary>
+    /// <value>
+    /// The number of test steps previously created by the same test component during the test execution, indicating 
+    /// the order of this test step in the sequence of iterations.
+    /// </value>
+    public required int TestComponentIteration { get; init; }
+
+    /// <summary>
     /// Gets the start date of the test step.
     /// </summary>
     /// <value>
