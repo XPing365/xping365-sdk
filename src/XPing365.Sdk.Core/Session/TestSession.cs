@@ -133,8 +133,8 @@ public sealed class TestSession : ISerializable, IDeserializationCallback, IEqua
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
         Id = (Guid)info.GetValue(nameof(Id), typeof(Guid)).RequireNotNull(nameof(Id));
-        Url = (Uri)info.GetValue(nameof(Url), typeof(Uri)).RequireNotNull(nameof(Url));
-        StartDate = (DateTime)info.GetValue(nameof(StartDate), typeof(DateTime)).RequireNotNull(nameof(StartDate));
+        _url = (Uri)info.GetValue(nameof(Url), typeof(Uri)).RequireNotNull(nameof(Url));
+        _startDate = (DateTime)info.GetValue(nameof(StartDate), typeof(DateTime)).RequireNotNull(nameof(StartDate));
         Steps = info.GetValue(nameof(Steps), typeof(TestStep[])) as TestStep[] ?? [];
         State = Enum.Parse<TestSessionState>(
             value: (string)info.GetValue(nameof(State), typeof(string)).RequireNotNull(nameof(State)));
