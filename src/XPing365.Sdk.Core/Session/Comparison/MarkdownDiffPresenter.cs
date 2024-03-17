@@ -1,5 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Session.Comparison;
@@ -42,17 +43,21 @@ internal class MarkdownDiffPresenter : IDiffPresenter
         "### Step-by-Step Analysis\r\nA granular analysis of each step allows for a deeper understanding of specific " +
         "issues and successes within the test sessions.";
     private readonly CompositeFormat DetailedStepByStepChanges = CompositeFormat.Parse(
-        "### Changes Between Session 1 and Session 2\r\nThis section highlights the differences that were " +
+        "#### Changes Between Session 1 and Session 2\r\nThis section highlights the differences that were " +
         "present in both sessions but have undergone changes.\r\n{0}");
     private readonly CompositeFormat DetailedStepByStepSingleChange = CompositeFormat.Parse(
-        "- `{0}:` changed from `{1}` to `{2}`");
+        "- `{0}` changed from `{1}` to `{2}`");
+    private readonly CompositeFormat DetailedStepByStepSingleStepHeaderChange = CompositeFormat.Parse(
+        "- {0}");
+    private readonly CompositeFormat DetailedStepByStepSingleStepChange = CompositeFormat.Parse(
+        "  - `{0}` changed from `{1}` to `{2}`");
     private readonly CompositeFormat DetailedStepByStepAdditions = CompositeFormat.Parse(
-        "### Additions in Session 2\r\nThis section lists the new steps that were added to Session 2 that were not " +
+        "#### Additions in Session 2\r\nThis section lists the new steps that were added to Session 2 that were not " +
         "present in Session 1.\r\n{0}");
     private readonly CompositeFormat DetailedStepByStepSingleAdd = CompositeFormat.Parse(
         "- `{0}` added with value: `{1}`");
     private readonly CompositeFormat DetailedStepByStepRemovals = CompositeFormat.Parse(
-        "### Removals from Session 1\r\nThis section outlines the steps that were present in Session 1 but have been " +
+        "#### Removals from Session 1\r\nThis section outlines the steps that were present in Session 1 but have been " +
         "removed in Session 2.\r\n{0}");
     private readonly CompositeFormat DetailedStepByStepSingleRemove = CompositeFormat.Parse(
         "- `{0}` removed with value: `{1}`");
@@ -172,7 +177,8 @@ internal class MarkdownDiffPresenter : IDiffPresenter
                 diffResult.Session1?.StartDate, diffResult.Session2?.StartDate,
                 diffResult.Session1?.Url, diffResult.Session2?.Url,
                 diffResult.Session1?.Steps.Count, diffResult.Session2?.Steps.Count,
-                diffResult.Session1?.Duration.GetFormattedTime(), diffResult.Session2?.Duration.GetFormattedTime(),
+                diffResult.Session1?.Duration.GetFormattedTime(TimeSpanUnit.Millisecond), 
+                diffResult.Session2?.Duration.GetFormattedTime(TimeSpanUnit.Millisecond),
                 diffResult.Session1?.Failures.Count, diffResult.Session2?.Failures.Count));
         }
 
@@ -189,7 +195,8 @@ internal class MarkdownDiffPresenter : IDiffPresenter
             if (IncludeDetailedExecutionDuration)
             {
                 output.AppendLine(string.Format(CultureInfo.InvariantCulture, DetailedExecutionDuration,
-                    diffResult.Session1?.Duration.GetFormattedTime(), diffResult.Session2?.Duration.GetFormattedTime()));
+                    diffResult.Session1?.Duration.GetFormattedTime(TimeSpanUnit.Millisecond), 
+                    diffResult.Session2?.Duration.GetFormattedTime(TimeSpanUnit.Millisecond)));
             }
 
             if (IncludeDetailedFailures)
@@ -222,12 +229,79 @@ internal class MarkdownDiffPresenter : IDiffPresenter
 
                 var changes = diffResult.Differences.Where(d => d.Type == DifferenceType.Changed).ToList();
 
-                if (changes.Count > 0)
+                if (changes != null && changes.Count > 0)
                 {
+                    var sessionChanges = changes.Where(change => 
+                        !change.PropertyName.StartsWith(nameof(TestStep), StringComparison.InvariantCulture));
+
                     output.AppendLine(string.Format(CultureInfo.InvariantCulture, DetailedStepByStepChanges,
-                        string.Join("\r\n", changes.Select(change =>
+                        string.Join("\r\n", sessionChanges.Select(change =>
                             string.Format(CultureInfo.InvariantCulture, DetailedStepByStepSingleChange,
                                 change.PropertyName, change.Value1?.ToString(), change.Value2?.ToString())))));
+
+                    var stepsChanges = changes
+                        .Where(change =>
+                            change.PropertyName.StartsWith(nameof(TestStep), StringComparison.InvariantCulture));
+                    
+                    var stepsChangesDictionary = new Dictionary<string, IList<Difference>>();
+                    
+                    foreach (var stepChange in stepsChanges)
+                    {                        
+                        var match = Regex.Match(stepChange.PropertyName, @"TestStep\(""(.*?)""\)\.(.*)");
+
+                        if (match.Success)
+                        {
+                            var insideBrackets = match.Groups[1].Value;
+                            var afterBracket = match.Groups[2].Value;
+                            
+                            if (stepsChangesDictionary.TryGetValue(insideBrackets, out var differences))
+                            {
+                                differences.Add(stepChange);
+                            }
+                            else
+                            {
+                                stepsChangesDictionary[insideBrackets] = [stepChange];
+                            }
+                        }
+                        else
+                        {
+                            if (stepsChangesDictionary.TryGetValue(stepChange.PropertyName, out var differences))
+                            {
+                                differences.Add(stepChange);
+                            }
+                            else
+                            {
+                                stepsChangesDictionary[stepChange.PropertyName] = [stepChange];
+                            }
+                        }                     
+                    }
+
+                    foreach (var stepChanage in stepsChangesDictionary)
+                    {
+                        output.AppendLine(string.Format(
+                            CultureInfo.InvariantCulture,
+                            DetailedStepByStepSingleStepHeaderChange,
+                            stepChanage.Key));
+
+                        output.AppendLine(string.Join("\r\n", stepChanage.Value.Select(change =>
+                        {
+                            var match = Regex.Match(change.PropertyName, @"TestStep\(""(.*?)""\)\.(.*)");
+
+                            if (match.Success)
+                            {
+                                var afterBracket = match.Groups[2].Value;
+                                return string.Format(CultureInfo.InvariantCulture, DetailedStepByStepSingleStepChange,
+                                    afterBracket,
+                                    change.Value1?.ToString(),
+                                    change.Value2?.ToString());
+                            }
+                            // Fallback to PropertyName
+                            return string.Format(CultureInfo.InvariantCulture, DetailedStepByStepSingleStepChange,
+                                    change.PropertyName,
+                                    change.Value1?.ToString(),
+                                    change.Value2?.ToString());
+                        })));
+                    }
                 }
                 else
                 {

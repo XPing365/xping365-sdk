@@ -76,6 +76,23 @@ public sealed class TestSessionBuilderTests
     }
 
     [Test]
+    public void TestComponentIterationCountShoudStartFrom1()
+    {
+        // Arrange
+        var builder = new TestSessionBuilder();
+        using var instrumentation = new InstrumentationLog();
+        var mockedComponent = new Mock<ITestComponent>();
+        mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
+        mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
+
+        // Act
+        TestStep step = builder.Build(mockedComponent.Object, instrumentation);
+
+        // Assert
+        Assert.That(step.TestComponentIteration, Is.EqualTo(1));
+    }
+
+    [Test]
     public void GetTestSessionReturnsDeclinedSessionWhenBuilderNotInitiated()
     {
         // Act
