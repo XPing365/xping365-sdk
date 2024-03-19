@@ -107,73 +107,6 @@ public class TestStepsComparer : ITestSessionComparer
         return name;
     }
 
-    private static void CompareIterationCount(
-        DiffResult result,
-        IReadOnlyCollection<TestStep> steps1,
-        IReadOnlyCollection<TestStep> steps2)
-    {
-        Dictionary<string, int> iterationCount1 = [];
-        Dictionary<string, int> iterationCount2 = [];
-
-        foreach (TestStep testStep in steps1)
-        {
-            iterationCount1[testStep.Name]++;
-        }
-
-        foreach (TestStep testStep in steps2)
-        {
-            iterationCount2[testStep.Name]++;
-        }
-
-        // Loop over the pairs of the first dictionary
-        foreach (var pair in iterationCount1)
-        {
-            // Get the key and value
-            string key = pair.Key;
-            int value = pair.Value;
-
-            // Check if the second dictionary contains the same key
-            if (!iterationCount2.TryGetValue(key, out _))
-            {
-                // If not, then key has been removed from session2.Steps
-                result.AddDifference(new Difference(
-                    PropertyName: key, // In this case key represents TestStpe.Name
-                    Value1: value,
-                    Value2: null!,
-                    Type: DifferenceType.Removed));
-            }
-            // Check if the second dictionary has the same value for the key
-            else if (!iterationCount2[key].Equals(value))
-            {
-                // If not, they are not equal
-                result.AddDifference(new Difference(
-                    PropertyName: key,
-                    Value1: iterationCount1[key],
-                    Value2: iterationCount2[key],
-                    Type: DifferenceType.Changed));
-            }
-        }
-
-        // Loop over the pairs of the second dictionary
-        foreach (var pair in iterationCount2)
-        {
-            // Get the key and value
-            string key = pair.Key;
-            int value = pair.Value;
-
-            // Check if the first dictionary contains the same key
-            if (!iterationCount1.TryGetValue(key, out _))
-            {
-                // If not, then key has been added to session2.Steps
-                result.AddDifference(new Difference(
-                    PropertyName: key, // In this case key represents TestStpe.Name
-                    Value1: null!,
-                    Value2: value,
-                    Type: DifferenceType.Added));
-            }
-        }
-    }
-
     private static void CompareType(DiffResult result, TestStep testStep1, TestStep testStep2)
     {
         // Comparison is performed only if test steps match by name and iteration count of the test component.
@@ -293,7 +226,7 @@ public class TestStepsComparer : ITestSessionComparer
                     // If not, then key has been removed from testStep2.PropertyBag
                     result.AddDifference(new Difference(
                         PropertyName: GetPropertyName(stepName, nameof(TestStep.PropertyBag), key.ToString()),
-                        Value1: key,
+                        Value1: value1,
                         Value2: null,
                         Type: DifferenceType.Removed));
                 }
@@ -327,7 +260,7 @@ public class TestStepsComparer : ITestSessionComparer
                     result.AddDifference(new Difference(
                         PropertyName: GetPropertyName(stepName, nameof(TestStep.PropertyBag), key.ToString()),
                         Value1: null,
-                        Value2: key,
+                        Value2: value2,
                         Type: DifferenceType.Added));
                 }
             }

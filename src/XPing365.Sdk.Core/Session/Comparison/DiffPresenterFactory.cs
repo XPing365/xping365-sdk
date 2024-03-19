@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core.Session.Comparison;
+﻿using XPing365.Sdk.Core.Session.Comparison.Internals;
+
+namespace XPing365.Sdk.Core.Session.Comparison;
 
 /// <summary>
 /// Factory class for creating instances of IDiffPresenter based on the specified format.

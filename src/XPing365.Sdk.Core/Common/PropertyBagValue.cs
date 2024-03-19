@@ -133,7 +133,7 @@ public sealed class PropertyBagValue<TValue> : IPropertyBagValue, ISerializable
         {
             string str => str,
             byte[] bytes => $"{bytes.Length} bytes",
-            string[] array => string.Join(';', array.Select(a => $"\"a\"")),
+            string[] array => string.Join(';', array.Select(a => $"\"{a}\"")),
             Dictionary<string, string> dictionary =>
                 string.Join(';', dictionary.Select(kvp => $"[{kvp.Key}]:\"{kvp.Value}\"")),
             _ => base.ToString()
