@@ -27,7 +27,7 @@ jobs:
     - name: Coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
       with:
-        reports: ./tests/*/TestResults/*/cobertura.xml
+        reports: ./tests/**/coverage.cobertura.xml
         targetdir: coveragereport
         reporttypes: Html;Badges
         assemblyfilters: +XPing365.Sdk.Core;+XPing365.Sdk.Availability
