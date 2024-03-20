@@ -567,7 +567,7 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
         // Assert
         Assert.That(result.Differences, Has.Count.EqualTo(2));
         Assert.That(result.Differences.First().Type, Is.EqualTo(DifferenceType.Removed));
-        Assert.That(result.Differences.First().Value1, Is.EqualTo(properties1.First().Key));
+        Assert.That(result.Differences.First().Value1, Is.EqualTo(properties1.First().Value));
         Assert.That(result.Differences.First().Value2, Is.Null);
         Assert.That(
             result.Differences.First().PropertyName,
@@ -576,7 +576,7 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
 
         Assert.That(result.Differences.Last().Type, Is.EqualTo(DifferenceType.Added));
         Assert.That(result.Differences.Last().Value1, Is.Null);
-        Assert.That(result.Differences.Last().Value2, Is.EqualTo(properties2.First().Key));
+        Assert.That(result.Differences.Last().Value2, Is.EqualTo(properties2.First().Value));
         Assert.That(
             result.Differences.Last().PropertyName,
             Is.EqualTo($"{nameof(TestStep)}(\"{StepName}\").{nameof(TestStep.PropertyBag)}" +
