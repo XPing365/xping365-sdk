@@ -15,6 +15,7 @@ jobs:
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: 8.x
+        dotnet-quality: 'ga'
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
@@ -22,4 +23,16 @@ jobs:
     - name: Ensure browsers are installed
       run: pwsh ./tests/XPing365.Sdk.IntegrationTests/bin/Release/net8.0/playwright.ps1 install --with-deps
     - name: Test
-      run: dotnet test -c Release --no-build --verbosity minimal
+      run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" -l "console;verbosity=normal"
+    - name: Coverage
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
+      with:
+        reports: ./tests/*/TestResults/*/cobertura.xml
+        targetdir: coveragereport
+        reporttypes: Html;Badges
+        assemblyfilters: +XPing365.Sdk.Core;+XPing365.Sdk.Availability
+    - name: Upload coverage report artifact
+      uses: actions/upload-artifact@v2.2.3
+      with:
+        name: CoverageReport
+        path: coveragereport
