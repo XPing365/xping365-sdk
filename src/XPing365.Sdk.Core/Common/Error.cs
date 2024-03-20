@@ -33,7 +33,7 @@ public sealed class Error(string code, string message) : IEquatable<Error>
     /// Determines whether the current Error object is equal to another Error object.
     /// </summary>
     /// <param name="other">The Error object to compare with the current object.</param>
-    /// <returns>true if the current object and other have the same value; otherwise, false.</returns>
+    /// <returns><c>true</c> if the current object and other have the same value; otherwise, <c>false</c>.</returns>
     public bool Equals(Error? other)
     {
         if (other is null)
@@ -59,7 +59,8 @@ public sealed class Error(string code, string message) : IEquatable<Error>
     /// </summary>
     /// <param name="obj">The object to compare with the current object.</param>
     /// <returns>
-    /// true if the current object and obj are both Error objects and have the same value; otherwise, false.
+    /// <c>true</c> if the current object and obj are both Error objects and have the same value; otherwise, 
+    /// <c>false</c>.
     /// </returns>
     public override bool Equals(object? obj)
     {
@@ -80,7 +81,7 @@ public sealed class Error(string code, string message) : IEquatable<Error>
     /// </summary>
     /// <param name="lhs">The first Error object to compare.</param>
     /// <param name="rhs">The second Error object to compare.</param>
-    /// <returns>true if lhs and rhs have the same value; otherwise, false.</returns>
+    /// <returns><c>true</c> if lhs and rhs have the same value; otherwise, <c>false</c>.</returns>
     public static bool operator ==(Error? lhs, Error? rhs)
     {
         if (lhs is null || rhs is null)
@@ -96,7 +97,7 @@ public sealed class Error(string code, string message) : IEquatable<Error>
     /// </summary>
     /// <param name="lhs">The first Error object to compare.</param>
     /// <param name="rhs">The second Error object to compare.</param>
-    /// <returns>true if lhs and rhs have different values; otherwise, false.</returns>
+    /// <returns><c>true</c> if lhs and rhs have different values; otherwise, <c>false</c>.</returns>
     public static bool operator !=(Error? lhs, Error? rhs)
     {
         if (lhs is null || rhs is null)

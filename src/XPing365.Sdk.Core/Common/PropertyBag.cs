@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Runtime.Serialization;
+using XPing365.Sdk.Core.Session.Comparison.Comparers.Internals;
 
 namespace XPing365.Sdk.Core.Common;
 
@@ -9,7 +10,7 @@ namespace XPing365.Sdk.Core.Common;
 /// permitted, since a null entry represents the absence of the key.
 /// </summary>
 [Serializable]
-public sealed class PropertyBag<TValue> : ISerializable
+public sealed class PropertyBag<TValue> : ISerializable, IEquatable<PropertyBag<TValue>>
 {
     private const string SerializableEntryName = "Properties";
 
@@ -29,9 +30,13 @@ public sealed class PropertyBag<TValue> : ISerializable
     /// Initializes a new instance of the PropertyBag class.
     /// </summary>
     /// <param name="properties">An optional dictionary of properties to initialize the property bag with.</param>
+    /// <remarks>
+    /// Null values are disallowed as they signify a non-existent key. Any attempt to add a null value will result in it 
+    /// being disregarded.
+    /// </remarks>
     public PropertyBag(IDictionary<PropertyBagKey, TValue>? properties = null)
     {
-        _properties = properties?.ToDictionary() ?? [];
+        _properties = properties?.Where(kvp => kvp.Value != null).ToDictionary() ?? [];
     }
 
     /// <summary>
@@ -61,6 +66,86 @@ public sealed class PropertyBag<TValue> : ISerializable
     }
 
     /// <summary>
+    /// Determines whether the current <see cref="PropertyBag{TValue}"/> object is equal to another 
+    /// <see cref="PropertyBag{TValue}"/> object.
+    /// </summary>
+    /// <param name="other">The <see cref="PropertyBag{TValue}"/> object to compare with the current object.</param>
+    /// <returns><c>true</c> if the current object and other have the same value; otherwise, <c>false</c>.</returns>
+    public bool Equals(PropertyBag<TValue>? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        if (_properties == null || other._properties == null)
+        {
+            return false;
+        }
+
+        return DictionaryComparer.CompareDictionaries(_properties, other._properties);
+    }
+
+    /// <summary>
+    /// Determines whether the current <see cref="PropertyBag{TValue}"/> object is equal to a specified object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns>
+    /// <c>true</c> if the current object and obj are both <see cref="PropertyBag{TValue}"/> objects and have the same 
+    /// value; otherwise, <c>false</c>.
+    /// </returns>
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as PropertyBag<TValue>);
+    }
+
+    /// <summary>
+    /// Returns the hash code for the current <see cref="PropertyBag{TValue}"/> object.
+    /// </summary>
+    /// <returns>A 32-bit signed integer hash code.</returns>
+    public override int GetHashCode()
+    {
+        return _properties.GetHashCode();
+    }
+
+    /// <summary>
+    /// Determines whether two <see cref="PropertyBag{TValue}"/> objects have the same value.
+    /// </summary>
+    /// <param name="lhs">The first <see cref="PropertyBag{TValue}"/> object to compare.</param>
+    /// <param name="rhs">The second <see cref="PropertyBag{TValue}"/> object to compare.</param>
+    /// <returns><c>true</c> if lhs and rhs have the same value; otherwise, <c>false</c>.</returns>
+    public static bool operator ==(PropertyBag<TValue>? lhs, PropertyBag<TValue>? rhs)
+    {
+        if (lhs is null || rhs is null)
+        {
+            return Equals(lhs, rhs);
+        }
+
+        return lhs.Equals(rhs);
+    }
+
+    /// <summary>
+    /// Determines whether two <see cref="PropertyBag{TValue}"/> objects have different values.
+    /// </summary>
+    /// <param name="lhs">The first <see cref="PropertyBag{TValue}"/> object to compare.</param>
+    /// <param name="rhs">The second <see cref="PropertyBag{TValue}"/> object to compare.</param>
+    /// <returns><c>true</c> if lhs and rhs have different values; otherwise, <c>false</c>.</returns>
+    public static bool operator !=(PropertyBag<TValue>? lhs, PropertyBag<TValue>? rhs)
+    {
+        if (lhs is null || rhs is null)
+        {
+            return !Equals(lhs, rhs);
+        }
+
+        return !lhs.Equals(rhs);
+    }
+
+    /// <summary>
     /// Determines whether the collection contains an element that has the specified key.
     /// </summary>
     /// <param name="key">A key represented as <see cref="PropertyBagKey"/> type.</param>
@@ -87,18 +172,24 @@ public sealed class PropertyBag<TValue> : ISerializable
     }
 
     /// <summary>
-    /// Adds or updates a key-value pair to the collection.
+    /// Adds a new key-value pair to the property bag or updates the value of an existing key.
     /// </summary>
     /// <param name="key">A key represented as <see cref="PropertyBagKey"/> type.</param>
-    /// <param name="value">Any value which should be stored in a collection.</param>
+    /// <param name="value">Any value which should be stored in a collection. </param>
     /// <remarks>
     /// If a key is not found in the collection, a new key-value pair is created. If a key is already present in the
-    /// collection, the value associated with the key is updated.
+    /// collection, the value associated with the key is updated. Null values are disallowed as they signify a 
+    /// non-existent key. Any attempt to add a null value will result in it being disregarded.
     /// </remarks>
+    /// <exception cref="ArgumentNullException">Thrown when the key is null.</exception>
     public void AddOrUpdateProperty(PropertyBagKey key, TValue value)
     {
         ArgumentNullException.ThrowIfNull(key);
-        ArgumentNullException.ThrowIfNull(value);
+        
+        if (value == null) // Null values are disallowed as they signify a non-existent key.
+        {
+            return;
+        }
 
         if (!_properties.TryAdd(key, value))
         {

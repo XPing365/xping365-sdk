@@ -38,7 +38,7 @@ public sealed class TestSessionBuilderTests
         var builder = new TestSessionBuilder();
         using var instrumentation = new InstrumentationLog();
         var mockedComponent = new Mock<ITestComponent>();
-        mockedComponent.SetupGet(c => c.Name).Returns("ComponenName");
+        mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
         mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
 
         // Act
@@ -46,6 +46,50 @@ public sealed class TestSessionBuilderTests
 
         // Assert
         Assert.That(builder.HasFailed, Is.EqualTo(expectedResult));
+    }
+
+
+    [Test]
+    public void HasCorrectTestComponentIterationWhenMultipleTestStepsHaveBeenAddedForTheSameComponent()
+    {
+        // Arrange
+        const int expectedCount = 4;
+
+        var builder = new TestSessionBuilder();
+        using var instrumentation = new InstrumentationLog();
+        var mockedComponent = new Mock<ITestComponent>();
+        mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
+        mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
+
+        // Act
+        builder.Build(mockedComponent.Object, instrumentation);
+        builder.Build(mockedComponent.Object, instrumentation);
+        builder.Build(mockedComponent.Object, instrumentation);
+        builder.Build(mockedComponent.Object, instrumentation);
+
+        TestSession session = builder.GetTestSession();
+        int counter = 0;
+        
+        // Assert
+        Assert.That(session.Steps.All(s => s.TestComponentIteration == ++counter), Is.True);
+        Assert.That(counter, Is.EqualTo(expectedCount));
+    }
+
+    [Test]
+    public void TestComponentIterationCountShoudStartFrom1()
+    {
+        // Arrange
+        var builder = new TestSessionBuilder();
+        using var instrumentation = new InstrumentationLog();
+        var mockedComponent = new Mock<ITestComponent>();
+        mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
+        mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
+
+        // Act
+        TestStep step = builder.Build(mockedComponent.Object, instrumentation);
+
+        // Assert
+        Assert.That(step.TestComponentIteration, Is.EqualTo(1));
     }
 
     [Test]

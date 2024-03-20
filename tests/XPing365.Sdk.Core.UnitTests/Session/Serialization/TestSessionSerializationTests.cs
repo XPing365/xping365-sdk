@@ -1,7 +1,7 @@
-﻿using System.Runtime.Serialization;
+﻿using System.Globalization;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Xml;
-using System.Xml.XPath;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.Core.Session.Serialization;
@@ -63,7 +63,7 @@ internal class TestSessionSerializationTests
     }
 
     [Test]
-    public void TestSessionIdIsSerialized()
+    public void TestSessionIdShouldBeSerialized()
     {
         // Arrange
         TestSession session = new()
@@ -100,6 +100,53 @@ internal class TestSessionSerializationTests
     }
 
     [Test]
+    public void TestComponentIterationShouldBeSerialized()
+    {
+        // Arrange
+        const int expectedCount = 1;
+
+        TestSession session = new()
+        {
+            Url = new Uri("https://test"),
+            StartDate = DateTime.UtcNow,
+            State = TestSessionState.NotStarted,
+            Steps = [new TestStep
+            {
+                Duration = TimeSpan.Zero,
+                Name = "stepName",
+                PropertyBag = null,
+                Result = TestStepResult.Succeeded,
+                StartDate = DateTime.UtcNow,
+                TestComponentIteration = expectedCount,
+                Type = TestStepType.ActionStep
+            }]
+        };
+        var serializer = new TestSessionSerializer();
+        using var stream = new MemoryStream();
+
+        // Act
+        serializer.Serialize(session, stream, SerializationFormat.XML);
+        stream.Position = 0;
+
+        using var reader = new StreamReader(stream, Encoding.UTF8);
+
+        // Load the XML into an XmlDocument
+        var doc = new XmlDocument();
+        doc.Load(reader);
+
+        // Create a NamespaceManager and add the namespace used in the XML
+        var namespaceManager = new XmlNamespaceManager(doc.NameTable);
+        namespaceManager.AddNamespace("ns", "http://schemas.datacontract.org/2004/07/XPing365.Sdk.Core.Session");
+
+        // Use the namespace prefix in the XPath expression to select the Id element
+        XmlNode? node = doc.SelectSingleNode("//ns:TestStep/TestComponentIteration", namespaceManager);
+
+        // Assert
+        Assert.That(node, Is.Not.Null);
+        Assert.That(node.InnerText, Is.EqualTo(expectedCount.ToString(CultureInfo.InvariantCulture)));
+    }
+
+    [Test]
     public void TestSessionInstanceIsCorrectlySerializedToXml()
     {
         // Arrange
@@ -111,6 +158,7 @@ internal class TestSessionSerializationTests
             Steps = [new TestStep
             {
                 Name = "step1",
+                TestComponentIteration = 1,
                 Duration = TimeSpan.Zero,
                 PropertyBag = new PropertyBag<IPropertyBagValue>(),
                 Result = TestStepResult.Failed,
@@ -158,6 +206,7 @@ internal class TestSessionSerializationTests
             Steps = [new TestStep
             {
                 Name = "step1",
+                TestComponentIteration = 1,
                 Duration = TimeSpan.Zero,
                 PropertyBag = new PropertyBag<IPropertyBagValue>(),
                 Result = TestStepResult.Failed,
@@ -176,14 +225,15 @@ internal class TestSessionSerializationTests
 
         // Assert
         Assert.That(session1, Is.Not.Null);
-        Assert.That(session.Url.AbsoluteUri, Is.EqualTo(session1.Url.AbsoluteUri));
-        Assert.That(session.StartDate, Is.EqualTo(session1.StartDate));
-        Assert.That(session.Steps.Count, Is.EqualTo(session1.Steps.Count));
-        Assert.That(session.Steps.First().Name, Is.EqualTo(session1.Steps.First().Name));
-        Assert.That(session.Steps.First().Duration, Is.EqualTo(session1.Steps.First().Duration));
+        Assert.That(session1.Url.AbsoluteUri, Is.EqualTo(session.Url.AbsoluteUri));
+        Assert.That(session1.StartDate, Is.EqualTo(session.StartDate));
+        Assert.That(session1.Steps.Count, Is.EqualTo(session.Steps.Count));
+        Assert.That(session1.Steps.First().Name, Is.EqualTo(session.Steps.First().Name));
+        Assert.That(session1.Steps.First().TestComponentIteration, Is.EqualTo(session.Steps.First().TestComponentIteration));
+        Assert.That(session1.Steps.First().Duration, Is.EqualTo(session.Steps.First().Duration));
         Assert.That(session1.Steps.First().PropertyBag, Is.Not.Null);
-        Assert.That(session.Steps.First().StartDate, Is.EqualTo(session1.Steps.First().StartDate));
-        Assert.That(session.Steps.First().Type, Is.EqualTo(session1.Steps.First().Type));
+        Assert.That(session1.Steps.First().StartDate, Is.EqualTo(session.Steps.First().StartDate));
+        Assert.That(session1.Steps.First().Type, Is.EqualTo(session.Steps.First().Type));
     }
 
     [TestCase(SerializationFormat.XML)]
@@ -225,6 +275,7 @@ internal class TestSessionSerializationTests
             Steps = [new TestStep
             {
                 Name = "step1",
+                TestComponentIteration = 1,
                 Duration = TimeSpan.Zero,
                 PropertyBag = new PropertyBag<IPropertyBagValue>(),
                 Result = TestStepResult.Failed,

@@ -94,6 +94,8 @@ public sealed class IPAddressAccessibilityCheck() : TestComponent(name: StepName
                         completed = false;
                     }
 
+                    context.Progress?.Report(testStep);
+
                     // This step implements a fail-fast mechanism that terminates the iteration as soon as the first
                     // IP address passes. If an error occurs, the iteration continues with the next IP address.
                 } while (completed != true && addressIndex < addresses.Count);
@@ -102,9 +104,6 @@ public sealed class IPAddressAccessibilityCheck() : TestComponent(name: StepName
         catch (Exception exception)
         {
             testStep = context.SessionBuilder.Build(component: this, instrumentation, exception);
-        }
-        finally
-        {
             context.Progress?.Report(testStep);
         }
     }

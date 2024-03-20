@@ -27,6 +27,15 @@ public sealed record TestStep : ISerializable
     }
 
     /// <summary>
+    /// Gets the iteration count of the test component that created this test step.
+    /// </summary>
+    /// <value>
+    /// The number of test steps previously created by the same test component during the test execution, indicating 
+    /// the order of this test step in the sequence of iterations.
+    /// </value>
+    public required int TestComponentIteration { get; init; }
+
+    /// <summary>
     /// Gets the start date of the test step.
     /// </summary>
     /// <value>
@@ -108,6 +117,7 @@ public sealed record TestStep : ISerializable
 
         _name = (string)info.GetValue(nameof(Name), typeof(string)).RequireNotNull(nameof(Name));
         _startDate = (DateTime)info.GetValue(nameof(StartDate), typeof(DateTime)).RequireNotNull(nameof(StartDate));
+        TestComponentIteration = info.GetInt32(nameof(TestComponentIteration));
         Duration = (TimeSpan)info.GetValue(nameof(Duration), typeof(TimeSpan)).RequireNotNull(nameof(Duration));
         Type = Enum.Parse<TestStepType>((string)info
             .GetValue(nameof(Type), typeof(string))
@@ -145,6 +155,7 @@ public sealed record TestStep : ISerializable
     {
         info.AddValue(nameof(Name), Name, typeof(string));
         info.AddValue(nameof(StartDate), StartDate, typeof(DateTime));
+        info.AddValue(nameof(TestComponentIteration), TestComponentIteration, typeof(int));
         info.AddValue(nameof(Duration), Duration, typeof(TimeSpan));
         info.AddValue(nameof(Type), Type.ToString(), typeof(string));
         info.AddValue(nameof(Result), Result.ToString(), typeof(string));

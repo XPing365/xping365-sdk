@@ -26,7 +26,7 @@ namespace XPing365.Sdk.Core.Session;
 /// </remarks>
 [Serializable]
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public sealed class TestSession : ISerializable, IDeserializationCallback
+public sealed class TestSession : ISerializable, IDeserializationCallback, IEquatable<TestSession>
 {
     private readonly Uri _url = null!;
     private readonly DateTime _startDate;
@@ -86,7 +86,7 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
     /// headless browser is available. Another cause of a declined test session is invalid data that blocks the test 
     /// execution.
     /// </remarks>
-    public string? DeclineReason { get; set; }
+    public string? DeclineReason { get; init; }
 
     /// <summary>
     /// Returns a read-only collection of the failed test steps within current test session.
@@ -133,8 +133,8 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
         ArgumentNullException.ThrowIfNull(info, nameof(info));
 
         Id = (Guid)info.GetValue(nameof(Id), typeof(Guid)).RequireNotNull(nameof(Id));
-        Url = (Uri)info.GetValue(nameof(Url), typeof(Uri)).RequireNotNull(nameof(Url));
-        StartDate = (DateTime)info.GetValue(nameof(StartDate), typeof(DateTime)).RequireNotNull(nameof(StartDate));
+        _url = (Uri)info.GetValue(nameof(Url), typeof(Uri)).RequireNotNull(nameof(Url));
+        _startDate = (DateTime)info.GetValue(nameof(StartDate), typeof(DateTime)).RequireNotNull(nameof(StartDate));
         Steps = info.GetValue(nameof(Steps), typeof(TestStep[])) as TestStep[] ?? [];
         State = Enum.Parse<TestSessionState>(
             value: (string)info.GetValue(nameof(State), typeof(string)).RequireNotNull(nameof(State)));
@@ -160,6 +160,81 @@ public sealed class TestSession : ISerializable, IDeserializationCallback
             $"{Environment.NewLine}{Environment.NewLine}");
 
         return sb.ToString();
+    }
+
+    /// <summary>
+    /// Determines whether the current TestSession object is equal to a specified object.
+    /// </summary>
+    /// <param name="obj">The object to compare with the current object.</param>
+    /// <returns>
+    /// <c>true</c> if the current object and obj are both TestSession objects and have the same id; otherwise, 
+    /// <c>false</c>.
+    /// </returns>
+    public override bool Equals(object? obj)
+    {
+        return Equals(obj as TestSession);
+    }
+
+    /// <summary>
+    /// Determines whether the current TestSession object is equal to another TestSession object.
+    /// </summary>
+    /// <param name="other">The TestSession object to compare with the current object.</param>
+    /// <returns><c>true</c>if the current object and other have the same id; otherwise, <c>false</c>.</returns>
+    public bool Equals(TestSession? other)
+    {
+        if (other is null)
+        {
+            return false;
+        }
+
+        if (ReferenceEquals(this, other))
+        {
+            return true;
+        }
+
+        return this.Id == other.Id;
+    }
+
+    /// <summary>
+    /// Determines whether two TestSession objects have the same id.
+    /// </summary>
+    /// <param name="lhs">The first TestSession object to compare.</param>
+    /// <param name="rhs">The second TestSession object to compare.</param>
+    /// <returns><c>true</c> if lhs and rhs have the same id; otherwise, <c>false</c>.</returns>
+    public static bool operator ==(TestSession? lhs, TestSession? rhs)
+    {
+        if (lhs is null || rhs is null)
+        {
+            return Equals(lhs, rhs);
+        }
+
+        return lhs.Equals(rhs);
+    }
+
+    /// <summary>
+    /// Determines whether two TestSession objects have different id.
+    /// </summary>
+    /// <param name="lhs">The first TestSession object to compare.</param>
+    /// <param name="rhs">The second TestSession object to compare.</param>
+    /// <returns><c>true</c> if lhs and rhs have different id; otherwise, <c>false</c>.</returns>
+    public static bool operator !=(TestSession? lhs, TestSession? rhs)
+    {
+        if (lhs is null || rhs is null)
+        {
+            return !Equals(lhs, rhs);
+        }
+
+        return !lhs.Equals(rhs);
+    }
+
+    /// <summary>
+    /// Returns the hash code for the current TestSession object.
+    /// </summary>
+    /// <returns>A 32-bit signed integer hash code.</returns>
+    public override int GetHashCode()
+    {
+        // Calculate a hash code based on the same properties used in Equals
+        return Id.GetHashCode();
     }
 
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)

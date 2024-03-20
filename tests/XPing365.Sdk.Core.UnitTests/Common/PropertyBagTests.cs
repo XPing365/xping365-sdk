@@ -5,7 +5,56 @@ namespace XPing365.Sdk.UnitTests.Common;
 public sealed class PropertyBagTests
 {
     [Test]
-    public void IsEmptyWhenInstantiatedWithDefaultCtor()
+    public void ShouldIgnoreNullValue()
+    {
+        // Arrange
+        var propertyBag = new PropertyBag<object>(properties: new Dictionary<PropertyBagKey, object>
+        {
+            { new PropertyBagKey("key"), null! }
+        });
+
+        // Assert
+        Assert.That(propertyBag.Keys, Is.Empty);
+        Assert.That(propertyBag.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void AddOrUpdatePropertyShouldIgnoreNullValue()
+    {
+        // Arrange
+        var propertyBag = new PropertyBag<object>();
+
+        // Act
+        propertyBag.AddOrUpdateProperty(new PropertyBagKey("key"), null!);
+
+        // Assert
+        Assert.That(propertyBag.Keys, Is.Empty);
+        Assert.That(propertyBag.Count, Is.EqualTo(0));
+    }
+
+    [Test]
+    public void AddOrUpdatePropertiesShouldIgnoreNullValues()
+    {
+        // Arrange
+        const int expectedCount = 1;
+
+        var propertyBag = new PropertyBag<object>();
+
+        // Act
+        propertyBag.AddOrUpdateProperties(properties: new Dictionary<PropertyBagKey, object>
+        {
+            { new PropertyBagKey("key1"), null! },
+            { new PropertyBagKey("key2"), new object() },
+            { new PropertyBagKey("key3"), null! },
+            { new PropertyBagKey("key4"), null! }
+        });
+
+        // Assert
+        Assert.That(propertyBag.Count, Is.EqualTo(expectedCount));
+    }
+
+    [Test]
+    public void ShouldBeEmptyWhenInstantiatedWithDefaultCtor()
     {
         // Arrange
         var propertyBag = new PropertyBag<IPropertyBagValue>();
@@ -19,7 +68,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void IsEmptyWhenInstantiatedWithEmptyProperties()
+    public void ShouldBeEmptyWhenInstantiatedWithEmptyProperties()
     {
         // Arrange
         var propertyBag = new PropertyBag<IPropertyBagValue>(
@@ -34,7 +83,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void IsNotEmptyWhenInstantiatedWithNotEmptyProperties()
+    public void ShouldNotBeEmptyWhenInstantiatedWithNotEmptyProperties()
     {
         // Arrange
         var propertyBag = new PropertyBag<object>(properties: new Dictionary<PropertyBagKey, object>
@@ -48,7 +97,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void HasOneItemWhenAddedOneItem()
+    public void ShouldHaveOneItemWhenAddedOneItem()
     {
         // Arrange
         const int expectedItemsCount = 1;
@@ -68,7 +117,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void HasOneItemWhenUpdatedItemAfterAdd()
+    public void ShouldHaveOneItemWhenUpdatedItemAfterAdd()
     {
         // Arrange
         const int expectedItemsCount = 1;
@@ -88,7 +137,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void ValueChangesWhenItemUpdated()
+    public void AddOrUpdatePropertyShouldUpdatedValueWithNewValue()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -103,7 +152,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void ContainsKeyReturnsTrueWhenFoundKey()
+    public void ContainsKeyShouldReturnTrueWhenKeyIsFound()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -117,7 +166,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void ContainsKeyReturnsFalseWhenNotFoundKey()
+    public void ContainsKeyShouldReturnFalseWhenKeyIsNotFound()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -132,7 +181,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void AddOrUpdatePropertyThrowsExceptionWhenKeyIsNull()
+    public void AddOrUpdatePropertyShouldThrowExceptionWhenKeyIsNull()
     {
         // Arrange
         PropertyBagKey key = null!;
@@ -143,18 +192,18 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void AddOrUpdatePropertyThrowsExceptionWhenValueIsNull()
+    public void AddOrUpdatePropertyShouldNotThrowExceptionWhenValueIsNull()
     {
         // Arrange
         var key = new PropertyBagKey("key");
         var propertyBag = new PropertyBag<object>();
 
         // Assert
-        Assert.Throws<ArgumentNullException>(() => propertyBag.AddOrUpdateProperty(key, null!));
+        Assert.DoesNotThrow(() => propertyBag.AddOrUpdateProperty(key, null!));
     }
 
     [Test]
-    public void AddOrUpdatePropertiesThrowsExceptionWhenPropertiesParameterIsNull()
+    public void AddOrUpdatePropertiesShouldThrowExceptionWhenPropertiesParameterIsNull()
     {
         // Arrange
         Dictionary<PropertyBagKey, object> properties = null!;
@@ -165,7 +214,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void HasCorrectNumberOfItemsAfterAddOrUpdateProperties()
+    public void ShouldHaveCorrectNumberOfItemsWhenNewItemsAreAdded()
     {
         // Arrange
         var properties = new Dictionary<PropertyBagKey, object>()
@@ -188,7 +237,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void DoesNotThrowWhenDuplicateKeyIsAddOrUpdated()
+    public void ShouldNotThrowWhenDuplicateKeyIsAddOrUpdated()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -202,7 +251,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void TryGetPropertyReturnsTrueWhenPropertyExist()
+    public void TryGetPropertyShouldReturnTrueWhenPropertyExist()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -216,7 +265,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void TryGetPropertyReturnsFalseWhenPropertyDoesNotExist()
+    public void TryGetPropertyShouldReturnFalseWhenPropertyDoesNotExist()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -230,7 +279,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void TryGetPropertyReturnsNullValueWhenPropertyDoesNotExist()
+    public void TryGetPropertyShouldReturnNullWhenPropertyDoesNotExist()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -245,7 +294,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericTryGetPropertyReturnsTrueWhenPropertyExist()
+    public void GenericTryGetPropertyShouldReturnTrueWhenPropertyExist()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -259,7 +308,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericTryGetPropertyReturnsFalseWhenPropertyDoesNotExist()
+    public void GenericTryGetPropertyShouldReturnFalseWhenPropertyDoesNotExist()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -273,7 +322,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericTryGetPropertyReturnsNullValueWhenPropertyDoesNotExist()
+    public void GenericTryGetPropertyShouldReturnNullWhenPropertyDoesNotExist()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -288,7 +337,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericTryGetPropertyDoesNotThrowInvalidCastExceptionWhenTypeMismatch()
+    public void GenericTryGetPropertyShouldNotThrowInvalidCastExceptionWhenTypeMismatch()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -302,7 +351,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GetPropertyThrowsExceptionWhenKeyIsNull()
+    public void GetPropertyShouldThrowExceptionWhenKeyIsNull()
     {
         // Arrange
         PropertyBagKey key = null!;
@@ -313,7 +362,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GetPropertyThrowsKeyNotFoundExceptionWhenKeyDoesNotExist()
+    public void GetPropertyShouldThrowKeyNotFoundExceptionWhenKeyDoesNotExist()
     {
         // Arrange
         var propertyBag = new PropertyBag<object>();
@@ -323,7 +372,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericGetPropertyThrowsExceptionWhenKeyIsNull()
+    public void GenericGetPropertyShouldThrowExceptionWhenKeyIsNull()
     {
         // Arrange
         PropertyBagKey key = null!;
@@ -334,7 +383,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericGetPropertyThrowsKeyNotFoundExceptionWhenKeyDoesNotExist()
+    public void GenericGetPropertyShouldThrowKeyNotFoundExceptionWhenKeyDoesNotExist()
     {
         // Arrange
         var propertyBag = new PropertyBag<object>();
@@ -344,7 +393,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void GenericGetPropertyThrowsInvalidCastExceptionWhenTypeMismatch()
+    public void GenericGetPropertyShouldThrowInvalidCastExceptionWhenTypeMismatch()
     {
         // Arrange
         var key = new PropertyBagKey("key");
@@ -358,7 +407,7 @@ public sealed class PropertyBagTests
     }
 
     [Test]
-    public void ClearRemovesAllPropertes()
+    public void ClearShouldRemoveAllPropertes()
     {
         // Arrange
         var propertyBag = new PropertyBag<object>(new Dictionary<PropertyBagKey, object>
@@ -376,5 +425,212 @@ public sealed class PropertyBagTests
             Assert.That(propertyBag.Keys, Is.Empty);
             Assert.That(propertyBag.Count, Is.EqualTo(0));
         });
+    }
+
+    [Test]
+    public void EqaulShouldReturnTrueWhenTwoInstancesAreEqaul()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+
+        var pBag1 = new PropertyBag<object>(properties1);
+        var pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1.Equals(pBag2);
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public void EqaulShouldReturnTrueWhenTwoInstancesAreEqaulAndOneIsCastedToObject()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+
+        var pBag1 = new PropertyBag<object>(properties1);
+        object pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1.Equals(pBag2);
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public void EqaulShouldReturnTrueWhenTwoInstancesAreEqaulAndBothAreCastedToObject()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+
+        object pBag1 = new PropertyBag<object>(properties1);
+        object pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1.Equals(pBag2);
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public void EqaulShouldReturnFalseWhenTwoInstancesHaveDifferentKeysAndTheSameValues()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key1"), "value" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key2"), "value" }
+        };
+
+        object pBag1 = new PropertyBag<object>(properties1);
+        object pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1.Equals(pBag2);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void EqaulShouldReturnFalseWhenTwoInstancesHaveDifferentValuesAndTheSameKeys()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value1" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value2" }
+        };
+
+        object pBag1 = new PropertyBag<object>(properties1);
+        object pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1.Equals(pBag2);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void EqaulShouldReturnFalseWhenTwoInstancesHaveDifferentKeysAndDifferentValues()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key1"), "value1" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key2"), "value2" }
+        };
+
+        object pBag1 = new PropertyBag<object>(properties1);
+        object pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1.Equals(pBag2);
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void EqaulOperatorShouldReturnTrueWhenTwoInstancesAreEqaul()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+
+        var pBag1 = new PropertyBag<object>(properties1);
+        var pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1 == pBag2;
+
+        // Assert
+        Assert.That(result, Is.True);
+    }
+
+    [Test]
+    public void InequalityOperatorShouldReturnFalseWhenTwoInstancesAreEqaul()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value" }
+        };
+
+        var pBag1 = new PropertyBag<object>(properties1);
+        var pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1 != pBag2;
+
+        // Assert
+        Assert.That(result, Is.False);
+    }
+
+    [Test]
+    public void InequalityOperatorShouldReturnTrueWhenTwoInstancesAreNotEqual()
+    {
+        // Arrange
+        var properties1 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value1" }
+        };
+        var properties2 = new Dictionary<PropertyBagKey, object>()
+        {
+            { new PropertyBagKey("key"), "value2" }
+        };
+
+        var pBag1 = new PropertyBag<object>(properties1);
+        var pBag2 = new PropertyBag<object>(properties2);
+
+        // Act
+        bool result = pBag1 != pBag2;
+
+        // Assert
+        Assert.That(result, Is.True);
     }
 }

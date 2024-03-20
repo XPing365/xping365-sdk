@@ -11,7 +11,7 @@ The figure below shows a typical testing pipeline for a web application.
 You can omit any of these components, but some components require others to be registered. For instance, the validation components that check the response content need the `HttpRequestSender` component. They depend on the HTTP response results from this component.
 
 > [!NOTE] 
-> The testing pipeline does not depend on the client that makes the HTTP requests. It works the same for both HttpClient and Headless Browsers.
+> The testing pipeline maintains uniform functionality across different clients, ensuring that the results are consistent whether using HttpClient or a Headless Browser. However, it should be noted that certain components may be specifically tailored to operate exclusively with one type of client.
 
 ## How to Terminate the Pipeline
 
