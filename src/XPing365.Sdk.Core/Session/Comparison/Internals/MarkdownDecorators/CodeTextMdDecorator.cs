@@ -6,6 +6,13 @@ internal class CodeTextMdDecorator(ITextReport textReport) : BaseMdDecorator(tex
 
     public override string Generate()
     {
-        return CodeMarker + base.Generate() + CodeMarker;
+        var text = base.Generate();
+
+        if (!string.IsNullOrEmpty(text))
+        {
+            return CodeMarker + base.Generate() + CodeMarker;
+        }
+
+        return text;
     }
 }

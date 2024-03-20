@@ -6,6 +6,13 @@ internal class BoldTextMdDecorator(ITextReport textReport) : BaseMdDecorator(tex
 
     public override string Generate()
     {
-        return BoldMarker + base.Generate() + BoldMarker;
+        var text = base.Generate();
+
+        if (!string.IsNullOrEmpty(text))
+        {
+            return BoldMarker + base.Generate() + BoldMarker;
+        }
+
+        return text;        
     }
 }

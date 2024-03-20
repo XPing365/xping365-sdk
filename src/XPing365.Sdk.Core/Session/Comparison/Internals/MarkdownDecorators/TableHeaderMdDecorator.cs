@@ -6,6 +6,6 @@ internal class TableDataMdDecorator(ITextReport textReport) : BaseMdDecorator(te
 
     public override string Generate()
     {
-        return TableMarker + base.Generate() + TableMarker;
+        return TableMarker + base.Generate();
     }
 }

@@ -35,38 +35,6 @@ internal class MarkdownDiffPresenter : IDiffPresenter
     public bool IncludeSummary { get; set; } = true;
 
     /// <summary>
-    /// Gets or sets a value indicating whether a detailed comparison should be included in the output.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if the detailed comparison is to be included; otherwise, <c>false</c>.
-    /// </value>
-    public bool IncludeDetailedComparison { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether detailed start date information should be included in the output.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if the detailed start date information is to be included; otherwise, <c>false</c>.
-    /// </value>
-    public bool IncludeDetailedStartDate { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether detailed failures information should be included in the output.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if the detailed failures information is to be included; otherwise, <c>false</c>.
-    /// </value>
-    public bool IncludeDetailedFailures { get; set; } = true;
-
-    /// <summary>
-    /// Gets or sets a value indicating whether detailed execution duration information should be included in the output.
-    /// </summary>
-    /// <value>
-    /// <c>true</c> if the detailed execution duration information is to be included; otherwise, <c>false</c>.
-    /// </value>
-    public bool IncludeDetailedExecutionDuration { get; set; } = true;
-
-    /// <summary>
     /// Gets or sets a value indicating whether a detailed step-by-step analysis should be included in the output.
     /// </summary>
     /// <value>
