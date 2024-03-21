@@ -23,16 +23,20 @@ jobs:
     - name: Ensure browsers are installed
       run: pwsh ./tests/XPing365.Sdk.IntegrationTests/bin/Release/net8.0/playwright.ps1 install --with-deps
     - name: Test
-      run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" -l "console;verbosity=normal"
-    - name: Coverage
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.2.4
+      run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        reports: ./tests/**/coverage.cobertura.xml
-        targetdir: coveragereport
-        reporttypes: Html;Badges
-        assemblyfilters: +XPing365.Sdk.Core;+XPing365.Sdk.Availability
-    - name: Upload coverage report artifact
-      uses: actions/upload-artifact@v2.2.3
+        filename: 'coverage/*/coverage.cobertura.xml'
+        badge: true
+        format: 'markdown'
+        output: 'both'
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
       with:
-        name: CoverageReport
-        path: coveragereport
+        recreate: true
+        path: code-coverage-results.md
+    - name: Write to Job Summary
+      run: cat code-coverage-results.md >> $GITHUB_STEP_SUMMARY
+ 
