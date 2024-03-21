@@ -23,7 +23,7 @@ jobs:
     - name: Ensure browsers are installed
       run: pwsh ./tests/XPing365.Sdk.IntegrationTests/bin/Release/net8.0/playwright.ps1 install --with-deps
     - name: Test
-      run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory coverage
+      run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory ./coverage
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
