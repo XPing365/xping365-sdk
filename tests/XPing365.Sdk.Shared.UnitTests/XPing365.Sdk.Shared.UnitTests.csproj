@@ -14,7 +14,12 @@
     <PackageReference Include="NUnit" Version="3.13.3" />
     <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
     <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
-    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+    <!-- <PackageReference Include="coverlet.collector" Version="6.0.0" /> 
+    // Note: When the <PackageReference Include="coverlet.collector" Version="6.0.0" /> is used in a unit test project
+    // that does not reference any other assemblies as this project, it will generate an empty coverage.cobertura.xml 
+    // report. This is expected behavior as there is no code coverage to report. However, this may cause subsequent jobs
+    // that generate reports based on these files to fail, as they anticipate non-empty coverage reports, thus
+    // coverlet.collector package is not include in such scenario. -->
   </ItemGroup>
 
   <Import Project="..\..\src\XPing365.Sdk.Shared\XPing365.Sdk.Shared.projitems" Label="Shared" />
