@@ -24,14 +24,18 @@ jobs:
       run: pwsh ./tests/XPing365.Sdk.IntegrationTests/bin/Release/net8.0/playwright.ps1 install --with-deps
     - name: Test
       run: dotnet test -c Release --no-build --collect:"XPlat Code Coverage" --logger trx --results-directory ./coverage
-    - name: Code Coverage Summary Report
+    - name: Merge coverage results
+      run: |
+        dotnet tool install --global dotnet-coverage
+        dotnet-coverage merge ./coverage/*/coverage.cobertura.xml -o ./coverage/coverage.merged.xml -f cobertura
+    - name: Code coverage summary report
       uses: irongut/CodeCoverageSummary@v1.3.0
       with:
-        filename: 'coverage/*/coverage.cobertura.xml'
+        filename: 'coverage/coverage.merged.xml'
         badge: true
         format: 'markdown'
         output: 'both'
-    - name: Add Coverage PR Comment
+    - name: Add coverage PR comment
       uses: marocchino/sticky-pull-request-comment@v2
       if: github.event_name == 'pull_request'
       with:
