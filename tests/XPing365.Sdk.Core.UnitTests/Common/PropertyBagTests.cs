@@ -407,6 +407,40 @@ public sealed class PropertyBagTests
     }
 
     [Test]
+    public void ClearShouldRemoveSpecifiedProperty()
+    {
+        var key = new PropertyBagKey("key");
+        var yek = new PropertyBagKey("yek");
+
+        // Arrange
+        var propertyBag = new PropertyBag<object>(new Dictionary<PropertyBagKey, object>
+        {
+            { key, new object() },
+            { yek, new object() }
+        });
+
+        // Act
+        propertyBag.Clear(new PropertyBagKey("yek"));
+
+        Assert.Multiple(() =>
+        {
+            // Assert
+            Assert.That(propertyBag.Keys.First(), Is.EqualTo(key));
+            Assert.That(propertyBag.Count, Is.EqualTo(1));
+        });
+    }
+
+    [Test]
+    public void ClearShouldThrowArgumentNullExpcetionWhenKeyIsNull()
+    {
+        // Arrange
+        var propertyBag = new PropertyBag<object>();
+
+        // Assert
+        Assert.Throws<ArgumentNullException>(() => propertyBag.Clear(key: null!));
+    }
+
+    [Test]
     public void ClearShouldRemoveAllPropertes()
     {
         // Arrange

@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core.HeadlessBrowser;
+﻿using XPing365.Sdk.Core.Components;
+
+namespace XPing365.Sdk.Core.HeadlessBrowser;
 
 /// <summary>
 /// This interface defines a method to create a <see cref="HeadlessBrowserClient"/> object that can interact with a web 
@@ -11,12 +13,12 @@ public interface IHeadlessBrowserFactory : IDisposable
     /// An asynchronous method that creates a <see cref="HeadlessBrowserClient"/> object with the specified browser 
     /// context options.
     /// </summary>
-    /// <param name="context">A <see cref="BrowserContext"/> object that represents the browser context options, such 
+    /// <param name="settings">A <see cref="TestSettings"/> object that represents the test settings options, such 
     /// as browser type, timeout, and user agent.</param>
     /// <returns>
     /// A Task&lt;HeadlessBrowserClient&gt; object that represents the asynchronous operation. The result of 
     /// the task is a <see cref="HeadlessBrowserClient"/> object that can interact with a web application using a 
     /// headless browser.
     /// </returns>
-    Task<HeadlessBrowserClient> CreateClientAsync(BrowserContext context);
+    Task<HeadlessBrowserClient> CreateClientAsync(TestSettings settings);
 }

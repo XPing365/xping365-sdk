@@ -114,8 +114,7 @@ public sealed class IPAddressAccessibilityCheck() : TestComponent(name: StepName
         Ttl = settings.PropertyBag.GetProperty<int>(PropertyBagKeys.PingTTLOption)
     };
 
-    private static int GetTimeout(TestSettings settings) =>
-        (int)settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout).TotalMilliseconds;
+    private static int GetTimeout(TestSettings settings) => (int)settings.HttpRequestTimeout.TotalMilliseconds;
 
     private static ReadOnlyCollection<IPAddress>? GetIPAddresses(ReadOnlyCollection<TestStep> steps)
     {

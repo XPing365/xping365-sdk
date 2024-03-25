@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Configurations;
-using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Availability.TestActions.Internals;
@@ -51,12 +50,6 @@ internal sealed class HttpClientRequestSender(string name) : TestComponent(name,
 
         using HttpClient httpClient = CreateHttpClient(settings, httpClientFactory);
         using HttpRequestMessage request = CreateHttpRequestMessage(url, settings);
-
-        foreach (var httpHeader in settings.GetHttpRequestHeadersOrEmpty())
-        {
-            request.Headers.Add(httpHeader.Key, httpHeader.Value);
-        }
-
         using var instrumentation = new InstrumentationLog(startStopwatch: true);
 
         TestStep testStep = null!;
@@ -116,19 +109,41 @@ internal sealed class HttpClientRequestSender(string name) : TestComponent(name,
                 HttpClientConfiguration.HttpClientWithNoRetryAndNoFollowRedirect);
         }
 
-        httpClient.Timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout);
+        httpClient.Timeout = settings.HttpRequestTimeout;
 
         return httpClient;
     }
 
     private static HttpRequestMessage CreateHttpRequestMessage(Uri url, TestSettings settings)
     {
-        return new HttpRequestMessage()
+        var request = new HttpRequestMessage()
         {
             RequestUri = url,
             Method = settings.GetHttpMethod(),
             Content = settings.GetHttpContent()
         };
+
+        // Clear any existing headers from the content to prevent unintended data from being sent.
+        request.Content?.Headers.Clear();
+        // Clear any existing headers from the request itself for the same reason.
+        request.Headers.Clear();
+        
+        // This ensures that only the headers explicitly set by the user will be included in the request.
+
+        foreach (var httpHeader in settings.GetHttpRequestHeaders())
+        {
+            if (request.Content != null &&
+                httpHeader.Key.ToUpperInvariant().StartsWith("CONTENT", StringComparison.InvariantCulture))
+            {
+                request.Content.Headers.Add(httpHeader.Key, httpHeader.Value);
+            }
+            else
+            {
+                request.Headers.Add(httpHeader.Key, httpHeader.Value);
+            }
+        }
+
+        return request;
     }
 
     private async Task<HttpResponseMessage> SendRequestAsync(

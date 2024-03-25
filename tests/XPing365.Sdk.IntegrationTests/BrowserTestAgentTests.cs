@@ -10,6 +10,7 @@ using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.IntegrationTests.HttpServer;
 using XPing365.Sdk.IntegrationTests.TestFixtures;
+using System.Net.Http.Json;
 
 namespace XPing365.Sdk.IntegrationTests;
 
@@ -125,15 +126,18 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         // Arrange
         const string userAgent = "Chrome/51.0.2704.64 Safari/537.36";
 
-        TestSettings settings = TestSettings.DefaultForHttpClient;
+        TestSettings settings = TestSettings.Default;
         var httpRequestHeaders = new Dictionary<string, IEnumerable<string>>
         {
             { HeaderNames.UserAgent, [userAgent] }
         };
         settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestHeaders, httpRequestHeaders);
 
-        static void ValidateRequest(HttpListenerRequest request)
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
         {
+            requestReceived = true;
             // Assert
             Assert.That(request.UserAgent, Is.Not.Null);
             Assert.That(request.UserAgent, Is.EqualTo(userAgent));
@@ -145,6 +149,205 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
                 requestReceived: ValidateRequest, 
                 settings: settings)
             .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
+    }
+
+    [Test]
+    public async Task HeadlessBrowserRequestSenderShouldSendCustomHttpHeaderWhenConfigured()
+    {
+        // Arrange
+        const string customKey = "custom-key";
+        const string customValue = "This is custome header";
+
+        TestSettings settings = TestSettings.Default;
+        var httpRequestHeaders = new Dictionary<string, IEnumerable<string>>
+        {
+            { customKey, [customValue] }
+        };
+        settings.SetHttpRequestHeaders(httpRequestHeaders);
+
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
+        {
+            requestReceived = true;
+            // Assert
+            Assert.That(request.Headers.AllKeys.Any(k => k == customKey), Is.True);
+            Assert.That(() =>
+            {
+                for (int i = 0; i < request.Headers.Count; i++)
+                {
+                    var hasValue = request.Headers.GetValues(i)?.Any(v => 
+                        v.Contains(customValue, StringComparison.InvariantCulture));
+
+                    if (hasValue == true)
+                    {
+                        return true;
+                    }
+                }
+
+                return false; // If we are here, then we did not find expected value;
+            });
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder,
+                requestReceived: ValidateRequest,
+                settings: settings)
+            .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
+    }
+
+    [TestCase("GET")]
+    [TestCase("POST")]
+    [TestCase("DELETE")]
+    [Test]
+    public async Task HeadlessBrowserRequestComponentUsesConfiguredHttpMethod(string method)
+    {
+        // Arrange
+        var httpMethod = new HttpMethod(method);
+
+        TestSettings settings = TestSettings.Default;
+        settings.SetHttpMethod(httpMethod);
+
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
+        {
+            requestReceived = true;
+            // Assert
+            Assert.That(request.HttpMethod, Is.EqualTo(method));
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder,
+                requestReceived: ValidateRequest,
+                settings: settings)
+            .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
+    }
+
+    [Test]
+    public async Task HeadlessBrowserRequestComponentUsesConfiguredHttpContent()
+    {
+        // Arrange
+        TestSettings settings = TestSettings.Default;
+        using var stringContent = new StringContent("HttpContentData");
+        settings.SetHttpContent(stringContent);
+
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
+        {
+            requestReceived = true;
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(request.HasEntityBody, Is.True);
+                Assert.That(request.ContentType, Is.EqualTo("text/plain"));
+            });
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder,
+                requestReceived: ValidateRequest,
+                settings: settings)
+            .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
+    }
+
+    [Test]
+    public async Task HeadlessBrowserRequestComponentUsesConfiguredJsonContent()
+    {
+        // Arrange
+        TestSettings settings = TestSettings.Default;
+        using var jsonContent = JsonContent.Create("{\"name\":\"John\", \"age\":30, \"car\":null}");
+        settings.SetHttpContent(jsonContent);
+
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
+        {
+            requestReceived = true;
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(request.HasEntityBody, Is.True);
+                Assert.That(request.ContentType, Is.EqualTo("application/json"));
+            });
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder,
+                requestReceived: ValidateRequest,
+                settings: settings)
+            .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
+    }
+
+    [Test]
+    public async Task HeadlessBrowserRequestComponentDoesNotUseContentTypeWhenNotConfigured()
+    {
+        // Arrange
+        TestSettings settings = TestSettings.Default;
+        using var stringContent = new StringContent("HttpContentData");
+        settings.SetHttpContent(stringContent, setContentHeaders: false);
+
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
+        {
+            requestReceived = true;
+            Assert.Multiple(() =>
+            {
+                // Assert
+                Assert.That(request.HasEntityBody, Is.True);
+                Assert.That(request.ContentType, Is.Null);
+            });
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder,
+                requestReceived: ValidateRequest,
+                settings: settings)
+            .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
+    }
+
+    [Test]
+    public async Task HeadlessBrowserRequestComponentDoesNotUsesHttpContentWhenNotConfigured()
+    {
+        // Arrange
+        TestSettings settings = TestSettings.Default;
+
+        bool requestReceived = false;
+
+        void ValidateRequest(HttpListenerRequest request)
+        {
+            requestReceived = true;
+            // Assert
+            Assert.That(request.HasEntityBody, Is.False);
+        }
+
+        // Act
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
+                responseBuilder: SimplePageResponseBuilder,
+                requestReceived: ValidateRequest,
+                settings: settings)
+            .ConfigureAwait(false);
+
+        Assert.That(requestReceived, Is.True);
     }
 
     [Test]
@@ -155,12 +358,12 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             "Error 1000: Message: Timeout 1000ms exceeded.\nCall log:\n  - navigating to \"http://localhost:8080/\", " +
             "waiting until \"load\"";
 
-        TestSettings settings = TestSettings.DefaultForHttpClient;
-        settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestTimeout, TimeSpan.FromSeconds(1));
+        TestSettings settings = TestSettings.Default;
+        settings.HttpRequestTimeout = TimeSpan.FromSeconds(1);
 
         void ResponseBuilder(HttpListenerResponse response)
         {
-            TimeSpan timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout);
+            TimeSpan timeout = settings.HttpRequestTimeout;
 
             // Delay response time which is > than TimeOut value defined in TestSettings
             // so we can test if the BrowserTestAgent correctly reacts to timeout configuration.
@@ -229,7 +432,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    public async Task HttpRequestSenderComponentFollowsRedirectWhenConfigured()
+    public async Task HeadlessBrowserRequestSenderComponentFollowsRedirectWhenConfigured()
     {
         // Arrange
         string destinationServerAddress = "http://localhost:8081/";
@@ -244,7 +447,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             requestReceived: (request) => { },
             uriPrefixes: [new Uri(destinationServerAddress)]);
 
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.FollowHttpRedirectionResponses = true;
 
         // Act
@@ -283,13 +486,13 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    public async Task HttpRequestSenderComponentDetectsCircularDependency()
+    public async Task HeadlessBrowserRequestSenderComponentDetectsCircularDependency()
     {
         // Arrange
         // The redirect URL is on the same server as the original URL
         string destinationServerAddress = InMemoryHttpServer.GetTestServerAddress().AbsoluteUri;
 
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.FollowHttpRedirectionResponses = true;
 
         // Act
@@ -324,14 +527,14 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    public async Task HttpRequestSenderComponentReportsProgressForAllItsStepsWhenRedirectionHappens()
+    public async Task HeadlessBrowserRequestSenderComponentReportsProgressForAllItsStepsWhenRedirectionHappens()
     {
         // Arrange
         var mockProgress = _serviceProvider.GetService<IProgress<TestStep>>();
 
         // The redirect URL is on the same server as the original URL
         string destinationServerAddress = InMemoryHttpServer.GetTestServerAddress().AbsoluteUri;
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.FollowHttpRedirectionResponses = true;
 
         // Act
@@ -348,7 +551,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    public async Task HttpRequestSenderComponentRestrictsNumberOfRedirectionsWhenConfigured()
+    public async Task HeadlessBrowserRequestSenderComponentRestrictsNumberOfRedirectionsWhenConfigured()
     {
         // Arrange two HTTP redirections localhost:8080 -> localhost:8081 -> localhost:8082
         string destinationServerAddress = "http://localhost:8081/";
@@ -364,7 +567,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             requestReceived: (request) => { },
             uriPrefixes: [new Uri(destinationServerAddress)]);
 
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.FollowHttpRedirectionResponses = true;
         settings.MaxRedirections = 1;
 
@@ -394,7 +597,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    public async Task HttpRequestSenderComponentFollowsRelativeRedirectedUrl()
+    public async Task HeadlessBrowserRequestSenderComponentFollowsRelativeRedirectedUrl()
     {
         bool redirected = false;
 
@@ -452,11 +655,11 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
 
     [Test]
     [Ignore(reason: "https://github.com/XPing365/xping365-sdk/issues/35")]
-    public async Task HttpRequestSenderComponentDoesNotFollowHttpRedirectWhenFollowRedirectionIsDisabled()
+    public async Task HeadlessBrowserRequestSenderComponentDoesNotFollowHttpRedirectWhenFollowRedirectionIsDisabled()
     {
         // Arrange
         string destinationServerAddress = "http://localhost:8080/destination";
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.FollowHttpRedirectionResponses = false;
 
         // Act
@@ -506,7 +709,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.DefaultForBrowser,
+                settings: settings ?? TestSettings.Default,
                 cancellationToken: cancellationToken)
             .ConfigureAwait(false);
 

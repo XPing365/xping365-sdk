@@ -92,10 +92,6 @@ public static class PropertyBagKeys
     /// </summary>
     public readonly static PropertyBagKey HttpFollowRedirect = new(nameof(HttpFollowRedirect));
 
-    /// <summary>
-    /// Represents the TimeSpan value that indicates time to wait before the request times out.
-    /// </summary>
-    public readonly static PropertyBagKey HttpRequestTimeout = new(nameof(HttpRequestTimeout));
 
     /// <summary>
     /// Represents the collection of HTTP request headers as IDictionary&lt;string, IEnumerable&lt;string&gt;&gt;. 
@@ -114,4 +110,16 @@ public static class PropertyBagKeys
     /// </summary>
     public readonly static PropertyBagKey HttpResponseTrailingHeaders = new(nameof(HttpResponseTrailingHeaders));
     #endregion // HTTP
+
+    #region BROWSER
+    /// <summary>
+    /// Represents the coordinates of the geographical location of a device.
+    /// </summary>
+    /// <remarks>
+    /// This property key is used to access the geolocation details in the context of automated browser tests.
+    /// It leverages the Geolocation feature from the Playwright library to simulate the geographical position
+    /// which can be useful for testing location-based functionalities of web applications.
+    /// </remarks>
+    public readonly static PropertyBagKey Geolocation = new(nameof(Geolocation));
+    #endregion
 }

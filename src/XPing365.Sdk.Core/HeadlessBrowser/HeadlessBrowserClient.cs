@@ -1,8 +1,11 @@
-﻿using System;
-using System.Diagnostics;
-using System.Net;
+﻿using System.Diagnostics;
+using System.Net.Http;
+using System.Threading;
+using Microsoft.Net.Http.Headers;
 using Microsoft.Playwright;
+using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.HeadlessBrowser.Internals;
+using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.HeadlessBrowser;
 
@@ -12,22 +15,28 @@ namespace XPing365.Sdk.Core.HeadlessBrowser;
 /// It implements the <see cref="IDisposable"/> and <see cref="IAsyncDisposable"/> interfaces to support both 
 /// synchronous and asynchronous disposal of the unmanaged resources.
 /// </summary>
-/// <remarks>
-/// A constructor initializes a new instance with the specified browser and context parameters. A browser 
-/// <see cref="IBrowser"/> object represents the headless browser instance. It can be obtained from the IPlaywright 
-/// interface. A <see cref="BrowserContext"/> object represents the browser context options.
-/// </remarks>
-/// <param name="browser"></param>
-/// <param name="context"></param>
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : IDisposable, IAsyncDisposable
+public class HeadlessBrowserClient : IDisposable, IAsyncDisposable
 {
-    private IBrowser _browser = browser;
+    private IBrowser _browser;
 
     /// <summary>
-    /// Gets object that represents the browser context options.
+    /// Initializes a new instance with the specified browser and settings parameters. A browser 
+    /// <see cref="IBrowser"/> object represents the headless browser instance. It can be obtained from the IPlaywright 
+    /// interface.
     /// </summary>
-    public BrowserContext Context { get; init; } = context;
+    /// <param name="browser">The headless browser instance.</param>
+    /// <param name="settings">The test settings instance.</param>
+    public HeadlessBrowserClient(IBrowser browser, TestSettings settings)
+    {
+        _browser = browser.RequireNotNull(nameof(browser));
+        Settings = settings.RequireNotNull(nameof(settings));
+    }
+
+    /// <summary>
+    /// Gets object that represents the test settings options.
+    /// </summary>
+    public TestSettings Settings { get; init; }
 
     /// <summary>
     /// A read-only property that gets the name of the headless browser type, such as “chromium”, “firefox”, or 
@@ -57,10 +66,13 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
     {
         ArgumentNullException.ThrowIfNull(url, nameof(url));
 
+        Settings.GetHttpRequestHeaders().TryGetValue(HeaderNames.UserAgent, out var userAgentHeader);
+
         var options = new BrowserNewPageOptions
         {
-            UserAgent = Context.UserAgent,
-            ViewportSize = Context.ViewportSize
+            UserAgent = userAgentHeader?.FirstOrDefault(),
+            ExtraHTTPHeaders = ConvertDictionary(Settings.GetHttpRequestHeaders()),
+            Geolocation = Settings.GetGeolocation()
         };
 
         var page = await _browser.NewPageAsync(options).ConfigureAwait(false);
@@ -74,9 +86,24 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
             }
         };
 
+        // Intercept network requests
+        await page.RouteAsync("**/*", async (route) =>
+        {
+            var httpContent = Settings.GetHttpContent();
+            var byteArray = httpContent != null ? await httpContent.ReadAsByteArrayAsync().ConfigureAwait(false) : null;
+
+            // Modify the HTTP method here
+            var routeOptions = new RouteContinueOptions
+            {
+                Method = Settings.GetHttpMethod().Method,
+                PostData = byteArray
+            };
+            await route.ContinueAsync(routeOptions).ConfigureAwait(false);
+        }).ConfigureAwait(false);
+
         var response = await page.GotoAsync(
-            url: url.AbsoluteUri,
-            options: new PageGotoOptions { Timeout = (float)Context.Timeout.TotalMilliseconds })
+                url: url.AbsoluteUri,
+                options: new PageGotoOptions { Timeout = (float)Settings.HttpRequestTimeout.TotalMilliseconds })
             .ConfigureAwait(false);
 
         var webpage = await new WebPageBuilder()
@@ -140,6 +167,19 @@ public class HeadlessBrowserClient(IBrowser browser, BrowserContext context) : I
 
         _browser = null!;
     }
+
+    private static IEnumerable<KeyValuePair<string, string>> ConvertDictionary(
+        IDictionary<string, IEnumerable<string>> dictionary)
+    {
+        foreach (var pair in dictionary)
+        {
+            foreach (var value in pair.Value)
+            {
+                yield return new KeyValuePair<string, string>(pair.Key, value);
+            }
+        }
+    }
+
 
     private string GetDebuggerDisplay() => Name;
 }

@@ -281,6 +281,16 @@ public sealed class PropertyBag<TValue> : ISerializable, IEquatable<PropertyBag<
     }
 
     /// <summary>
+    /// Attempts to remove the property associated with the specified key from the property bag.
+    /// </summary>
+    /// <param name="key">The key of the property to remove.</param>
+    /// <returns>true if the property is successfully found and removed; otherwise, false.</returns>
+    public bool Clear(PropertyBagKey key)
+    {
+        return _properties.Remove(key);
+    }
+
+    /// <summary>
     /// Removes all items from the collection.
     /// </summary>
     public void Clear()

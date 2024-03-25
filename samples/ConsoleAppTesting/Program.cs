@@ -40,7 +40,7 @@ public sealed class Program
             testAgent.Container?.AddComponent(CreateValidationPipeline());
 
             TestSession session = await testAgent
-                .RunAsync(url, settings: TestSettings.DefaultForHttpClient)
+                .RunAsync(url, settings: TestSettings.Default)
                 .ConfigureAwait(false);
 
             context.Console.WriteLine("\nSummary:");

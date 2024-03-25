@@ -38,7 +38,7 @@ public sealed class TestAgentTests(IServiceProvider serviceProvider)
         // Assert
         Assert.ThrowsAsync<ArgumentNullException>(async () => await testAgent.RunAsync(
             url: null!,
-            TestSettings.DefaultForHttpClient).ConfigureAwait(false));
+            TestSettings.Default).ConfigureAwait(false));
     }
 
     [Test]

@@ -19,14 +19,14 @@ namespace XPing365.Sdk.Availability.TestActions.Internals;
 /// Before using this test component, you need to register the necessary services by calling the 
 /// <see cref="Core.DependencyInjection.DependencyInjectionExtension.AddBrowserClients(IServiceCollection)"/> method 
 /// which adds <see cref="IHeadlessBrowserFactory"/> factory service. The XPing365 SDK provides a default implementation 
-/// of this interface, called DefaultHeadlessBrowserFactory, which based on the <see cref="BrowserContext"/> creates a 
+/// of this interface, called DefaultHeadlessBrowserFactory, which based on the <see cref="TestSettings"/> creates a 
 /// Chromium, WebKit or Firefox headless browser instance. You can also implement your own custom headless browser 
 /// factory by implementing the <see cref="IHeadlessBrowserFactory"/> interface and adding its implementation into
 /// services.
 /// </remarks>
 internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(name, type: TestStepType.ActionStep)
 {
-    private readonly OrderedHttpRedirections _visitedUrls = new();
+    private readonly OrderedHttpRedirections _visitedUrls = [];
 
     /// <summary>
     /// This method performs the test step operation asynchronously.
@@ -57,7 +57,7 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
 
 #pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task - impossible to enforce this rule
         await using HeadlessBrowserClient browser = await headlessBrowserFactory
-            .CreateClientAsync(CreateBrowserContext(settings))
+            .CreateClientAsync(settings)
             .ConfigureAwait(false);
 #pragma warning restore CA2007 // Consider calling ConfigureAwait on the awaited task
 
@@ -149,25 +149,6 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
     private static PropertyBagValue<Dictionary<string, string>> GetHeaders(HttpHeaders headers) =>
         new(headers.ToDictionary(h => h.Key.ToUpperInvariant(), h => string.Join(";", h.Value)));
 
-    private static BrowserContext CreateBrowserContext(TestSettings settings)
-    {
-        settings.GetHttpRequestHeadersOrEmpty().TryGetValue(HeaderNames.UserAgent, out var values);
-
-        return new BrowserContext
-        {
-            Timeout = settings.PropertyBag.GetProperty<TimeSpan>(PropertyBagKeys.HttpRequestTimeout),
-            UserAgent = values?.FirstOrDefault(),
-            Type = settings.BrowserType,
-            MaxRedirections = settings.MaxRedirections,
-            FollowHttpRedirectionResponses = settings.FollowHttpRedirectionResponses,
-            ViewportSize = settings.BrowserViewportSize != null ? new ViewportSize
-            {
-                Height = settings.BrowserViewportSize.Value.Height,
-                Width = settings.BrowserViewportSize.Value.Width
-            } : null
-        };
-    }
-
     private static async Task<byte[]> ReadAsByteArrayAsync(HttpContent httpContent, CancellationToken cancellationToken)
     {
         // When storing the server response content, it is generally recommended to store it as a byte array
@@ -178,6 +159,5 @@ internal sealed class HeadlessBrowserRequestSender(string name) : TestComponent(
         // specify the character encoding to use.
         return await httpContent.ReadAsByteArrayAsync(cancellationToken).ConfigureAwait(false);
     }
-
 }
  

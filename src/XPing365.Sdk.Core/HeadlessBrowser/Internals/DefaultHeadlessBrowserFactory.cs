@@ -1,4 +1,5 @@
 ﻿using Microsoft.Playwright;
+using XPing365.Sdk.Core.Components;
 
 namespace XPing365.Sdk.Core.HeadlessBrowser.Internals;
 
@@ -11,9 +12,9 @@ internal sealed class DefaultHeadlessBrowserFactory : IHeadlessBrowserFactory
     private bool _disposedValue;
     private IPlaywright? _playwright;
 
-    public async Task<HeadlessBrowserClient> CreateClientAsync(BrowserContext context)
+    public async Task<HeadlessBrowserClient> CreateClientAsync(TestSettings settings)
     {
-        ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
         _playwright ??= await Playwright.CreateAsync().ConfigureAwait(false);
 
@@ -22,18 +23,18 @@ internal sealed class DefaultHeadlessBrowserFactory : IHeadlessBrowserFactory
             Headless = true
         };
 
-        return context.Type switch
+        return settings.BrowserType switch
         {
             BrowserType.Webkit => 
                 new HeadlessBrowserClient(
-                    browser: await _playwright.Webkit.LaunchAsync(launchOptions).ConfigureAwait(false), context),
+                    browser: await _playwright.Webkit.LaunchAsync(launchOptions).ConfigureAwait(false), settings),
 
             BrowserType.Firefox => 
                 new HeadlessBrowserClient(
-                    browser: await _playwright.Firefox.LaunchAsync(launchOptions).ConfigureAwait(false), context),
+                    browser: await _playwright.Firefox.LaunchAsync(launchOptions).ConfigureAwait(false), settings),
 
             _ => new HeadlessBrowserClient(
-                browser: await _playwright.Chromium.LaunchAsync(launchOptions).ConfigureAwait(false), context),
+                browser: await _playwright.Chromium.LaunchAsync(launchOptions).ConfigureAwait(false), settings),
         };
     }
 
