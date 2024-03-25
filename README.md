@@ -2,6 +2,7 @@
 
 [![NuGet](https://img.shields.io/nuget/v/XPing365.Core)](https://www.nuget.org/profiles/XPing365)
 ![Build Status](https://github.com/XPing365/xping365-sdk/actions/workflows/ci.yml/badge.svg)
+[![codecov](https://codecov.io/gh/XPing365/xping365-sdk/graph/badge.svg?token=9JYAN87PBS)](https://codecov.io/gh/XPing365/xping365-sdk)
 
 <!-- PROJECT LOGO -->
 <br />
@@ -98,7 +99,7 @@ var testAgent = _serviceProvider.GetRequiredKeyedService<TestAgent>(serviceKey: 
 TestSession session = await testAgent
     .RunAsync(
         new Uri("www.demoblaze.com"),
-        TestSettings.DefaultForHttpClient)
+        TestSettings.Default)
     .ConfigureAwait(false);
 ```
 
@@ -110,7 +111,7 @@ That’s it! You’re now ready to start automating your web application tests a
 <!-- USAGE EXAMPLES -->
 ## Usage
 
-The `samples` folder in this repository contains various examples of how to use XPing 365 for your testing needs. For a comprehensive guide on how to install, configure, and customize XPing 365, please refer to the documentation website available at [xping365.github.io/xping365-sdk](https://xping365.github.io/xping365-sdk/index.html).
+The `samples` folder in this repository contains various examples of how to use XPing 365 for your testing needs. For a comprehensive guide on how to install, configure, and customize XPing 365, please refer to the documentation website available at [xping365.github.io](https://xping365.github.io/xping365-sdk/index.html).
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
