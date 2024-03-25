@@ -34,6 +34,7 @@ internal static class InMemoryHttpServer
             catch (Exception e)
             {
                 Debug.WriteLine(e);
+                Debugger.Break();
             }
         }, cancellationToken);
     }

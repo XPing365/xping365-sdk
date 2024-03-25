@@ -37,7 +37,7 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
             onError: $"The response content did not match the Regex expression: '{WelcomeTextIsH1()}'"));
 
         // Act
-        TestSession session = await _agent.RunAsync(TestServer, TestSettings.DefaultForBrowser).ConfigureAwait(false);
+        TestSession session = await _agent.RunAsync(TestServer, TestSettings.Default).ConfigureAwait(false);
 
         // Assert
         Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);
@@ -54,7 +54,7 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
             onError: $"The response content did not contain the expected '{learnAboutLabel}' text."));
 
         // Act
-        TestSession session = await _agent.RunAsync(TestServer, TestSettings.DefaultForBrowser).ConfigureAwait(false);
+        TestSession session = await _agent.RunAsync(TestServer, TestSettings.Default).ConfigureAwait(false);
 
         // Assert
         Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);
@@ -72,7 +72,7 @@ public partial class IndexPageTests : WebAppIntegrationTestFixture
             onError: $"The HTML document does not match the XPath expression: '{xpath.Expression}'"));
 
         // Act
-        TestSession session = await _agent.RunAsync(TestServer, TestSettings.DefaultForBrowser).ConfigureAwait(false);
+        TestSession session = await _agent.RunAsync(TestServer, TestSettings.Default).ConfigureAwait(false);
 
         // Assert
         Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);

@@ -74,7 +74,7 @@ internal class PipelineTests(IServiceProvider serviceProvider)
         var url = new Uri("http://test");
         var pipeline = new Pipeline(components: components);
         var context = new TestContext(Mock.Of<ITestSessionBuilder>(), progress: null);
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
 
         // Arrange
         await pipeline.HandleAsync(url, settings, context, _serviceProvider).ConfigureAwait(false);
@@ -102,7 +102,7 @@ internal class PipelineTests(IServiceProvider serviceProvider)
         sessionBuilderMock.SetupGet(b => b.HasFailed).Returns(hasFailedResult);
 
         var context = new TestContext(sessionBuilderMock.Object, progress: null);
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.ContinueOnFailure = false;
 
         var components = new ITestComponent[] { Mock.Of<ITestComponent>(), Mock.Of<ITestComponent>() };
@@ -138,7 +138,7 @@ internal class PipelineTests(IServiceProvider serviceProvider)
         sessionBuilderMock.SetupGet(b => b.HasFailed).Returns(hasFailedResult);
 
         var context = new TestContext(sessionBuilderMock.Object, progress: null);
-        var settings = TestSettings.DefaultForHttpClient;
+        var settings = TestSettings.Default;
         settings.ContinueOnFailure = true;
 
         var components = new ITestComponent[] { Mock.Of<ITestComponent>(), Mock.Of<ITestComponent>() };

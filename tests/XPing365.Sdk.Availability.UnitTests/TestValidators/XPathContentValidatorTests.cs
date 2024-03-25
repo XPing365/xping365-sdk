@@ -37,7 +37,7 @@ public sealed class XPathContentValidatorTests
 
         // Assert
         Assert.Throws<ArgumentNullException>(() =>
-            validator.HandleAsync(url: null!, TestSettings.DefaultForHttpClient, context, Mock.Of<IServiceProvider>()));
+            validator.HandleAsync(url: null!, TestSettings.Default, context, Mock.Of<IServiceProvider>()));
     }
 
     [Test]
@@ -61,7 +61,7 @@ public sealed class XPathContentValidatorTests
         var url = new Uri("http://localhost");
         XPathExpression xpath = XPathExpression.Compile("//div");
         var validator = new XPathContentValidator(xpath, nodes => true);
-        TestSettings settings = TestSettings.DefaultForHttpClient;
+        TestSettings settings = TestSettings.Default;
 
         // Assert
         Assert.Throws<ArgumentNullException>(() =>
@@ -73,7 +73,7 @@ public sealed class XPathContentValidatorTests
     {
         // Arrange
         var url = new Uri("http://localhost");
-        TestSettings settings = TestSettings.DefaultForHttpClient;
+        TestSettings settings = TestSettings.Default;
         var context = new TestContext(new TestSessionBuilder(), progress: null);
         using var instrumentation = new InstrumentationLog();
 
@@ -106,7 +106,7 @@ public sealed class XPathContentValidatorTests
     {
         // Arrange
         var url = new Uri("http://localhost");
-        TestSettings settings = TestSettings.DefaultForHttpClient;
+        TestSettings settings = TestSettings.Default;
         var context = new TestContext(new TestSessionBuilder(), progress: null);
         using var instrumentation = new InstrumentationLog();
 
