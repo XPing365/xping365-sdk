@@ -204,8 +204,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             Assert.Multiple(() =>
             {
                 // Assert
-                Assert.That(request.Headers.GetKey(0), Is.EqualTo(customKey));
-                Assert.That(request.Headers.GetValues(0)?.First(), Is.EqualTo(customValue));
+                Assert.That(request.Headers[customKey], Is.EqualTo(customValue));
             });
         }
 
