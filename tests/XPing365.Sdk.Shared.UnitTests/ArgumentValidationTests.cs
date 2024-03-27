@@ -1,6 +1,4 @@
-﻿using XPing365.Sdk.Shared;
-
-namespace XPing365.Sdk.Common.UnitTests;
+﻿namespace XPing365.Sdk.Shared.UnitTests;
 
 public sealed class ArgumentValidationTests
 {
