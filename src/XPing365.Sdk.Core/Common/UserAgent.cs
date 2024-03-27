@@ -20,7 +20,7 @@ public static class UserAgent
     /// <summary>
     /// Represents a user agent string for Mozilla Firefox on desktop.
     /// </summary>
-    public static readonly string FirefoxFesktop = 
+    public static readonly string FirefoxDesktop = 
         "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:53.0) Gecko/20100101 Firefox/53.0";
 
     /// <summary>
@@ -38,15 +38,29 @@ public static class UserAgent
         "Version/10.0 Mobile/14E304 Safari/602.1";
 
     /// <summary>
-    /// Represents a user agent string for Google Chrome on mobile devices.
+    /// Represents a user agent string for Google Chrome on iOS mobile devices.
     /// </summary>    
-    public static readonly string ChromeMobile =
-        "Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) " +
-        "Chrome/58.0.3029.110 Mobile Safari/537.36";
+    public static readonly string ChromeiOSMobile =
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 17_4 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) " +
+        "CriOS/123.0.6312.52 Mobile/15E148 Safari/604.1";
 
     /// <summary>
-    /// Represents a user agent string for Mozilla Firefox on mobile devices.
+    /// Represents a user agent string for Google Chrome on Android mobile devices.
+    /// </summary>    
+    public static readonly string ChromeAndroidMobile =
+        "Mozilla/5.0 (Linux; Android 10; K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.6312.80 Mobile " +
+        "Safari/537.36";
+
+    /// <summary>
+    /// Represents a user agent string for Mozilla Firefox on iOS mobile devices.
     /// </summary>
-    public static readonly string FirefoxFireMobile = 
-        "Mozilla/5.0 (Android 7.0; Mobile; rv:53.0) Gecko/53.0 Firefox/53.0";
+    public static readonly string FirefoxiOSMobile =
+        "Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) " +
+        "FxiOS/124.0 Mobile/15E148 Safari/605.1.15";
+
+    /// <summary>
+    /// Represents a user agent string for Mozilla Firefox on Android mobile devices.
+    /// </summary>
+    public static readonly string FirefoxAndroidMobile =
+        "Mozilla/5.0 (Android 14; Mobile; rv:124.0) Gecko/124.0 Firefox/124.0";
 }

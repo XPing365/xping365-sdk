@@ -11,7 +11,7 @@ internal static class DateTimeExtensions
     {
         if (time.TotalMinutes >= 1)
         {
-            return $"{Math.Round(time.TotalSeconds, 2)} min";
+            return $"{Math.Round(time.TotalMinutes, 2)} min";
         }
         if (time.TotalSeconds >= 1)
         {
@@ -33,7 +33,7 @@ internal static class DateTimeExtensions
         {
             TimeSpanUnit.Millisecond => $"{Math.Round(time.TotalMilliseconds, 0)} ms",
             TimeSpanUnit.Second => $"{Math.Round(time.TotalSeconds, 2)} s",
-            TimeSpanUnit.Minute => $"{Math.Round(time.TotalSeconds, 2)} min",
+            TimeSpanUnit.Minute => $"{Math.Round(time.TotalMinutes, 2)} min",
             TimeSpanUnit.Hour => time.TotalHours switch
             {
                 // Check if the total hours are close to 0 (considering a small threshold for rounding errors)
