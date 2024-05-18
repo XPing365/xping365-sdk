@@ -11,7 +11,7 @@ internal class CompositeTestsTests
         public override Task HandleAsync(
             Uri url,
             TestSettings settings,
-            Sdk.Core.Components.TestContext context,
+            Core.Components.TestContext context,
             IServiceProvider serviceProvider,
             CancellationToken cancellationToken = default)
         {

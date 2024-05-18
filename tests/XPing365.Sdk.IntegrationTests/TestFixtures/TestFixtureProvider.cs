@@ -3,9 +3,8 @@ using Microsoft.Extensions.Hosting;
 using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Availability.TestActions;
 using Microsoft.Extensions.Logging;
+using XPing365.Sdk.Availability.Extensions;
 
 namespace XPing365.Sdk.IntegrationTests.TestFixtures;
 
@@ -24,31 +23,21 @@ public static class TestFixtureProvider
         builder.ConfigureServices(services =>
         {
             services.AddSingleton(implementationInstance: Mock.Of<IProgress<TestStep>>());
-            services.AddHttpClients();
-            services.AddBrowserClients();
+            services.AddHttpClientFactory();
+            services.AddBrowserClientFactory();
             services.AddTestAgent(
                 name: "HttpClient", builder: (TestAgent agent) =>
                 {
-                    agent.Container = new Pipeline(
-                        name: "Availability pipeline (HttpClient)",
-                        components: [
-                            new DnsLookup(),
-                            new IPAddressAccessibilityCheck(),
-                            new HttpRequestSender(Client.HttpClient)
-                        ]);
-                    return agent;
+                    agent.UseDnsLookup();
+                    agent.UseIPAddressAccessibilityCheck();
+                    agent.UseHttpClient();
                 });
             services.AddTestAgent(
                 name: "BrowserClient", builder: (TestAgent agent) =>
                 {
-                    agent.Container = new Pipeline(
-                        name: "Availability pipeline (BrowserClient)",
-                        components: [
-                            new DnsLookup(),
-                            new IPAddressAccessibilityCheck(),
-                            new HttpRequestSender(Client.HeadlessBrowser)
-                        ]);
-                    return agent;
+                    agent.UseDnsLookup();
+                    agent.UseIPAddressAccessibilityCheck();
+                    agent.UseBrowserClient();
                 });
         });
         builder.ConfigureLogging(logging =>

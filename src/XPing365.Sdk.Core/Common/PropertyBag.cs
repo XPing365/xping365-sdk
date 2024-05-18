@@ -24,7 +24,12 @@ public sealed class PropertyBag<TValue> : ISerializable, IEquatable<PropertyBag<
     /// <summary>
     /// Gets a read-only collection that contains the keys of the collection.
     /// </summary>
-    public ReadOnlyCollection<PropertyBagKey> Keys => _properties.Keys.ToList().AsReadOnly();
+    public IReadOnlyCollection<PropertyBagKey> Keys => _properties.Keys;
+
+    /// <summary>
+    /// Gets a read-only collection that contains the values of the collection.
+    /// </summary>
+    public IReadOnlyCollection<TValue> Values => _properties.Values;
 
     /// <summary>
     /// Initializes a new instance of the PropertyBag class.
@@ -201,8 +206,10 @@ public sealed class PropertyBag<TValue> : ISerializable, IEquatable<PropertyBag<
     /// This method attempts to get the value associated with the specified key from the collection.
     /// </summary>
     /// <param name="key">A key represented as <see cref="PropertyBagKey"/> type.</param>
-    /// <param name="value">When this method returns, contains the object value stored in the collection, if
-    /// the key is found, or null if the key is not found.</param>
+    /// <param name="value">
+    /// When this method returns, contains the object value stored in the collection, if the key is found, or null if 
+    /// the key is not found.
+    /// </param>
     /// <returns>true if a key was found successfully; otherwise, false</returns>
     public bool TryGetProperty(PropertyBagKey key, out TValue? value)
     {

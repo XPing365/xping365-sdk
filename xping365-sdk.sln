@@ -31,9 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebApp", "samples\WebApp\We
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ConsoleAppTesting", "samples\ConsoleAppTesting\ConsoleAppTesting.csproj", "{B972A01E-4D7C-4D7A-9A9A-2D81CF621E1E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "XPing365.Sdk.Availability.UnitTests", "tests\XPing365.Sdk.Availability.UnitTests\XPing365.Sdk.Availability.UnitTests.csproj", "{33F7600A-124F-46A8-80B5-E1DD3264B24D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "XPing365.Sdk.Availability.UnitTests", "tests\XPing365.Sdk.Availability.UnitTests\XPing365.Sdk.Availability.UnitTests.csproj", "{33F7600A-124F-46A8-80B5-E1DD3264B24D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTesting", "samples\IntegrationTesting\IntegrationTesting.csproj", "{86A5FC4F-7A18-4319-801F-87F102949276}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "IntegrationTesting", "samples\IntegrationTesting\IntegrationTesting.csproj", "{86A5FC4F-7A18-4319-801F-87F102949276}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

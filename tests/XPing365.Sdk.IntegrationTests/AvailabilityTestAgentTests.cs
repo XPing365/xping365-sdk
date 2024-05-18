@@ -1,12 +1,14 @@
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using System.Text;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Net.Http.Headers;
 using XPing365.Sdk.Availability.TestActions;
-using XPing365.Sdk.Availability.TestValidators;
+using XPing365.Sdk.Availability.Validations.Content.Html;
+using XPing365.Sdk.Availability.Validations.Content.Page;
+using XPing365.Sdk.Availability.Validations.HttpResponse;
 using XPing365.Sdk.Core;
+using XPing365.Sdk.Core.Clients.Configurations;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Extensions;
@@ -67,7 +69,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(session.Steps.Any(step => step.Name == DnsLookup.StepName), Is.True);
+            Assert.That(session.Steps.Any(step => step.Name == DnsLookup.ComponentName), Is.True);
             Assert.That(session.TryGetPropertyBagValue(expectedBag, out PropertyBagValue<string[]>? ips), Is.True);
         });
     }
@@ -95,7 +97,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     [TestCase(HttpStatusCode.Moved)]
     [TestCase(HttpStatusCode.NotFound)]
     [TestCase(HttpStatusCode.Redirect)]
-    public async Task SentHttpRequestStepHasCorrectHttpStatusCodeWhenSucceeded(HttpStatusCode httpStatusCode)
+    public async Task SendHttpRequestStepHasCorrectHttpStatusCodeWhenSucceeded(HttpStatusCode httpStatusCode)
     {
         // Arrange
         void ResponseBuilder(HttpListenerResponse response)
@@ -104,13 +106,15 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             response.Close(); // By closing a response it can be send to client.
         }
 
-        TestSettings testSettings = TestSettings.Default;
-        testSettings.RetryHttpRequestWhenFailed = false;
-        testSettings.FollowHttpRedirectionResponses = false;
+        var configuration = new HttpClientConfiguration
+        {
+            RetryHttpRequestWhenFailed = false,
+            FollowHttpRedirectionResponses = false
+        };
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
-            ResponseBuilder, settings: testSettings).ConfigureAwait(false);
+            ResponseBuilder, configuration: configuration).ConfigureAwait(false);
 
         // Assert
         PropertyBagValue<string>? code = null;
@@ -129,12 +133,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         const string expectedErrMsg = 
             "Error 1000: Message: The request was canceled due to the configured HttpClient.Timeout of 1 seconds " +
             "elapsing.";
-        TestSettings settings = TestSettings.Default;
-        settings.HttpRequestTimeout = TimeSpan.FromSeconds(1);
+        var configuration = new HttpClientConfiguration();
+        configuration.HttpRequestTimeout = TimeSpan.FromSeconds(1);
 
         void ResponseBuilder(HttpListenerResponse response)
         {
-            TimeSpan timeout = settings.HttpRequestTimeout;
+            TimeSpan timeout = configuration.HttpRequestTimeout;
 
             // Delay response time which is > than TimeOut value defined in TestSettings
             // so we can test if the agent correctly reacts to timeout configuration.
@@ -143,11 +147,11 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
-            ResponseBuilder, settings: settings).ConfigureAwait(false);
+            ResponseBuilder, configuration: configuration).ConfigureAwait(false);
 
         // Assert
         Assert.That(session.Steps.Any(step =>
-            step.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture) &&
+            step.Name.StartsWith(nameof(HttpClientRequestSender), StringComparison.InvariantCulture) &&
             step.Result == TestStepResult.Failed &&
             step.ErrorMessage == expectedErrMsg), Is.True);
     }
@@ -158,12 +162,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Arrange
         const string userAgent = "Chrome/51.0.2704.64 Safari/537.36";
 
-        TestSettings settings = TestSettings.Default;
+        var configuration = new HttpClientConfiguration();
         var httpRequestHeaders = new Dictionary<string, IEnumerable<string>>
         {
             { HeaderNames.UserAgent, [userAgent] }
         };
-        settings.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestHeaders, httpRequestHeaders);
+        configuration.PropertyBag.AddOrUpdateProperty(PropertyBagKeys.HttpRequestHeaders, httpRequestHeaders);
 
         bool requestReceived = false;
 
@@ -177,7 +181,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
-            requestReceived: ValidateRequest, settings: settings).ConfigureAwait(false);
+            requestReceived: ValidateRequest, configuration: configuration).ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
     }
@@ -189,12 +193,12 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         const string customKey = "custom-key";
         const string customValue = "This is custome header";
 
-        TestSettings settings = TestSettings.Default;
+        var configuration = new HttpClientConfiguration();
         var httpRequestHeaders = new Dictionary<string, IEnumerable<string>>
         {
             { customKey, [customValue] }
         };
-        settings.SetHttpRequestHeaders(httpRequestHeaders);
+        configuration.SetHttpRequestHeaders(httpRequestHeaders);
 
         bool requestReceived = false;
 
@@ -210,7 +214,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
-            requestReceived: ValidateRequest, settings: settings).ConfigureAwait(false);
+            requestReceived: ValidateRequest, configuration: configuration).ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
     }
@@ -223,8 +227,8 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     {
         // Arrange
         var httpMethod = new HttpMethod(method);
-        TestSettings settings = TestSettings.Default;
-        settings.SetHttpMethod(httpMethod);
+        var configuration = new HttpClientConfiguration();
+        configuration.SetHttpMethod(httpMethod);
 
         bool requestReceived = false;
 
@@ -237,7 +241,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
-            requestReceived: ValidateRequest, settings: settings).ConfigureAwait(false);
+            requestReceived: ValidateRequest, configuration: configuration).ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
     }
@@ -246,9 +250,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     public async Task HttpRequestComponentUsesConfiguredStringContent()
     {
         // Arrange
-        TestSettings settings = TestSettings.Default;
+        var configuration = new HttpClientConfiguration();
         using var stringContent = new StringContent("HttpContentData");
-        settings.SetHttpContent(stringContent);
+        configuration.SetHttpContent(stringContent);
 
         bool requestReceived = false;
 
@@ -266,7 +270,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
                 requestReceived: ValidateRequest,
-                settings: settings)
+                configuration: configuration)
             .ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
@@ -276,9 +280,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     public async Task HttpRequestComponentUsesConfiguredJsonContent()
     {
         // Arrange
-        TestSettings settings = TestSettings.Default;
+        var configuration = new HttpClientConfiguration();
         using var jsonContent = JsonContent.Create("{\"name\":\"John\", \"age\":30, \"car\":null}");
-        settings.SetHttpContent(jsonContent);
+        configuration.SetHttpContent(jsonContent);
 
         bool requestReceived = false;
 
@@ -296,7 +300,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
                 requestReceived: ValidateRequest,
-                settings: settings)
+                configuration: configuration)
             .ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
@@ -306,9 +310,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     public async Task HttpClientRequestComponentDoesNotUseContentTypeWhenNotConfigured()
     {
         // Arrange
-        TestSettings settings = TestSettings.Default;
+        var configuration = new HttpClientConfiguration();
         using var stringContent = new StringContent("HttpContentData");
-        settings.SetHttpContent(stringContent, setContentHeaders: false);
+        configuration.SetHttpContent(stringContent, setContentHeaders: false);
 
         bool requestReceived = false;
 
@@ -326,18 +330,16 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
                 requestReceived: ValidateRequest,
-                settings: settings)
+                configuration: configuration)
             .ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
     }
 
     [Test]
-    public async Task HttpRequestComponentDoesNotUsesHttpContentWhenNotConfigured()
+    public async Task HttpClientRequestComponentDoesNotUsesHttpContentWhenNotConfigured()
     {
         // Arrange
-        TestSettings settings = TestSettings.Default;
-
         bool requestReceived = false;
 
         void ValidateRequest(HttpListenerRequest request)
@@ -348,9 +350,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         }
 
         // Act
-        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
-                requestReceived: ValidateRequest,
-                settings: settings)
+        TestSession session = await GetTestSessionFromInMemoryHttpTestServer(requestReceived: ValidateRequest)
             .ConfigureAwait(false);
 
         Assert.That(requestReceived, Is.True);
@@ -390,16 +390,15 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     public async Task ServerContentResponseValidatorDoesNotThrowWhenResponseDoesNotContainContent()
     {
         // Arrange
-        const bool expectedValidityResult = true;
-        var serverContentValidator = new HttpResponseContentValidator(
-            isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => expectedValidityResult);
+        var httpResponseValidator = new HttpResponseValidator(
+            validation: (IHttpResponse) => {});
 
         // Act
         TestSession session = 
-            await GetTestSessionFromInMemoryHttpTestServer(component: serverContentValidator).ConfigureAwait(false);
+            await GetTestSessionFromInMemoryHttpTestServer(component: httpResponseValidator).ConfigureAwait(false);
 
         // Assert
-        Assert.That(session.IsValid, Is.EqualTo(expectedValidityResult));
+        Assert.That(session.IsValid, Is.EqualTo(true));
     }
 
     [Test]
@@ -408,9 +407,9 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // Arrange
         var mockProgress = _serviceProvider.GetService<IProgress<TestStep>>();
         var validationPipeline = new Pipeline(components: [
-            new HttpResponseContentValidator(isValid: (byte[] buffer, HttpContentHeaders contentHeaders) => true),
-            new HttpStatusCodeValidator(isValid: code => true),
-            new HttpResponseHeadersValidator(isValid: headers => true)
+            new HttpResponseValidator(validation: (IHttpResponse response) => {}),
+            new HtmlContentValidator(validation: (IHtmlContent) => {}),
+            new PageContentValidator(validation: (IPage) => {})
         ]);
 
         // Act
@@ -437,8 +436,8 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             requestReceived: (request) => { },
             uriPrefixes: [new Uri(destinationServerAddress)]);
 
-        var settings = TestSettings.Default;
-        settings.FollowHttpRedirectionResponses = true;
+        var configuration = new HttpClientConfiguration();
+        configuration.FollowHttpRedirectionResponses = true;
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
@@ -447,13 +446,13 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 response.StatusCode = (int)redirectionStatus;
                 response.Headers.Add(HeaderNames.Location, destinationServerAddress);
                 response.Close(); // By closing a response it can be send to client.
-            }, settings: settings).ConfigureAwait(false);
+            }, configuration: configuration).ConfigureAwait(false);
 
         await destinationServer.WaitAsync(cancellationToken: default).ConfigureAwait(false);
 
         // Assert
         var httpRequestSteps = session.Steps.Where(s => 
-            s.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture)).ToList();
+            s.Name.StartsWith(nameof(HttpClientRequestSender), StringComparison.InvariantCulture)).ToList();
         var redirectionStep = httpRequestSteps.First();
         var destinationStep = httpRequestSteps.Last();
 
@@ -482,8 +481,8 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         // The redirect URL is on the same server as the original URL
         string destinationServerAddress = InMemoryHttpServer.GetTestServerAddress().AbsoluteUri;
 
-        var settings = TestSettings.Default;
-        settings.FollowHttpRedirectionResponses = true;
+        var configuration = new HttpClientConfiguration();
+        configuration.FollowHttpRedirectionResponses = true;
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
@@ -492,11 +491,11 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 response.StatusCode = (int)HttpStatusCode.MovedPermanently;
                 response.Headers.Add(HeaderNames.Location, destinationServerAddress);
                 response.Close(); // By closing a response it can be send to client.
-            }, settings: settings).ConfigureAwait(false);
+            }, configuration: configuration).ConfigureAwait(false);
 
         // Assert
         var httpRequestSteps = session.Steps.Where(s =>
-            s.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture)).ToList();
+            s.Name.StartsWith(nameof(HttpClientRequestSender), StringComparison.InvariantCulture)).ToList();
         var redirectionStep = httpRequestSteps.First();
         var destinationStep = httpRequestSteps.Last();
 
@@ -524,8 +523,8 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // The redirect URL is on the same server as the original URL
         string destinationServerAddress = InMemoryHttpServer.GetTestServerAddress().AbsoluteUri;
-        var settings = TestSettings.Default;
-        settings.FollowHttpRedirectionResponses = true;
+        var configuration = new HttpClientConfiguration();
+        configuration.FollowHttpRedirectionResponses = true;
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
@@ -534,7 +533,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 response.StatusCode = (int)HttpStatusCode.MovedPermanently;
                 response.Headers.Add(HeaderNames.Location, destinationServerAddress);
                 response.Close(); // By closing a response it can be send to client.
-            }, settings: settings).ConfigureAwait(false);
+            }, configuration: configuration).ConfigureAwait(false);
 
         // Assert
         Mock.Get(mockProgress!).Verify(p => p.Report(It.IsAny<TestStep>()), Times.Exactly(session.Steps.Count));
@@ -557,9 +556,11 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             requestReceived: (request) => { },
             uriPrefixes: [new Uri(destinationServerAddress)]);
 
-        var settings = TestSettings.Default;
-        settings.FollowHttpRedirectionResponses = true;
-        settings.MaxRedirections = 1;
+        var configuration = new HttpClientConfiguration
+        {
+            FollowHttpRedirectionResponses = true,
+            MaxRedirections = 1
+        };
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
@@ -568,20 +569,20 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 response.StatusCode = (int)redirectionStatus;
                 response.Headers.Add(HeaderNames.Location, destinationServerAddress);
                 response.Close(); // By closing a response it can be send to client.
-            }, settings: settings).ConfigureAwait(false);
+            }, configuration: configuration).ConfigureAwait(false);
 
         await destinationServer.WaitAsync(cancellationToken: default).ConfigureAwait(false);
 
         // Assert
         var httpRequestSteps = session.Steps.Where(s =>
-            s.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture)).ToList();
+            s.Name.StartsWith(nameof(HttpClientRequestSender), StringComparison.InvariantCulture)).ToList();
         var destinationStep = httpRequestSteps.Last();
 
         Assert.Multiple(() =>
         {
             Assert.That(destinationStep.Result, Is.EqualTo(TestStepResult.Failed));
             Assert.That(destinationStep.ErrorMessage, Does.Contain($"The maximum number of redirects " +
-                $"({settings.MaxRedirections}) has been exceeded for the URL http://localhost:8080/. The last " +
+                $"({configuration.MaxRedirections}) has been exceeded for the URL http://localhost:8080/. The last " +
                 $"redirect URL was http://localhost:8081/"));
         });
     }
@@ -624,7 +625,7 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
 
         // Assert
         var httpRequestSteps = session.Steps.Where(s =>
-            s.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture)).ToList();
+            s.Name.StartsWith(nameof(HttpClientRequestSender), StringComparison.InvariantCulture)).ToList();
         var destinationStep = httpRequestSteps.Last();
 
         var destinationStatusCode = destinationStep.PropertyBag!.GetProperty<PropertyBagValue<string>>(
@@ -648,8 +649,10 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
     {
         // Arrange
         string destinationServerAddress = "http://localhost:8080/destination";
-        var settings = TestSettings.Default;
-        settings.FollowHttpRedirectionResponses = false;
+        var configuration = new HttpClientConfiguration
+        {
+            FollowHttpRedirectionResponses = false
+        };
 
         // Act
         TestSession session = await GetTestSessionFromInMemoryHttpTestServer(
@@ -658,11 +661,11 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
                 response.StatusCode = (int)HttpStatusCode.MovedPermanently;
                 response.Headers.Add(HeaderNames.Location, destinationServerAddress);
                 response.Close(); // By closing a response it can be send to client.
-            }, settings: settings).ConfigureAwait(false);
+            }, configuration: configuration).ConfigureAwait(false);
 
         // Assert
         var httpRequestSteps = session.Steps.Where(s =>
-            s.Name.StartsWith(HttpRequestSender.StepName, StringComparison.InvariantCulture)).ToList();
+            s.Name.StartsWith(nameof(HttpClientRequestSender), StringComparison.InvariantCulture)).ToList();
 
         Assert.That(httpRequestSteps, Has.Count.EqualTo(1));
     }
@@ -671,7 +674,8 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
         Action<HttpListenerResponse>? responseBuilder = null,
         Action<HttpListenerRequest>? requestReceived = null,
         TestComponent? component = null,
-        TestSettings? settings = null)
+        TestSettings? settings = null,
+        HttpClientConfiguration? configuration = null)
     {
         using var cts = new CancellationTokenSource();
 
@@ -688,23 +692,17 @@ public class AvailabilityTestAgentTests(IServiceProvider serviceProvider)
             cts.Token);
         
         var testAgent = _serviceProvider.GetRequiredKeyedService<TestAgent>(serviceKey: "HttpClient");
+        testAgent.Replace(new HttpClientRequestSender(configuration ?? new HttpClientConfiguration()));
 
         if (component != null)
         {
-            if (testAgent.Container == null)
-            {
-                testAgent.Container = new Pipeline(components: [component]);
-            }
-            else
-            {
-                testAgent.Container.AddComponent(component);
-            }
+            testAgent.Container.AddComponent(component);
         }
 
         TestSession session = await testAgent
             .RunAsync(
                 url: InMemoryHttpServer.GetTestServerAddress(),
-                settings: settings ?? TestSettings.Default, 
+                settings: settings, 
                 cancellationToken: cts.Token)
             .ConfigureAwait(false);
 

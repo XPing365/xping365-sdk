@@ -58,7 +58,7 @@ internal static class InMemoryHttpServer
                 for (int i = 0; i < uriPrefixes.Length; i++)
                 {
                     // GetContext method blocks while waiting for a request. 
-                    HttpListenerContext context = await listener.GetContextAsync().ConfigureAwait(false);
+                    HttpListenerContext context = await listener.GetContextAsync();
                     // Examine client request received
                     requestReceived?.Invoke(context.Request);
                     // Build HttpListenerResponse
@@ -68,6 +68,7 @@ internal static class InMemoryHttpServer
             catch (Exception e)
             {
                 Debug.WriteLine(e);
+                Debugger.Break();
             }
         }, cancellationToken);
     }

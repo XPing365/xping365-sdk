@@ -12,8 +12,8 @@ public sealed class DeclineReasonComparerTests : ComparerBaseTests<DeclineReason
         // Arrange
         const string declineReason = "DeclinedText";
 
-        TestSession session1 = CreateTestSessionMock(declineReason: declineReason);
-        TestSession session2 = CreateTestSessionMock(declineReason: declineReason);
+        using TestSession session1 = CreateTestSessionMock(declineReason: declineReason);
+        using TestSession session2 = CreateTestSessionMock(declineReason: declineReason);
 
         // Act
         DeclineReasonComparer comparer = CreateComparer();
@@ -30,8 +30,8 @@ public sealed class DeclineReasonComparerTests : ComparerBaseTests<DeclineReason
         const string declineReason1 = "DeclinedText1";
         const string declineReason2 = "DeclinedText2";
 
-        TestSession session1 = CreateTestSessionMock(declineReason: declineReason1);
-        TestSession session2 = CreateTestSessionMock(declineReason: declineReason2);
+        using TestSession session1 = CreateTestSessionMock(declineReason: declineReason1);
+        using TestSession session2 = CreateTestSessionMock(declineReason: declineReason2);
 
         // Act
         DeclineReasonComparer comparer = CreateComparer();
@@ -50,8 +50,8 @@ public sealed class DeclineReasonComparerTests : ComparerBaseTests<DeclineReason
         // Arrange
         const string declineReason = "DeclinedText";
 
-        TestSession session1 = CreateTestSessionMock(declineReason: null);
-        TestSession session2 = CreateTestSessionMock(declineReason: declineReason);
+        using TestSession session1 = CreateTestSessionMock(declineReason: null);
+        using TestSession session2 = CreateTestSessionMock(declineReason: declineReason);
 
         // Act
         DeclineReasonComparer comparer = CreateComparer();
@@ -70,8 +70,8 @@ public sealed class DeclineReasonComparerTests : ComparerBaseTests<DeclineReason
         // Arrange
         const string declineReason = "DeclinedText";
 
-        TestSession session1 = CreateTestSessionMock(declineReason: declineReason);
-        TestSession session2 = CreateTestSessionMock(declineReason: null);
+        using TestSession session1 = CreateTestSessionMock(declineReason: declineReason);
+        using TestSession session2 = CreateTestSessionMock(declineReason: null);
 
         // Act
         DeclineReasonComparer comparer = CreateComparer();

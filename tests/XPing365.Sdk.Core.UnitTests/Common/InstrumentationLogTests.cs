@@ -8,7 +8,7 @@ public sealed class InstrumentationLogTests
     public void StartDateIsSetToTodayWhenNewlyInstantiatedAndStartStopWatchIsDisabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: false);
+        using var log = new InstrumentationTimer(startStopwatch: false);
 
         // Assert
         Assert.That(log.StartTime, Is.EqualTo(DateTime.Today));
@@ -18,7 +18,7 @@ public sealed class InstrumentationLogTests
     public void StartDateIsNotSetToTodayWhenNewlyInstantiatedAndStartStopWatchIsEnabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: true);
+        using var log = new InstrumentationTimer(startStopwatch: true);
 
         // Assert
         Assert.That(log.StartTime, Is.Not.EqualTo(DateTime.Today));
@@ -28,7 +28,7 @@ public sealed class InstrumentationLogTests
     public void ElapsedTimeIsZeroWhenNewlyInstantiatedAndStartStopWatchIsDisabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: false);
+        using var log = new InstrumentationTimer(startStopwatch: false);
 
         // Assert
         Assert.That(log.ElapsedTime, Is.EqualTo(TimeSpan.Zero));
@@ -38,7 +38,7 @@ public sealed class InstrumentationLogTests
     public void ElapsedMillisecondsIsZeroWhenNewlyInstantiatedAndStartStopWatchIsDisabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: false);
+        using var log = new InstrumentationTimer(startStopwatch: false);
 
         // Assert
         Assert.That(log.ElapsedMilliseconds, Is.EqualTo(0));
@@ -48,7 +48,7 @@ public sealed class InstrumentationLogTests
     public void ElapsedTicksIsZeroWhenNewlyInstantiatedAndStartStopWatchIsDisabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: false);
+        using var log = new InstrumentationTimer(startStopwatch: false);
 
         // Assert
         Assert.That(log.ElapsedTicks, Is.EqualTo(0));
@@ -58,7 +58,7 @@ public sealed class InstrumentationLogTests
     public void ElapsedTimeIsNotZeroWhenNewlyInstantiatedAndStartStopWatchIsEnabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: true);
+        using var log = new InstrumentationTimer(startStopwatch: true);
 
         // Assert
         Assert.That(log.ElapsedTime, Is.Not.EqualTo(TimeSpan.Zero));
@@ -68,7 +68,7 @@ public sealed class InstrumentationLogTests
     public void ElapsedMillisecondsIsNotZeroWhenNewlyInstantiatedAndStartStopWatchIsEnabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: true);
+        using var log = new InstrumentationTimer(startStopwatch: true);
 
         // Act
         Thread.Sleep(100); // Give some time for the stopwatch to measure it.
@@ -81,7 +81,7 @@ public sealed class InstrumentationLogTests
     public void ElapsedTicksIsNotZeroWhenNewlyInstantiatedAndStartStopWatchIsEnabled()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: true);
+        using var log = new InstrumentationTimer(startStopwatch: true);
 
         // Assert
         Assert.That(log.ElapsedTicks, Is.Not.EqualTo(0));
@@ -91,7 +91,7 @@ public sealed class InstrumentationLogTests
     public void StartTimeChangesAfterRestart()
     {
         // Arrange
-        using var log = new InstrumentationLog(startStopwatch: true);
+        using var log = new InstrumentationTimer(startStopwatch: true);
         DateTime initialStartTime = log.StartTime;
 
         // Act
@@ -106,7 +106,7 @@ public sealed class InstrumentationLogTests
     {
         // Arrange
         bool isInvoked = false;
-        using (var log = new InstrumentationLog(callback: log => isInvoked = true))
+        using (var log = new InstrumentationTimer(callback: log => isInvoked = true))
         { }
 
         // Assert
@@ -118,7 +118,7 @@ public sealed class InstrumentationLogTests
     {
         // Arrange
         bool isRunning = true;
-        using (var log = new InstrumentationLog(callback: log => isRunning = log.IsRunning))
+        using (var log = new InstrumentationTimer(callback: log => isRunning = log.IsRunning))
         { }
 
         // Assert
@@ -129,7 +129,7 @@ public sealed class InstrumentationLogTests
     public void StopwatchIsRunningWhenNotDisposed()
     {
         // Arrange
-        using var log = new InstrumentationLog();
+        using var log = new InstrumentationTimer();
 
         // Assert
         Assert.That(log.IsRunning, Is.True);

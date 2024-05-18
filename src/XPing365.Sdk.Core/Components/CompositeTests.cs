@@ -3,11 +3,11 @@ using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Components;
 
-
 interface ICompositeTests
 {
     void AddComponent(ITestComponent component);
     bool RemoveComponent(ITestComponent component);
+    void Clear();
     IReadOnlyCollection<ITestComponent> Components { get; }
 }
 
@@ -41,6 +41,15 @@ public abstract class CompositeTests : TestComponent, ICompositeTests
     /// when component was not found.
     /// </returns>
     public new bool RemoveComponent(ITestComponent component) => _components.Remove(component);
+
+    /// <summary>
+    /// Clears all the components from the current instance.
+    /// </summary>
+    /// <remarks>
+    /// This method is called to clean up the test components. It ensures that the components collection is emptied, 
+    /// preventing cross-contamination of state between tests.
+    /// </remarks>
+    public void Clear() => _components.Clear();
 
     /// <summary>
     /// Gets a read-only collection of the child TestComponent instances of the current object.

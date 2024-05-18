@@ -5,8 +5,8 @@
 /// </summary>
 /// <remarks>
 /// This class is used to store any value that should be excluded from being serialized during the 
-/// <see cref="PropertyBag{TValue}"/> serialization process. Its main purpose is to transfer data among different objects that 
-/// do not need this data to be serialized.
+/// <see cref="PropertyBag{TValue}"/> serialization process. Its main purpose is to transfer data among different 
+/// objects that do not need this data to be serialized.
 /// </remarks>
 public sealed class NonSerializable<TValue>(TValue value) : IPropertyBagValue
 {

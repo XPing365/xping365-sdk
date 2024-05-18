@@ -25,7 +25,7 @@ internal class TestSessionSerializationTests
     public void SerializeThrowsArgumentNullExceptionWhenStreamIsNull()
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -46,7 +46,7 @@ internal class TestSessionSerializationTests
     public void DeserializeThrowsArgumentNullExceptionWhenStreamIsNull()
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -66,7 +66,7 @@ internal class TestSessionSerializationTests
     public void TestSessionIdShouldBeSerialized()
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -90,7 +90,7 @@ internal class TestSessionSerializationTests
         var namespaceManager = new XmlNamespaceManager(doc.NameTable);
         namespaceManager.AddNamespace("ns", "http://schemas.datacontract.org/2004/07/XPing365.Sdk.Core.Session");
 
-        // Use the namespace prefix in the XPath expression to select the Id element
+        // Add the namespace prefix in the XPath expression to select the Id element
         XmlNode? idNode = doc.SelectSingleNode("//ns:TestSession/Id", namespaceManager);
 
         // Assert
@@ -105,7 +105,7 @@ internal class TestSessionSerializationTests
         // Arrange
         const int expectedCount = 1;
 
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -138,7 +138,7 @@ internal class TestSessionSerializationTests
         var namespaceManager = new XmlNamespaceManager(doc.NameTable);
         namespaceManager.AddNamespace("ns", "http://schemas.datacontract.org/2004/07/XPing365.Sdk.Core.Session");
 
-        // Use the namespace prefix in the XPath expression to select the Id element
+        // Add the namespace prefix in the XPath expression to select the Id element
         XmlNode? node = doc.SelectSingleNode("//ns:TestStep/TestComponentIteration", namespaceManager);
 
         // Assert
@@ -150,7 +150,7 @@ internal class TestSessionSerializationTests
     public void TestSessionInstanceIsCorrectlySerializedToXml()
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -183,7 +183,7 @@ internal class TestSessionSerializationTests
         var namespaceManager = new XmlNamespaceManager(doc.NameTable);
         namespaceManager.AddNamespace("ns", "http://schemas.datacontract.org/2004/07/XPing365.Sdk.Core.Session");
 
-        // Use the namespace prefix in the XPath expression to select the Url element
+        // Add the namespace prefix in the XPath expression to select the Url element
         XmlNode? urlNode = doc.SelectSingleNode("//ns:TestSession/Url", namespaceManager);
 
         // Assert
@@ -198,7 +198,7 @@ internal class TestSessionSerializationTests
     public void TestSessionInstanceIsCorrectlyDeserialized(SerializationFormat format)
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -242,7 +242,7 @@ internal class TestSessionSerializationTests
     public void TestSessionIdIsCorrectlyDeserialized(SerializationFormat format)
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,
@@ -267,7 +267,7 @@ internal class TestSessionSerializationTests
     public void DeserializerThrowsSerializationExceptionWhenIncorrectSerializationFormatProvided()
     {
         // Arrange
-        TestSession session = new()
+        using TestSession session = new()
         {
             Url = new Uri("https://test"),
             StartDate = DateTime.UtcNow,

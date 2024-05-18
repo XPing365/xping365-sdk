@@ -43,7 +43,7 @@ public abstract class ComparerBaseTests<TComparer> where TComparer : ITestSessio
     public void CompareReturnsDiffResultEmptyWhenTwoTestSessionsAreReferenceEqual()
     {
         // Arrange
-        TestSession session1 = CreateTestSessionMock();
+        using TestSession session1 = CreateTestSessionMock();
         TestSession session2 = session1;
 
         // Act
@@ -74,7 +74,7 @@ public abstract class ComparerBaseTests<TComparer> where TComparer : ITestSessio
     {
         // Arrange
         TestSession session1 = null!;
-        TestSession session2 = CreateTestSessionMock();
+        using TestSession session2 = CreateTestSessionMock();
 
         // Act
         var comparer = CreateComparer();
@@ -88,7 +88,7 @@ public abstract class ComparerBaseTests<TComparer> where TComparer : ITestSessio
     public void CompareReturnsDiffResultEmptyWhenSecondTestSessionIsNull()
     {
         // Arrange
-        TestSession session1 = CreateTestSessionMock();
+        using TestSession session1 = CreateTestSessionMock();
         TestSession session2 = null!;
 
         // Act

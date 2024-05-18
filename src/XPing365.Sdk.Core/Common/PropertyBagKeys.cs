@@ -121,5 +121,10 @@ public static class PropertyBagKeys
     /// which can be useful for testing location-based functionalities of web applications.
     /// </remarks>
     public readonly static PropertyBagKey Geolocation = new(nameof(Geolocation));
+
+    /// <summary>
+    /// Represents the <see cref="BrowserResponseMessage"/>.
+    /// </summary>
+    public readonly static PropertyBagKey BrowserResponseMessage = new(nameof(BrowserResponseMessage));
     #endregion
 }
