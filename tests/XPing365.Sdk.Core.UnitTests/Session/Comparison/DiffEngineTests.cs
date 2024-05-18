@@ -49,7 +49,7 @@ public sealed class DiffEngineTests
     {
         // Arrange
         var diffEngine = new DiffEngine();
-        TestSession session1 = new()
+        using TestSession session1 = new()
         {
             StartDate = DateTime.Now,
             State = TestSessionState.NotStarted,
@@ -67,7 +67,7 @@ public sealed class DiffEngineTests
     {
         // Arrange
         var diffEngine = new DiffEngine();
-        TestSession session1 = new()
+        using TestSession session1 = new()
         {
             StartDate = DateTime.Now,
             State = TestSessionState.NotStarted,
@@ -87,7 +87,7 @@ public sealed class DiffEngineTests
         ITestSessionComparer[] comparers = [Mock.Of<ITestSessionComparer>(), Mock.Of<ITestSessionComparer>()];
         var diffEngine = new DiffEngine(comparers);
 
-        TestSession session1 = new()
+        using TestSession session1 = new()
         {
             StartDate = DateTime.Now,
             State = TestSessionState.NotStarted,
@@ -95,7 +95,7 @@ public sealed class DiffEngineTests
             Url = new Uri("http://localhost")
         };
 
-        TestSession session2 = new()
+        using TestSession session2 = new()
         {
             StartDate = DateTime.Now,
             State = TestSessionState.NotStarted,

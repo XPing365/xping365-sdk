@@ -11,7 +11,7 @@ namespace XPing365.Sdk.Core.Session;
 /// <remarks>
 /// This record can be serialized and its state can be saved using serializers that support the ISerializable interface.
 /// </remarks>
-[Serializable] // Indicates that this class can be serialized
+[Serializable]
 public sealed record TestStep : ISerializable
 {
     private readonly string _name = null!;
@@ -46,8 +46,9 @@ public sealed record TestStep : ISerializable
         get => _startDate;
         init => _startDate = value.RequireCondition(
             // To prevent a difference between StartDate and this condition, we subtract 60 sec from the present date.
-            // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at 12:00. 
-            condition: date => date >= DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60),
+            // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at
+            // 12:00. 
+            condition: date => date >= (DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60)),
             parameterName: nameof(StartDate),
             message: Errors.IncorrectStartDate);
     }
@@ -140,7 +141,7 @@ public sealed record TestStep : ISerializable
         string msg = $"{StartDate} " +
             $"({Duration.GetFormattedTime()}) " +
             $"[{Type}]: " +
-            $"{Name} " +
+            $"{Name}{GetMethodName()}" +
             $"{Result.GetDisplayName()}.";
 
         if (!string.IsNullOrEmpty(ErrorMessage))
@@ -161,5 +162,14 @@ public sealed record TestStep : ISerializable
         info.AddValue(nameof(Result), Result.ToString(), typeof(string));
         info.AddValue(nameof(PropertyBag), PropertyBag, typeof(PropertyBag<IPropertyBagValue>));
         info.AddValue(nameof(ErrorMessage), ErrorMessage, typeof(string));
+    }
+
+    private string? GetMethodName()
+    {
+        PropertyBagValue<string>? bagValue = null;
+        PropertyBag?.TryGetProperty(key: new("MethodName"), out bagValue);
+
+        string? methodName = !string.IsNullOrWhiteSpace(bagValue?.Value) ? $":{bagValue.Value}" : null;
+        return methodName;
     }
 }

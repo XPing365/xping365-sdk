@@ -1,9 +1,11 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Polly;
-using XPing365.Sdk.Core.Configurations;
-using XPing365.Sdk.Core.DependencyInjection.Internals;
-using XPing365.Sdk.Core.HeadlessBrowser;
-using XPing365.Sdk.Core.HeadlessBrowser.Internals;
+using XPing365.Sdk.Core.Clients.Browser;
+using XPing365.Sdk.Core.Clients.Browser.Internals;
+using XPing365.Sdk.Core.Clients.Configurations;
+using XPing365.Sdk.Core.Clients.Http;
 using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Core.DependencyInjection;
@@ -14,64 +16,79 @@ namespace XPing365.Sdk.Core.DependencyInjection;
 public static class DependencyInjectionExtension
 {
     /// <summary>
-    /// This extension method adds the HttpClientTestAgent service and related services to your application’s service 
-    /// collection and configures a named <see cref="HttpClient"/> clients.
+    /// This extension method adds the IHttpClientFactory service and related services to service collection and 
+    /// configures a named <see cref="HttpClient"/> clients.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
-    /// <param name="configuration">The <see cref="HttpClientConfiguration"/>.</param>
+    /// <param name="configuration">The <see cref="HttpClientFactoryConfiguration"/>.</param>
     /// <returns><see cref="IServiceCollection"/> object.</returns>
-    public static IServiceCollection AddHttpClients(
+    public static IServiceCollection AddHttpClientFactory(
         this IServiceCollection services,
-        Action<IServiceProvider, HttpClientConfiguration>? configuration = null)
+        Action<IServiceProvider, HttpClientFactoryConfiguration>? configuration = null)
     {
-        HttpClientConfiguration httpClientConfiguration = new();
-        configuration?.Invoke(services.BuildServiceProvider(), httpClientConfiguration);
+        var factoryConfiguration = new HttpClientFactoryConfiguration();
+        configuration?.Invoke(services.BuildServiceProvider(), factoryConfiguration);
 
-        services.AddHttpClient(HttpClientConfiguration.HttpClientWithNoRetryAndNoFollowRedirect)
+        services.AddHttpClient(HttpClientFactoryConfiguration.HttpClientWithNoRetryPolicy)
                 .ConfigurePrimaryHttpMessageHandler(configureHandler =>
                 {
-                    return CreateSocketsHttpHandler(httpClientConfiguration);
+                    return CreateSocketsHttpHandler(factoryConfiguration);
                 });
 
-        services.AddHttpClient(HttpClientConfiguration.HttpClientWithRetryAndNoFollowRedirect)
+        services.AddHttpClient(HttpClientFactoryConfiguration.HttpClientWithRetryPolicy)
                 .ConfigurePrimaryHttpMessageHandler(configureHandler =>
                 {
-                    return CreateSocketsHttpHandler(httpClientConfiguration);
+                    return CreateSocketsHttpHandler(factoryConfiguration);
                 })
                 .AddTransientHttpErrorPolicy(builder => builder.WaitAndRetryAsync(
-                    sleepDurations: httpClientConfiguration.SleepDurations))
+                    sleepDurations: factoryConfiguration.SleepDurations))
                 .AddTransientHttpErrorPolicy(builder => builder.CircuitBreakerAsync(
-                    handledEventsAllowedBeforeBreaking: httpClientConfiguration.HandledEventsAllowedBeforeBreaking,
-                    durationOfBreak: httpClientConfiguration.DurationOfBreak));
+                    handledEventsAllowedBeforeBreaking: factoryConfiguration.HandledEventsAllowedBeforeBreaking,
+                    durationOfBreak: factoryConfiguration.DurationOfBreak));
 
         return services;
     }
 
     /// <summary>
-    /// Adds a test server HttpClient produced by WebAppFactory to the service collection.
+    /// Adds an IHttpClientFactory implemented by <see cref="WebApplicationHttpClientFactory"/> to the service 
+    /// collection. This factory is specifically designed to align with system requirements for returning HttpClient 
+    /// instances produced by WebApplicationFactory.
     /// </summary>
+    /// <remarks>
+    /// The IHttpClientFactory provides a central location for creating and configuring HttpClient instances.
+    /// It ensures efficient reuse of HttpClient instances, manages their lifetime, and allows customization of their 
+    /// behavior. The WebApplicationHttpClientFactory is tailored to work seamlessly with WebApplicationFactory and its 
+    /// associated services.
+    /// </remarks>
     /// <param name="services">The service collection to add the service to.</param>
-    /// <param name="httpClientBuilder">A function that creates an HttpClient instance.</param>
+    /// <param name="createClient">
+    /// A function that creates an HttpClient instance, typically WebApplicationFactory.CreateClient method.
+    /// </param>
     /// <returns>The same service collection.</returns>
-    public static IServiceCollection AddTestServerHttpClient(
-        this IServiceCollection services, Func<HttpClient> httpClientBuilder)
+    public static IServiceCollection AddTestServerHttpClientFactory(
+        this IServiceCollection services, 
+        Func<WebApplicationFactoryClientOptions, HttpClient> createClient)
     {
-        services.AddTransient<IHttpClientFactory>(implementationFactory:
-            serviceProvider => new TestServerHttpClientFactory(httpClientBuilder()));
+        var factoryConfiguration = new HttpClientFactoryConfiguration();
+        services.TryAddTransient<IHttpClientFactory>(implementationFactory:
+            serviceProvider => new WebApplicationHttpClientFactory(createClient, factoryConfiguration));
 
         return services;
     }
 
-    /// <summary>
+     /// <summary>
     /// This extension method adds the necessary factory service to create headless browser instance into your 
     /// application’s service collection.
     /// </summary>
     /// <param name="services">The <see cref="IServiceCollection"/>.</param>
     /// <returns><see cref="IServiceCollection"/> object.</returns>
-    public static IServiceCollection AddBrowserClients(
-        this IServiceCollection services)
+    public static IServiceCollection AddBrowserClientFactory(this IServiceCollection services)
     {
-        services.AddTransient<IHeadlessBrowserFactory, DefaultHeadlessBrowserFactory>();
+        // Register the DefaultBrowserFactory as a singleton to ensure there is only one instance throughout the
+        // application lifecycle. This instance maintains a reference to the IPlaywright library, optimizing its
+        // creation and disposal. By registering it as a singleton, we ensure that the browser factory is available
+        // on-demand and efficiently manages resources until the application shuts down.
+        services.TryAddSingleton<IBrowserFactory, DefaultBrowserFactory>();
 
         return services;
     }
@@ -86,15 +103,40 @@ public static class DependencyInjectionExtension
     public static IServiceCollection AddTestAgent(
         this IServiceCollection services,
         string name,
-        Func<TestAgent, TestAgent> builder)
+        Action<TestAgent> builder)
     {
-        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
+        services.TryAddTransient<ITestSessionBuilder, TestSessionBuilder>();
         services.AddKeyedTransient(
             serviceKey: name,
-            implementationFactory: (IServiceProvider provider, object? serviceKey) =>
+            implementationFactory: (IServiceProvider provider, object serviceKey) =>
             {
                 var agent = new TestAgent(provider);
-                return builder(agent);
+                builder(agent);
+
+                return agent;
+            });
+
+        return services;
+    }
+
+    /// <summary>
+    /// Adds a test agent to the service collection.
+    /// </summary>
+    /// <param name="services">The service collection to add the service to.</param>
+    /// <param name="builder">A function that configures the test agent instance.</param>
+    /// <returns>The same service collection.</returns>
+    public static IServiceCollection AddTestAgent(
+        this IServiceCollection services,
+        Action<TestAgent> builder)
+    {
+        services.TryAddTransient<ITestSessionBuilder, TestSessionBuilder>();
+        services.AddTransient(
+            implementationFactory: (IServiceProvider provider) =>
+            {
+                var agent = new TestAgent(provider);
+                builder(agent);
+
+                return agent;
             });
 
         return services;
@@ -107,19 +149,31 @@ public static class DependencyInjectionExtension
     /// <returns>The same service collection.</returns>
     public static IServiceCollection AddTestAgent(this IServiceCollection services)
     {
-        services.AddTransient<ITestSessionBuilder, TestSessionBuilder>();
+        services.TryAddTransient<ITestSessionBuilder, TestSessionBuilder>();
         services.AddTransient(implementationFactory: (IServiceProvider provider) => new TestAgent(provider));
 
         return services;
     }
 
+    /// <summary>
+    /// Checks if a specific service type is already registered in the service collection.
+    /// </summary>
+    /// <typeparam name="TService">The type of the service to check for registration.</typeparam>
+    /// <param name="services">The IServiceCollection instance to search in.</param>
+    /// <returns>
+    /// True if the service type is registered; otherwise, false.
+    /// </returns>
+    public static bool IsServiceRegistered<TService>(this IServiceCollection services)
+    {
+        return services.Any(serviceDescriptor => serviceDescriptor.ServiceType == typeof(TService));
+    }
 
     private static SocketsHttpHandler CreateSocketsHttpHandler(
-        HttpClientConfiguration httpClientConfiguration) => new()
+        HttpClientFactoryConfiguration factoryConfiguration) => new()
         {
-            PooledConnectionLifetime = httpClientConfiguration.PooledConnectionLifetime,
-            AutomaticDecompression = httpClientConfiguration.AutomaticDecompression,
-            AllowAutoRedirect = false, // We implement custom redirection mechanism
-            UseCookies = false, // Set the cookie manually instead from the CookieContainer
+            PooledConnectionLifetime = factoryConfiguration.PooledConnectionLifetime,
+            AutomaticDecompression = factoryConfiguration.AutomaticDecompression,
+            AllowAutoRedirect = HttpClientFactoryConfiguration.HttpClientAutoRedirects,
+            UseCookies = HttpClientFactoryConfiguration.HttpClientHandleCookies,
         };
 }

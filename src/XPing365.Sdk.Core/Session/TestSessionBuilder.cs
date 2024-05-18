@@ -15,9 +15,10 @@ public class TestSessionBuilder : ITestSessionBuilder
     private readonly List<TestStep> _steps = [];
     private readonly Dictionary<ITestComponent, int> _componentStepCounts = [];
 
-    private DateTime _startDate = DateTime.MinValue;
-    private Error? _error;
     private Uri? _url;
+    private DateTime _startDate = DateTime.MinValue;
+    private TestContext? _context;
+    private Error? _error;
     private PropertyBag<IPropertyBagValue>? _propertyBag;
 
     /// <summary>
@@ -31,15 +32,36 @@ public class TestSessionBuilder : ITestSessionBuilder
     public ReadOnlyCollection<TestStep> Steps => _steps.AsReadOnly();
 
     /// <summary>
-    /// Initializes the test session builder with the specified URL and start date.
+    /// Gets the test component associated with the testing context.
+    /// </summary>
+    protected ITestComponent Component => 
+        _context.RequireNotNull(nameof(_context)).CurrentComponent.RequireNotNull(nameof(Component));
+
+    /// <summary>
+    /// Gets the instrumentation timer associated with the testing context.
+    /// </summary>
+    protected IInstrumentation Instrumentation =>
+        _context.RequireNotNull(nameof(_context)).Instrumentation;
+
+    /// <summary>
+    /// Initializes the test session builder with the specified start time, the URL of the page being validated,
+    /// and associating it with the current TestContext responsible for maintaining the state of the test execution.
     /// </summary>
     /// <param name="url">The URL to be used for the test session.</param>
     /// <param name="startDate">The start date of the test session.</param>
+    /// <param name="context">The context responsible for maintaining the state of the test execution.</param>
     /// <returns>The initialized test session builder.</returns>
-    public ITestSessionBuilder Initiate(Uri url, DateTime startDate)
+    public ITestSessionBuilder Initiate(Uri url, DateTime startDate, TestContext context)
     {
-        _startDate = startDate;
-        _url = url;
+        _url = url/*.RequireNotNull(nameof(url))*/;
+        _startDate = startDate/*.RequireCondition(
+            // To prevent a difference between StartDate and this condition, we subtract 60 sec from the present date.
+            // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at
+            // 12:00. 
+            condition: date => date >= (DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60)),
+            parameterName: nameof(startDate),
+            message: Errors.IncorrectStartDate)*/;
+        _context = context.RequireNotNull(nameof(context));
 
         return this;
     }
@@ -73,27 +95,25 @@ public class TestSessionBuilder : ITestSessionBuilder
     }
 
     /// <summary>
-    /// Builds a test step with the specified component and instrumentation log. Test step is marked as succeeded.
+    /// Constructs a successful <see cref="TestStep"/> instance, integrating it with the corresponding test component.
+    /// This instance is also synchronized with the instrumentation timer managed by the <see cref="TestContext"/>,
+    /// ensuring accurate tracking of execution metrics.
     /// </summary>
-    /// <param name="component">The component to be used for the test step.</param>
-    /// <param name="instrumentation">The instrumentation log to be used for the test step.</param>
     /// <returns>The built test step.</returns>
-    public TestStep Build(ITestComponent component, InstrumentationLog instrumentation)
+    public TestStep Build()
     {
-        ArgumentNullException.ThrowIfNull(component, nameof(component));
-        ArgumentNullException.ThrowIfNull(instrumentation, nameof(instrumentation));
-
         // Increment the step count for the given ITestComponent instance to ensure each component step is accurately
         // named based on its number of steps within the test session.
-        _componentStepCounts[component] = _componentStepCounts.TryGetValue(component, out int count) ? count + 1 : 1;
+        _componentStepCounts[Component] = 
+            _componentStepCounts.TryGetValue(Component, out int count) ? count + 1 : 1;
 
         var testStep = new TestStep
         {
-            Name = component.Name,
-            TestComponentIteration = _componentStepCounts[component],
-            StartDate = instrumentation.StartTime,
-            Duration = instrumentation.ElapsedTime,
-            Type = component.Type,
+            Name = Component.Name,
+            TestComponentIteration = _componentStepCounts[Component],
+            StartDate = Instrumentation.StartTime,
+            Duration = Instrumentation.ElapsedTime,
+            Type = Component.Type,
             PropertyBag = _propertyBag,
             Result = TestStepResult.Succeeded,
             ErrorMessage = null
@@ -104,33 +124,35 @@ public class TestSessionBuilder : ITestSessionBuilder
         // Set property bag to null to force its reconstruction when new data is added.
         _propertyBag = null;
 
+        // Restart the instrumentation timer to measure the elapsed time for a new test step.
+        // This ensures that the previous test step's time is not included in the measurement.
+        Instrumentation.Restart();
+
         return testStep;
     }
 
     /// <summary>
-    /// Builds a test step with the specified component, instrumentation log, and error. Test step is marked as failed.
+    /// Constructs a failed <see cref="TestStep"/> instance, integrating it with the corresponding test component.
+    /// This instance is also synchronized with the instrumentation timer managed by the <see cref="TestContext"/>,
+    /// ensuring accurate tracking of execution metrics.
     /// </summary>
-    /// <param name="component">The component to be used for the test step.</param>
-    /// <param name="instrumentation">The instrumentation log to be used for the test step.</param>
-    /// <param name="error">The error to be used for the test step.</param>
+    /// <param name="error">The error to be used for the failed test step.</param>
     /// <returns>The built test step.</returns>
-    public TestStep Build(ITestComponent component, InstrumentationLog instrumentation, Error error)
+    public TestStep Build(Error error)
     {
-        ArgumentNullException.ThrowIfNull(component, nameof(component));
-        ArgumentNullException.ThrowIfNull(instrumentation, nameof(instrumentation));
         ArgumentNullException.ThrowIfNull(error, nameof(error));
 
         // Increment the step count for the given ITestComponent instance to ensure each component step is accurately
         // named based on its number of steps within the test session.
-        _componentStepCounts[component] = _componentStepCounts.TryGetValue(component, out int count) ? count + 1 : 1;
+        _componentStepCounts[Component] = _componentStepCounts.TryGetValue(Component, out int count) ? count + 1 : 1;
 
         var testStep = new TestStep
         {
-            Name = component.Name,
-            TestComponentIteration = _componentStepCounts[component],
-            StartDate = instrumentation.StartTime,
-            Duration = instrumentation.ElapsedTime,
-            Type = component.Type,
+            Name = Component.Name,
+            TestComponentIteration = _componentStepCounts[Component],
+            StartDate = Instrumentation.StartTime,
+            Duration = Instrumentation.ElapsedTime,
+            Type = Component.Type,
             PropertyBag = _propertyBag,
             Result = TestStepResult.Failed,
             ErrorMessage = error
@@ -141,34 +163,35 @@ public class TestSessionBuilder : ITestSessionBuilder
         // Set property bag to null to force its reconstruction when new data is added.
         _propertyBag = null;
 
+        // Restart the instrumentation timer to measure the elapsed time for a new test step.
+        // This ensures that the previous test step's time is not included in the measurement.
+        Instrumentation.Restart();
+
         return testStep;
     }
 
     /// <summary>
-    /// Builds a test step with the specified component, instrumentation log, and exception. Test step is marked as
-    /// failed.
+    /// Constructs a failed <see cref="TestStep"/> instance, integrating it with the corresponding test component.
+    /// This instance is also synchronized with the instrumentation timer managed by the <see cref="TestContext"/>,
+    /// ensuring accurate tracking of execution metrics.
     /// </summary>
-    /// <param name="component">The component to be used for the test step.</param>
-    /// <param name="instrumentation">The instrumentation log to be used for the test step.</param>
-    /// <param name="exception">The exception to be used for the test step.</param>
+    /// <param name="exception">The exception to be used for the failed test step.</param>
     /// <returns>The built test step.</returns>
-    public TestStep Build(ITestComponent component, InstrumentationLog instrumentation, Exception exception)
+    public TestStep Build(Exception exception)
     {
-        ArgumentNullException.ThrowIfNull(component, nameof(component));
-        ArgumentNullException.ThrowIfNull(instrumentation, nameof(instrumentation));
         ArgumentNullException.ThrowIfNull(exception, nameof(exception));
 
         // Increment the step count for the given ITestComponent instance to ensure each component step is accurately
         // named based on its number of steps within the test session.
-        _componentStepCounts[component] = _componentStepCounts.TryGetValue(component, out int count) ? count + 1 : 1;
+        _componentStepCounts[Component] = _componentStepCounts.TryGetValue(Component, out int count) ? count + 1 : 1;
 
         var testStep = new TestStep
         {
-            Name = component.Name,
-            TestComponentIteration = _componentStepCounts[component],
-            StartDate = instrumentation.StartTime,
-            Duration = instrumentation.ElapsedTime,
-            Type = component.Type,
+            Name = Component.Name,
+            TestComponentIteration = _componentStepCounts[Component],
+            StartDate = Instrumentation.StartTime,
+            Duration = Instrumentation.ElapsedTime,
+            Type = Component.Type,
             PropertyBag = _propertyBag,
             Result = TestStepResult.Failed,
             ErrorMessage = Errors.ExceptionError(exception)
@@ -178,6 +201,10 @@ public class TestSessionBuilder : ITestSessionBuilder
 
         // Set property bag to null to force its reconstruction when new data is added.
         _propertyBag = null;
+
+        // Restart the instrumentation timer to measure the elapsed time for a new test step.
+        // This ensures that the previous test step's time is not included in the measurement.
+        Instrumentation.Restart();
 
         return testStep;
     }

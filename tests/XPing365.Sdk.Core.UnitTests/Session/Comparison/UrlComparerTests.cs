@@ -12,8 +12,8 @@ public sealed class UrlComparerTests : ComparerBaseTests<UrlComparer>
         // Arrange
         Uri url = new("http://test.com");
 
-        TestSession session1 = CreateTestSessionMock(url: url);
-        TestSession session2 = CreateTestSessionMock(url: url);
+        using TestSession session1 = CreateTestSessionMock(url: url);
+        using TestSession session2 = CreateTestSessionMock(url: url);
 
         // Act
         UrlComparer comparer = CreateComparer();
@@ -30,8 +30,8 @@ public sealed class UrlComparerTests : ComparerBaseTests<UrlComparer>
         Uri url1 = new("http://test1.com");
         Uri url2 = new("http://test2.com");
 
-        TestSession session1 = CreateTestSessionMock(url: url1);
-        TestSession session2 = CreateTestSessionMock(url: url2);
+        using TestSession session1 = CreateTestSessionMock(url: url1);
+        using TestSession session2 = CreateTestSessionMock(url: url2);
 
         // Act
         UrlComparer comparer = CreateComparer();

@@ -1,5 +1,7 @@
 ﻿using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Components;
+using Microsoft.Net.Http.Headers;
+using System.Net;
 
 namespace XPing365.Sdk.Core.Common;
 
@@ -19,7 +21,7 @@ public static class Errors
     /// <summary>
     /// Creates an error when no Http clients are registered in the service provider
     /// </summary>
-    /// <returns>An error with code 1010 and a message instructing to invoke AddHttpClients()</returns>
+    /// <returns>An error with code 1010 and a message instructing to invoke AddHttpClientFactory()</returns>
     public static Error HttpClientsNotFound =>
         new("1010", $"The service provider does not have any Http clients registered. You need to invoke " +
             $"`AddHttpClients()` to add them before you can use them.");
@@ -27,7 +29,7 @@ public static class Errors
     /// <summary>
     /// Creates an error when no Headless browsers are registered in the service provider
     /// </summary>
-    /// <returns>An error with code 1011 and a message instructing to invoke AddBrowserClients()</returns>
+    /// <returns>An error with code 1011 and a message instructing to invoke AddBrowserClientFactory()</returns>
     public static Error HeadlessBrowserNotFound =>
         new("1011", $"The service provider does not have any Headless browsers registered. You need to invoke " +
             $"`AddBrowserClients()` to add them before you can use them.");
@@ -35,7 +37,7 @@ public static class Errors
     /// <summary>
     /// Creates an error when incorrect client type has been given for Http Request System
     /// </summary>
-    /// <returns>An error with code 1012 and a message instructing to use HttpClient or HeadlessBrowser</returns>
+    /// <returns>An error with code 1012 and a message instructing to use HttpClient or BrowserClient</returns>
     public static Error IncorrectClientType =>
         new("1012", $"The client type is not supported. Please use either HttpClient or HeadlessBrowser.");    
 
@@ -66,6 +68,18 @@ public static class Errors
                     $" {errorMessage}");
 
     /// <summary>
+    /// Creates an error representing a timeout failure for a test component.
+    /// </summary>
+    /// <param name="component">The test component that timed out.</param>
+    /// <param name="timeout">The maximum allowed execution time that was exceeded.</param>
+    /// <returns>An error with code 1102 and a detailed error message.</returns>
+    public static Error TestComponentTimeout(ITestComponent component, TimeSpan timeout) =>
+        new("1102", $"Test Operation Timeout: The test component {component.RequireNotNull(nameof(component)).Name} " +
+            $"exceeded the maximum allowed execution time of {timeout.GetFormattedTime(TimeSpanUnit.Second)} and has " +
+            $"been marked as failed. To accommodate longer test durations, consider increasing the timeout setting " +
+            $"for the test operation.");
+
+    /// <summary>
     /// Creates an error when the DNS lookup fails to resolve the hostname
     /// </summary>
     /// <returns>An error with code 1110 and a message indicating the DNS lookup failure</returns>
@@ -78,6 +92,14 @@ public static class Errors
     /// <returns>An error with code 1111 and a message indicating the ping request failure</returns>
     public static Error PingRequestFailed =>
         new("1111", $"An error occurred while sending the ping request.");
+
+    /// <summary>
+    /// Creates an error when the https status code validation fails
+    /// </summary>
+    /// <param name="expectedCode">The expected HTTP staus code</param>
+    /// <returns>An error with code 1112 and a message indicating the http status code failure</returns>
+    public static Error HttpStatusValidationFailed(HttpStatusCode expectedCode) =>
+        new("1112", $"The HTTP response status code did not match the expected '{expectedCode}' code.");
 
     /// <summary>
     /// Creates an error when no test step handlers are found

@@ -24,8 +24,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(duration: TimeSpan.FromMilliseconds(100)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -50,8 +50,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: "Step3"),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -80,8 +80,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: "Step2"),            
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -115,8 +115,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(startDate: today + TimeSpan.FromDays(6))
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -142,8 +142,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(startDate: startDate)
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -167,8 +167,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, duration: TimeSpan.FromMilliseconds(120)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -199,8 +199,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, duration: duration),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -224,8 +224,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, type: TestStepType.ValidateStep),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -256,8 +256,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, type: type),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -281,8 +281,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, result: TestStepResult.Failed),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -313,8 +313,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, result: stepResult),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -338,8 +338,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, errorMessage: "error2"),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -370,8 +370,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, errorMessage: ErrorMessage),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -395,8 +395,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, errorMessage: "error2"),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -426,8 +426,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, errorMessage: null),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -457,8 +457,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, propertyBag: null),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -488,8 +488,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, propertyBag: new PropertyBag<IPropertyBagValue>()),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -523,8 +523,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, propertyBag: new PropertyBag<IPropertyBagValue>(properties)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -557,8 +557,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, propertyBag: new PropertyBag<IPropertyBagValue>(properties2)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -608,8 +608,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock(name: StepName, propertyBag: new PropertyBag<IPropertyBagValue>(properties2)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -635,8 +635,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock()
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: null);
-        TestSession session2 = CreateTestSessionMock(steps: steps);
+        using TestSession session1 = CreateTestSessionMock(steps: null);
+        using TestSession session2 = CreateTestSessionMock(steps: steps);
 
         // Act
         TestStepsComparer comparer = CreateComparer();
@@ -664,8 +664,8 @@ public sealed class TestStepsComparerTests : ComparerBaseTests<TestStepsComparer
             CreateTestStepMock()
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps);
-        TestSession session2 = CreateTestSessionMock(steps: null);
+        using TestSession session1 = CreateTestSessionMock(steps: steps);
+        using TestSession session2 = CreateTestSessionMock(steps: null);
 
         // Act
         TestStepsComparer comparer = CreateComparer();

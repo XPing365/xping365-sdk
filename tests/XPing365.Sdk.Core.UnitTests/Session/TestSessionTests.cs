@@ -38,7 +38,7 @@ public sealed class TestSessionTests
     public void ConstructorAssignsGUIDWhenAnObjectIsInstantiated()
     {
         // Act
-        var session = new TestSession
+        using var session = new TestSession
         {
             Url = new Uri("http://localhost"),
             StartDate = DateTime.UtcNow,
@@ -68,7 +68,7 @@ public sealed class TestSessionTests
     public void NotStartedWhenNewlyInstantiated()
     {
         // Arrange
-        var testSession = CreateTestSessionUnderTest();
+        using var testSession = CreateTestSessionUnderTest();
 
         // Assert
         Assert.That(testSession.State, Is.EqualTo(TestSessionState.NotStarted));
@@ -78,7 +78,7 @@ public sealed class TestSessionTests
     public void HasZeroStepsWhenInstantiatedWithZeroSteps()
     {
         // Arrange
-        var testSession = CreateTestSessionUnderTest(steps: []);
+        using var testSession = CreateTestSessionUnderTest(steps: []);
 
         // Assert
         Assert.That(testSession.Steps, Is.Empty);
@@ -88,7 +88,7 @@ public sealed class TestSessionTests
     public void HasZeroFailuresWhenNoFailuresHasBeenAdded()
     {
         // Arrange
-        var testSession = CreateTestSessionUnderTest(steps: []);
+        using var testSession = CreateTestSessionUnderTest(steps: []);
 
         // Assert
         Assert.That(testSession.Failures, Is.Empty);
@@ -98,7 +98,7 @@ public sealed class TestSessionTests
     public void IsValidWhenNoFailuresHasBeenGiven()
     {
         // Arrange
-        var testSession = CreateTestSessionUnderTest(steps: [CreateTestStepMock()]);
+        using var testSession = CreateTestSessionUnderTest(steps: [CreateTestStepMock()]);
 
         // Assert
         Assert.That(testSession.IsValid, Is.True);
@@ -111,7 +111,7 @@ public sealed class TestSessionTests
         const int expectedItemCount = 1;
 
         // Act
-        var testSession = CreateTestSessionUnderTest(
+        using var testSession = CreateTestSessionUnderTest(
             steps: [CreateTestStepMock(result: TestStepResult.Failed, errorMessage: "error")]);
 
         // Assert
@@ -129,7 +129,7 @@ public sealed class TestSessionTests
         const int expectedItemCount = 0;
 
         // Act
-        var testSession = CreateTestSessionUnderTest(steps: [CreateTestStepMock()]);
+        using var testSession = CreateTestSessionUnderTest(steps: [CreateTestStepMock()]);
 
         // Assert
         Assert.That(testSession.Failures, Has.Count.EqualTo(expectedItemCount));
@@ -150,7 +150,7 @@ public sealed class TestSessionTests
         }
 
         // Act
-        var testSession = CreateTestSessionUnderTest(steps: steps);
+        using var testSession = CreateTestSessionUnderTest(steps: steps);
 
         // Assert
         Assert.That(testSession.Duration,
@@ -161,7 +161,7 @@ public sealed class TestSessionTests
     public void IsEqualToOtherTestSessionWithTheSameId()
     {
         // Arrange
-        TestSession session1 = CreateTestSessionUnderTest();
+        using TestSession session1 = CreateTestSessionUnderTest();
         var serializer = new TestSessionSerializer();
         
         using var stream = new MemoryStream();

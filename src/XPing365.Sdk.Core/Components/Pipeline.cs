@@ -1,4 +1,6 @@
-﻿namespace XPing365.Sdk.Core.Components;
+﻿using System.ComponentModel;
+
+namespace XPing365.Sdk.Core.Components;
 
 /// <summary>
 /// The Pipeline class is a concrete implementation of the <see cref="CompositeTests"/> class that is designed to run 
@@ -58,8 +60,13 @@ public class Pipeline : CompositeTests
 
         foreach (var component in Components)
         {
+            using var tokenSource = new CancellationTokenSource(settings.Timeout);
+
+            // Update context with currently executing component.
+            context.UpdateExecutionContext(component);
+
             await component
-                .HandleAsync(url, settings, context, serviceProvider, cancellationToken)
+                .HandleAsync(url, settings, context, serviceProvider, tokenSource.Token)
                 .ConfigureAwait(false);
 
             // If the 'ContinueOnFailure' property is set to false and the test context contains a session that has

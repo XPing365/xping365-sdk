@@ -119,7 +119,7 @@ public sealed class TestComponentTests(IServiceProvider serviceProvider)
     {
         // Arrange
         var url = new Uri("http://test");
-        var settings = TestSettings.Default;
+        var settings = new TestSettings();
         var component = new TestComponentUnderTest();
 
         // Act

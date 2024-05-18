@@ -16,8 +16,8 @@ public sealed class ExecutionDurationComparerTests : ComparerBaseTests<Execution
             CreateTestStepMock(duration: TimeSpan.FromMilliseconds(100)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps);
-        TestSession session2 = CreateTestSessionMock(steps: steps);
+        using TestSession session1 = CreateTestSessionMock(steps: steps);
+        using TestSession session2 = CreateTestSessionMock(steps: steps);
 
         // Act
         ExecutionDurationComparer comparer = CreateComparer();
@@ -43,8 +43,8 @@ public sealed class ExecutionDurationComparerTests : ComparerBaseTests<Execution
             CreateTestStepMock(duration: TimeSpan.FromMilliseconds(125)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps1);
-        TestSession session2 = CreateTestSessionMock(steps: steps2);
+        using TestSession session1 = CreateTestSessionMock(steps: steps1);
+        using TestSession session2 = CreateTestSessionMock(steps: steps2);
 
         // Act
         ExecutionDurationComparer comparer = CreateComparer();
@@ -67,8 +67,8 @@ public sealed class ExecutionDurationComparerTests : ComparerBaseTests<Execution
             CreateTestStepMock(duration: TimeSpan.FromMilliseconds(100)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: null);
-        TestSession session2 = CreateTestSessionMock(steps: steps);
+        using TestSession session1 = CreateTestSessionMock(steps: null);
+        using TestSession session2 = CreateTestSessionMock(steps: steps);
 
         // Act
         ExecutionDurationComparer comparer = CreateComparer();
@@ -91,8 +91,8 @@ public sealed class ExecutionDurationComparerTests : ComparerBaseTests<Execution
             CreateTestStepMock(duration: TimeSpan.FromMilliseconds(100)),
         ];
 
-        TestSession session1 = CreateTestSessionMock(steps: steps);
-        TestSession session2 = CreateTestSessionMock(steps: null);
+        using TestSession session1 = CreateTestSessionMock(steps: steps);
+        using TestSession session2 = CreateTestSessionMock(steps: null);
 
         // Act
         ExecutionDurationComparer comparer = CreateComparer();

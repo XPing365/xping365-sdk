@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Moq;
+using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
 using XPing365.Sdk.UnitTests.TestFixtures;
@@ -73,8 +74,8 @@ internal class PipelineTests(IServiceProvider serviceProvider)
 
         var url = new Uri("http://test");
         var pipeline = new Pipeline(components: components);
-        var context = new TestContext(Mock.Of<ITestSessionBuilder>(), progress: null);
-        var settings = TestSettings.Default;
+        var context = new TestContext(Mock.Of<ITestSessionBuilder>(), Mock.Of<IInstrumentation>(), progress: null);
+        var settings = new TestSettings();
 
         // Arrange
         await pipeline.HandleAsync(url, settings, context, _serviceProvider).ConfigureAwait(false);
@@ -101,9 +102,11 @@ internal class PipelineTests(IServiceProvider serviceProvider)
         var sessionBuilderMock = new Mock<ITestSessionBuilder>();
         sessionBuilderMock.SetupGet(b => b.HasFailed).Returns(hasFailedResult);
 
-        var context = new TestContext(sessionBuilderMock.Object, progress: null);
-        var settings = TestSettings.Default;
-        settings.ContinueOnFailure = false;
+        var context = new TestContext(sessionBuilderMock.Object, Mock.Of<IInstrumentation>(), progress: null);
+        var settings = new TestSettings
+        {
+            ContinueOnFailure = false
+        };
 
         var components = new ITestComponent[] { Mock.Of<ITestComponent>(), Mock.Of<ITestComponent>() };
         var pipeline = new Pipeline(components: components);
@@ -137,9 +140,11 @@ internal class PipelineTests(IServiceProvider serviceProvider)
         var sessionBuilderMock = new Mock<ITestSessionBuilder>();
         sessionBuilderMock.SetupGet(b => b.HasFailed).Returns(hasFailedResult);
 
-        var context = new TestContext(sessionBuilderMock.Object, progress: null);
-        var settings = TestSettings.Default;
-        settings.ContinueOnFailure = true;
+        var context = new TestContext(sessionBuilderMock.Object, Mock.Of<IInstrumentation>(), progress: null);
+        var settings = new TestSettings
+        {
+            ContinueOnFailure = true
+        };
 
         var components = new ITestComponent[] { Mock.Of<ITestComponent>(), Mock.Of<ITestComponent>() };
         var pipeline = new Pipeline(components: components);

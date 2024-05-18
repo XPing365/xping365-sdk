@@ -2,7 +2,11 @@
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
+using Microsoft.Playwright;
+using Polly;
+using XPing365.Sdk.Core.Clients.Browser;
 using XPing365.Sdk.Core.Common;
+using XPing365.Sdk.Core.Extensions;
 using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Core.Session;
@@ -26,10 +30,12 @@ namespace XPing365.Sdk.Core.Session;
 /// </remarks>
 [Serializable]
 [DebuggerDisplay($"{{{nameof(GetDebuggerDisplay)}(),nq}}")]
-public sealed class TestSession : ISerializable, IDeserializationCallback, IEquatable<TestSession>
+public sealed class TestSession : 
+    IDisposable, IAsyncDisposable, ISerializable, IDeserializationCallback, IEquatable<TestSession>
 {
     private readonly Uri _url = null!;
     private readonly DateTime _startDate;
+    private bool disposedValue;
 
     /// <summary>
     /// Gets the unique identifier of the test session.
@@ -59,8 +65,9 @@ public sealed class TestSession : ISerializable, IDeserializationCallback, IEqua
         get => _startDate;
         init => _startDate = value.RequireCondition(
             // To prevent a difference between StartDate and this condition, we subtract 60 sec from the present date.
-            // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at 12:00. 
-            condition: date => date >= DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60),
+            // This difference can occur if StartDate is assigned just before 12:00 and this condition executes at
+            // 12:00. 
+            condition: date => date >= (DateTime.Today.ToUniversalTime() - TimeSpan.FromSeconds(60)),
             parameterName: nameof(StartDate),
             message: Errors.IncorrectStartDate);
     }
@@ -237,6 +244,28 @@ public sealed class TestSession : ISerializable, IDeserializationCallback, IEqua
         return Id.GetHashCode();
     }
 
+    /// <summary>
+    /// Releases the resources stored in the TestSession.
+    /// </summary>
+    public void Dispose()
+    {
+        // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Asynchronously releases the resources stroed in the TestSession.
+    /// </summary>
+    /// <returns>A task that represents the asynchronous dispose operation.</returns>
+    public async ValueTask DisposeAsync()
+    {
+        await DisposeAsyncCore().ConfigureAwait(false);
+
+        Dispose(disposing: false);
+        GC.SuppressFinalize(this);
+    }
+
     void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
     {
         info.AddValue(nameof(Id), Id, typeof(Guid));
@@ -257,4 +286,38 @@ public sealed class TestSession : ISerializable, IDeserializationCallback, IEqua
 
     private string GetDebuggerDisplay() =>
         $"{StartDate} ({Duration.GetFormattedTime()}), Steps: {Steps.Count}, Failures: {Failures.Count} ";
+
+    private void Dispose(bool disposing)
+    {
+        if (!disposedValue)
+        {
+            if (disposing)
+            {
+                var httpResponseMessage = this.GetNonSerializablePropertyBagValue<HttpResponseMessage>
+                    (PropertyBagKeys.HttpResponseMessage);
+                httpResponseMessage?.Dispose();
+
+                var browserResponseMessage = this.GetNonSerializablePropertyBagValue<BrowserResponseMessage>
+                    (PropertyBagKeys.BrowserResponseMessage);
+                browserResponseMessage?.Dispose();
+            }
+
+            disposedValue = true;
+        }
+    }
+
+    private async Task DisposeAsyncCore()
+    {
+        var browserResponseMessage = this.GetNonSerializablePropertyBagValue<BrowserResponseMessage>
+            (PropertyBagKeys.BrowserResponseMessage);
+
+        if (browserResponseMessage != null)
+        {
+            await browserResponseMessage.DisposeAsync().ConfigureAwait(false);
+        }
+
+        var httpResponseMessage = this.GetNonSerializablePropertyBagValue<HttpResponseMessage>
+            (PropertyBagKeys.HttpResponseMessage);
+        httpResponseMessage?.Dispose();
+    }
 }

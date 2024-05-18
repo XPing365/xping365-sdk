@@ -22,12 +22,12 @@ public sealed class Error(string code, string message) : IEquatable<Error>
     /// <summary>
     /// Gets the string representation of the code that indicates the type of error.
     /// </summary>
-    public string Code { get; } = code.RequireNotNullOrEmpty(nameof(code));
+    public string Code { get; } = code.RequireNotNull(nameof(code));
 
     /// <summary>
     /// Gets the string representation of the error that provides human-readable description.
     /// </summary>
-    public string Message { get; } = message.RequireNotNullOrEmpty(nameof(message));
+    public string Message { get; } = message.RequireNotNull(nameof(message));
 
     /// <summary>
     /// Determines whether the current Error object is equal to another Error object.

@@ -1,6 +1,8 @@
 ﻿using XPing365.Sdk.Shared;
 using XPing365.Sdk.Core.Session;
 using Microsoft.Extensions.DependencyInjection;
+using XPing365.Sdk.Core.Common;
+using System.ComponentModel;
 
 namespace XPing365.Sdk.Core.Components;
 
@@ -22,7 +24,7 @@ public abstract class TestComponent : ITestComponent
     }
 
     /// <summary>
-    /// Gets a step name.
+    /// Gets component name.
     /// </summary>
     public string Name { get; protected set; }
 
@@ -69,9 +71,21 @@ public abstract class TestComponent : ITestComponent
         ArgumentNullException.ThrowIfNull(url, nameof(url));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
 
+        using var instrumentation = new InstrumentationTimer(startStopwatch: false);
+        var sessionBuilder = serviceProvider.GetRequiredService<ITestSessionBuilder>();
+
         var context = new TestContext(
-            sessionBuilder: serviceProvider.GetRequiredService<ITestSessionBuilder>(),
+            sessionBuilder: sessionBuilder,
+            instrumentation: instrumentation,
             progress: serviceProvider.GetService<IProgress<TestStep>>());
+
+        // Update context with currently executing component.
+        context.UpdateExecutionContext(this);
+
+        // Initiate the test session by recording its start time, the URL of the page being validated,
+        // and associating it with the current TestContext responsible for maintaining the state of the test
+        // execution.
+        sessionBuilder.Initiate(url, DateTime.UtcNow, context);
 
         // Execute test operation by invoking the HandleAsync method of this class.
         await HandleAsync(url, settings, context, serviceProvider, cancellationToken).ConfigureAwait(false);

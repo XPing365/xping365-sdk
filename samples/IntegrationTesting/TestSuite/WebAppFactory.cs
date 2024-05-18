@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using WebApp;
 using WebApp.Data;
 
@@ -14,7 +13,7 @@ namespace NUnitTestProject.TestSuite;
 /// example, the ReplaceDbContextWithInMemoryDb method replaces the actual database configuration to use the SQLite 
 /// database.
 /// </summary>
-internal sealed class WebAppFactory : WebApplicationFactory<Program>
+public sealed class WebAppFactory : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

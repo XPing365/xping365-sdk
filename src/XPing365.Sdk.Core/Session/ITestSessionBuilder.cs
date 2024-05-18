@@ -15,12 +15,13 @@ namespace XPing365.Sdk.Core.Session;
 public interface ITestSessionBuilder
 {
     /// <summary>
-    /// Initializes the test session builder with the specified URL and start date.
+    /// Initializes the test session builder with the specified URL, start date and <see cref="TestContext"/> object.
     /// </summary>
     /// <param name="url">The URL to be used for the test session.</param>
     /// <param name="startDate">The start date of the test session.</param>
+    /// <param name="context">The context responsible for maintaining the state of the test execution.</param>
     /// <returns>The initialized test session builder.</returns>
-    ITestSessionBuilder Initiate(Uri url, DateTime startDate);
+    ITestSessionBuilder Initiate(Uri url, DateTime startDate, TestContext context);
 
     /// <summary>
     /// Gets a value indicating whether the test session has failed.
@@ -49,30 +50,30 @@ public interface ITestSessionBuilder
     ITestSessionBuilder Build(PropertyBagKey key, IPropertyBagValue value);
 
     /// <summary>
-    /// Builds a test step with the specified component and instrumentation log.
+    /// Constructs a successful <see cref="TestStep"/> instance, integrating it with the corresponding test component.
+    /// This instance is also synchronized with the instrumentation timer managed by the <see cref="TestContext"/>,
+    /// ensuring accurate tracking of execution metrics.
     /// </summary>
-    /// <param name="component">The component to be used for the test step.</param>
-    /// <param name="instrumentation">The instrumentation log to be used for the test step.</param>
     /// <returns>The built test step.</returns>
-    TestStep Build(ITestComponent component, InstrumentationLog instrumentation);
+    TestStep Build();
 
     /// <summary>
-    /// Builds a test step with the specified component, instrumentation log, and error.
+    /// Constructs a failed <see cref="TestStep"/> instance, integrating it with the corresponding test component.
+    /// This instance is also synchronized with the instrumentation timer managed by the <see cref="TestContext"/>,
+    /// ensuring accurate tracking of execution metrics.
     /// </summary>
-    /// <param name="component">The component to be used for the test step.</param>
-    /// <param name="instrumentation">The instrumentation log to be used for the test step.</param>
-    /// <param name="error">The error to be used for the test step.</param>
+    /// <param name="error">The error to be used for the failed test step.</param>
     /// <returns>The built test step.</returns>
-    TestStep Build(ITestComponent component, InstrumentationLog instrumentation, Error error);
+    TestStep Build(Error error);
 
     /// <summary>
-    /// Builds a test step with the specified component, instrumentation log, and exception.
+    /// Constructs a failed <see cref="TestStep"/> instance, integrating it with the corresponding test component.
+    /// This instance is also synchronized with the instrumentation timer managed by the <see cref="TestContext"/>,
+    /// ensuring accurate tracking of execution metrics.
     /// </summary>
-    /// <param name="component">The component to be used for the test step.</param>
-    /// <param name="instrumentation">The instrumentation log to be used for the test step.</param>
-    /// <param name="exception">The exception to be used for the test step.</param>
+    /// <param name="exception">The exception to be used for the failed test step.</param>
     /// <returns>The built test step.</returns>
-    TestStep Build(ITestComponent component, InstrumentationLog instrumentation, Exception exception);
+    TestStep Build(Exception exception);
 
     /// <summary>
     /// Gets the test session.

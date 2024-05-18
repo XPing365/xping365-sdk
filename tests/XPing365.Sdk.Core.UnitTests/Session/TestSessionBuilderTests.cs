@@ -1,9 +1,8 @@
-﻿using System;
-using Moq;
-using Polly;
+﻿using Moq;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Core.Session;
+using TestContext = XPing365.Sdk.Core.Components.TestContext;
 
 namespace XPing365.Sdk.UnitTests.Session;
 
@@ -36,13 +35,21 @@ public sealed class TestSessionBuilderTests
         const bool expectedResult = true;
 
         var builder = new TestSessionBuilder();
-        using var instrumentation = new InstrumentationLog();
+        using var instrumentation = new InstrumentationTimer();
         var mockedComponent = new Mock<ITestComponent>();
         mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
         mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
 
+        var context = new TestContext(builder, instrumentation, progress: null);
+        context.UpdateExecutionContext(mockedComponent.Object);
+
+        builder.Initiate(
+            url: new Uri("http://localhost/"),
+            startDate: DateTime.UtcNow,
+            context: context);
+
         // Act
-        builder.Build(mockedComponent.Object, instrumentation, new Error("code", "message"));
+        builder.Build(new Error("code", "message"));
 
         // Assert
         Assert.That(builder.HasFailed, Is.EqualTo(expectedResult));
@@ -56,23 +63,33 @@ public sealed class TestSessionBuilderTests
         const int expectedCount = 4;
 
         var builder = new TestSessionBuilder();
-        using var instrumentation = new InstrumentationLog();
+        using var instrumentation = new InstrumentationTimer();
         var mockedComponent = new Mock<ITestComponent>();
         mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
         mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
 
+        var context = new TestContext(builder, instrumentation, progress: null);
+        context.UpdateExecutionContext(mockedComponent.Object);
+
+        builder.Initiate(
+            url: new Uri("http://localhost/"),
+            startDate: DateTime.UtcNow,
+            context: context);
+
         // Act
-        builder.Build(mockedComponent.Object, instrumentation);
-        builder.Build(mockedComponent.Object, instrumentation);
-        builder.Build(mockedComponent.Object, instrumentation);
-        builder.Build(mockedComponent.Object, instrumentation);
+        builder.Build();
+        builder.Build();
+        builder.Build();
+        builder.Build();
 
         TestSession session = builder.GetTestSession();
         int counter = 0;
-        
-        // Assert
-        Assert.That(session.Steps.All(s => s.TestComponentIteration == ++counter), Is.True);
-        Assert.That(counter, Is.EqualTo(expectedCount));
+        Assert.Multiple(() =>
+        {
+            // Assert
+            Assert.That(session.Steps.All(s => s.TestComponentIteration == ++counter), Is.True);
+            Assert.That(counter, Is.EqualTo(expectedCount));
+        });
     }
 
     [Test]
@@ -80,13 +97,21 @@ public sealed class TestSessionBuilderTests
     {
         // Arrange
         var builder = new TestSessionBuilder();
-        using var instrumentation = new InstrumentationLog();
+        using var instrumentation = new InstrumentationTimer();
         var mockedComponent = new Mock<ITestComponent>();
         mockedComponent.SetupGet(c => c.Name).Returns("ComponentName");
         mockedComponent.SetupGet(c => c.Type).Returns(TestStepType.ActionStep);
 
+        var context = new TestContext(builder, instrumentation, progress: null);
+        context.UpdateExecutionContext(mockedComponent.Object);
+
+        builder.Initiate(
+            url: new Uri("http://localhost/"),
+            startDate: DateTime.UtcNow,
+            context: context);
+
         // Act
-        TestStep step = builder.Build(mockedComponent.Object, instrumentation);
+        TestStep step = builder.Build();
 
         // Assert
         Assert.That(step.TestComponentIteration, Is.EqualTo(1));
@@ -107,10 +132,14 @@ public sealed class TestSessionBuilderTests
     {
         // Arrange
         string expectedDeclineReason = Errors.MissingUrlInTestSession;
+        using var instrumentation = new InstrumentationTimer();
         var builder = new TestSessionBuilder();
 
         // Act
-        builder.Initiate(url: null!, DateTime.UtcNow);
+        builder.Initiate(
+            url: null!, 
+            startDate: DateTime.UtcNow, 
+            context: new TestContext(builder, instrumentation, progress: null));
 
         // Assert
         Assert.That(builder.GetTestSession().DeclineReason, Does.StartWith(expectedDeclineReason));
@@ -121,10 +150,14 @@ public sealed class TestSessionBuilderTests
     {
         // Arrange
         string expectedDeclineReason = Errors.IncorrectStartDate;
+        using var instrumentation = new InstrumentationTimer();
         var builder = new TestSessionBuilder();
 
         // Act
-        builder.Initiate(url: new Uri("http://test.com"), DateTime.UtcNow - TimeSpan.FromDays(2));
+        builder.Initiate(
+            url: new Uri("http://test.com"), 
+            startDate: DateTime.UtcNow - TimeSpan.FromDays(2),
+            context: new TestContext(builder, instrumentation, progress: null));
 
         // Assert
         Assert.That(builder.GetTestSession().DeclineReason, Does.StartWith(expectedDeclineReason));

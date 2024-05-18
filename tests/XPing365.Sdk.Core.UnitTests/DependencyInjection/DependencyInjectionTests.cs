@@ -1,8 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using XPing365.Sdk.Core;
-using XPing365.Sdk.Core.Configurations;
 using XPing365.Sdk.Core.DependencyInjection;
-using XPing365.Sdk.Core.HeadlessBrowser;
+using XPing365.Sdk.Core.Clients.Browser;
+using XPing365.Sdk.Core.Clients.Configurations;
 using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.UnitTests.DependencyInjection;
@@ -16,7 +16,7 @@ internal class DependencyInjectionTests
         IServiceCollection serviceDescriptors = new ServiceCollection();
 
         // Act
-        serviceDescriptors.AddHttpClients();
+        serviceDescriptors.AddHttpClientFactory();
 
         // Assert
         Assert.That(serviceDescriptors.Any(d => d.ServiceType.Name == nameof(IHttpClientFactory)), Is.True);
@@ -30,15 +30,18 @@ internal class DependencyInjectionTests
 
         bool configurationCalled = false;
 
-        void Configure(IServiceProvider provider, HttpClientConfiguration config)
+        void Configure(IServiceProvider provider, HttpClientFactoryConfiguration config)
         {
-            Assert.That(provider, Is.Not.Null);
-            Assert.That(config, Is.Not.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(provider, Is.Not.Null);
+                Assert.That(config, Is.Not.Null);
+            });
             configurationCalled = true;
         }
 
         // Act
-        serviceDescriptors.AddHttpClients(Configure);
+        serviceDescriptors.AddHttpClientFactory(Configure);
 
         // Assert
         Assert.That(configurationCalled, Is.True);
@@ -51,10 +54,10 @@ internal class DependencyInjectionTests
         IServiceCollection serviceDescriptors = new ServiceCollection();
 
         // Act
-        serviceDescriptors.AddBrowserClients();
+        serviceDescriptors.AddBrowserClientFactory();
 
         // Assert
-        Assert.That(serviceDescriptors.Any(d => d.ServiceType.Name == nameof(IHeadlessBrowserFactory)), Is.True);
+        Assert.That(serviceDescriptors.Any(d => d.ServiceType.Name == nameof(IBrowserFactory)), Is.True);
     }
 
     [Test]
@@ -71,13 +74,26 @@ internal class DependencyInjectionTests
     }
 
     [Test]
+    public void AddTestAgentWithTestAgentBuilderRegistersITestSessionBuilder()
+    {
+        // Arrange
+        IServiceCollection serviceDescriptors = new ServiceCollection();
+
+        // Act
+        serviceDescriptors.AddTestAgent((testAgent) => { });
+
+        // Assert
+        Assert.That(serviceDescriptors.Any(d => d.ServiceType.Name == nameof(ITestSessionBuilder)), Is.True);
+    }
+
+    [Test]
     public void AddNamedTestAgentRegistersITestSessionBuilder()
     {
         // Arrange
         IServiceCollection serviceDescriptors = new ServiceCollection();
 
         // Act
-        serviceDescriptors.AddTestAgent("named test agent", (testAgent) => testAgent);
+        serviceDescriptors.AddTestAgent("named test agent", (testAgent) => { });
 
         // Assert
         Assert.That(serviceDescriptors.Any(d => d.ServiceType.Name == nameof(ITestSessionBuilder)), Is.True);
@@ -93,11 +109,10 @@ internal class DependencyInjectionTests
 
         bool builderCalled = false;
 
-        TestAgent Builder(TestAgent agent)
+        void Builder(TestAgent agent)
         {
             Assert.That(agent, Is.Not.Null);
             builderCalled = true;
-            return agent;
         }
 
         // Act

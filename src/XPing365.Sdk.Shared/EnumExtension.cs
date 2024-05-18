@@ -9,7 +9,7 @@ internal static class EnumExtensions
     /// Gets the enum display name.
     /// </summary>
     /// <param name="enumValue">The enum value.</param>
-    /// <returns>Use DisplayAttribute if exists. Otherwise, use the standard string representation.</returns>
+    /// <returns>Add DisplayAttribute if exists. Otherwise, use the standard string representation.</returns>
     public static string GetDisplayName(this Enum enumValue)
     {
         ArgumentNullException.ThrowIfNull(enumValue, nameof(enumValue));

@@ -12,8 +12,8 @@ public sealed class StateComparerTests : ComparerBaseTests<StateComparer>
         // Arrange
         const TestSessionState state = TestSessionState.Completed;
 
-        TestSession session1 = CreateTestSessionMock(state: state);
-        TestSession session2 = CreateTestSessionMock(state: state);
+        using TestSession session1 = CreateTestSessionMock(state: state);
+        using TestSession session2 = CreateTestSessionMock(state: state);
 
         // Act
         StateComparer comparer = CreateComparer();
@@ -30,8 +30,8 @@ public sealed class StateComparerTests : ComparerBaseTests<StateComparer>
         const TestSessionState state1 = TestSessionState.Completed;
         const TestSessionState state2 = TestSessionState.NotStarted;
 
-        TestSession session1 = CreateTestSessionMock(state: state1);
-        TestSession session2 = CreateTestSessionMock(state: state2);
+        using TestSession session1 = CreateTestSessionMock(state: state1);
+        using TestSession session2 = CreateTestSessionMock(state: state2);
 
         // Act
         StateComparer comparer = CreateComparer();
