@@ -24,7 +24,7 @@ public abstract class BaseContentValidator(string name) : TestComponent(name, Te
     /// <returns>A string representation of the HTTP content.</returns>
     /// <exception cref="ArgumentNullException">Thrown when the data or contentHeaders parameter is null.</exception>
     /// <exception cref="DecoderFallbackException">Thrown when a decoder fallback operation fails.</exception>
-    protected static string GetContent(byte[] data, HttpContentHeaders contentHeaders)
+    protected virtual string GetContent(byte[] data, HttpContentHeaders contentHeaders)
     {
         ArgumentNullException.ThrowIfNull(data, nameof(data));
         ArgumentNullException.ThrowIfNull(contentHeaders, nameof(contentHeaders));

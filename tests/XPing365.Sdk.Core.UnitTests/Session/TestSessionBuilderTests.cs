@@ -55,7 +55,6 @@ public sealed class TestSessionBuilderTests
         Assert.That(builder.HasFailed, Is.EqualTo(expectedResult));
     }
 
-
     [Test]
     public void HasCorrectTestComponentIterationWhenMultipleTestStepsHaveBeenAddedForTheSameComponent()
     {

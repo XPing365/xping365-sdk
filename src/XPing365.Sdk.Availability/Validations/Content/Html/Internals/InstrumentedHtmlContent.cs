@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using System.Globalization;
-using System.Reflection.Metadata;
+﻿using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using System.Xml.XPath;
 using HtmlAgilityPack;
 using XPing365.Sdk.Availability.Validations.Content.Html.Internals.Selectors;
@@ -18,10 +17,13 @@ internal class InstrumentedHtmlContent : IHtmlContent
     private readonly HtmlDocument _document;
     private readonly string _testIdAttribute;
 
+    public TestContext Context => _context;
+    public HtmlDocument Document => _document;
+
     public InstrumentedHtmlContent(string data, TestContext context, string testIdAttribute)
     {
         _document = new HtmlDocument();
-        _document.LoadHtml(data.RequireNotNullOrEmpty(nameof(data)));
+        _document.LoadHtml(data.RequireNotNull(nameof(data)));
         _context = context.RequireNotNull(nameof(context));
         _testIdAttribute = testIdAttribute.RequireNotNullOrEmpty(nameof(testIdAttribute));
     }
@@ -30,7 +32,10 @@ internal class InstrumentedHtmlContent : IHtmlContent
     {
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(HasTitle)),
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(HasTitle)))
+            .Build(
+                new PropertyBagKey(key: nameof(title)),
                 new PropertyBagValue<string>(title))
             .Build(
                 new PropertyBagKey(key: nameof(TextOptions)),
@@ -86,6 +91,10 @@ internal class InstrumentedHtmlContent : IHtmlContent
 
         int byteCount = _document.Encoding.GetByteCount(_document.Text);
 
+        _context.SessionBuilder.Build(
+            new PropertyBagKey(key: "SizeInBytes"),
+            new PropertyBagValue<string>(byteCount.ToString(CultureInfo.InvariantCulture)));
+
         if (byteCount > maxSizeInBytes)
         {
             throw new ValidationException(
@@ -103,7 +112,10 @@ internal class InstrumentedHtmlContent : IHtmlContent
     {
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(GetByAltText)),
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(GetByAltText)))
+            .Build(
+                new PropertyBagKey(key: nameof(text)),
                 new PropertyBagValue<string>(text))
             .Build(
                 new PropertyBagKey(key: nameof(TextOptions)),

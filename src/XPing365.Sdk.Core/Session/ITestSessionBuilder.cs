@@ -31,7 +31,7 @@ public interface ITestSessionBuilder
     /// <summary>
     /// Gets a read only collection of test steps associated with the current instance of the test session builder.
     /// </summary>
-    ReadOnlyCollection<TestStep> Steps { get; }
+    IReadOnlyCollection<TestStep> Steps { get; }
 
     /// <summary>
     /// Builds a test session that has been declined by the <see cref="TestAgent"/>. 
