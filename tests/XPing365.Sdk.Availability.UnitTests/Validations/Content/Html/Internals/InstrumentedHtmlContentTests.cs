@@ -28,23 +28,28 @@ public sealed class InstrumentedHtmlContentTests
         {
             return _mockedSelector.Object;
         }
+
+        protected override ISelector CreateByAltTextSelector(string text, TextOptions? options = null)
+        {
+            return _mockedSelector.Object;
+        }
     }
 
     [Test]
     public void CtorThrowsArgumentExceptionWhenDataIsNull()
     {
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        Assert.Throws<ArgumentNullException>(() =>
         {
             new InstrumentedHtmlContent(data: null!, _testContext, "testIdAttribute");
         });
     }
 
     [Test]
-    public void CtorThrowsArgumentExceptionWhenDataIsEmpty()
+    public void CtorDoesNotThrowWhenDataIsEmpty()
     {
         // Assert
-        Assert.Throws<ArgumentException>(() =>
+        Assert.DoesNotThrow(() =>
         {
             new InstrumentedHtmlContent(data: string.Empty, _testContext, "testIdAttribute");
         });

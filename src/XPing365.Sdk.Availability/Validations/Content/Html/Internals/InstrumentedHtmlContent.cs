@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
-using System.Xml.Linq;
 using System.Xml.XPath;
 using HtmlAgilityPack;
 using XPing365.Sdk.Availability.Validations.Content.Html.Internals.Selectors;

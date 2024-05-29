@@ -18,7 +18,7 @@ internal abstract class AttributeSelector(string attribute) : ISelector
 
             if (IsMatch(attrValue))
             {
-                nodes.Add(node);
+                nodes.Add(n);
             }
         }
 
