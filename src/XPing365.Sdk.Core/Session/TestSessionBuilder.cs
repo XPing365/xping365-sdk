@@ -29,7 +29,7 @@ public class TestSessionBuilder : ITestSessionBuilder
     /// <summary>
     /// Gets a collection of test steps associated with the current instance of the test session builder.
     /// </summary>
-    public ReadOnlyCollection<TestStep> Steps => _steps.AsReadOnly();
+    public IReadOnlyCollection<TestStep> Steps => _steps.AsReadOnly();
 
     /// <summary>
     /// Gets the test component associated with the testing context.

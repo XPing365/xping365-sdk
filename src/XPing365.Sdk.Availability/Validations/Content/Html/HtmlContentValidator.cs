@@ -8,12 +8,13 @@ using XPing365.Sdk.Shared;
 namespace XPing365.Sdk.Availability.Validations.Content.Html;
 
 /// <summary>
-/// Represents a validator that checks if a http response content matches a specified pattern or condition.
+/// Represents a validator that checks if a html content matches a specified pattern or condition.
 /// </summary>
 /// <remarks>
 /// <note>
-/// The HtmlContentValidator component requires either the Browser or HttpClient component to be registered before it in 
-/// the pipeline, because it depends on the HTTP response results from these components.
+/// The HtmlContentValidator component requires either the Browser <see cref="Extensions.TestAgentExtensions.UseBrowserClient(XPing365.Sdk.Core.TestAgent, Action{XPing365.Sdk.Core.Clients.Configurations.BrowserConfiguration}?)"/> or HttpClient 
+/// <see cref="Extensions.TestAgentExtensions.UseHttpClient(XPing365.Sdk.Core.TestAgent, Action{XPing365.Sdk.Core.Clients.Configurations.HttpClientConfiguration}?)"/> component to be registered before it 
+/// in the pipeline, because it depends on the HTTP response results from these components.
 /// </note>
 /// </remarks>
 public class HtmlContentValidator : BaseContentValidator
@@ -63,6 +64,7 @@ public class HtmlContentValidator : BaseContentValidator
         ArgumentNullException.ThrowIfNull(url, nameof(url));
         ArgumentNullException.ThrowIfNull(settings, nameof(settings));
         ArgumentNullException.ThrowIfNull(context, nameof(context));
+        ArgumentNullException.ThrowIfNull(serviceProvider, nameof(serviceProvider));
 
         TestStep? testStep = null;
 
@@ -81,7 +83,7 @@ public class HtmlContentValidator : BaseContentValidator
                 string content = GetContent(data, response.Content.Headers);
 
                 // Perform HTML validation.
-                _validation(new InstrumentedHtmlContent(content, context, settings.TestIdAttribute));
+                _validation(CreateHtmlContent(content, context, settings.TestIdAttribute));
 
                 // During HTML validation, test steps are typically generated to reflect the validation process.
                 // Validation is executed by user-defined code. If no steps have been created, it implies that no
@@ -112,6 +114,19 @@ public class HtmlContentValidator : BaseContentValidator
         }
 
         return Task.CompletedTask;
+    }
+
+    /// <summary>
+    /// Creates an instance of <see cref="IHtmlContent"/> by combining the provided HTML data, test context, 
+    /// and a specified test ID attribute.
+    /// </summary>
+    /// <param name="content">The HTML data to include in the content.</param>
+    /// <param name="context">The test context.</param>
+    /// <param name="testIdAttribute">The attribute to use for identifying test-specific elements.</param>
+    /// <returns>An instance of <see cref="IHtmlContent"/> representing the instrumented HTML content.</returns>
+    protected virtual IHtmlContent CreateHtmlContent(string content, TestContext context, string testIdAttribute)
+    {
+        return new InstrumentedHtmlContent(content, context, testIdAttribute);
     }
 }
 

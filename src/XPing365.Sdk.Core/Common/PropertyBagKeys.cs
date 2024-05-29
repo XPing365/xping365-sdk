@@ -26,7 +26,7 @@ public static class PropertyBagKeys
     /// Array of matching IP addresses associated with a DNS name of the host.
     /// </summary>
     public readonly static PropertyBagKey DnsResolvedIPAddresses = new(nameof(DnsResolvedIPAddresses));
-    #endregion // DNS Lookup
+    #endregion DNS Lookup
 
     #region PING 
     /// <summary>
@@ -44,7 +44,7 @@ public static class PropertyBagKeys
     /// receive the corresponding ICMP echo reply message.
     /// </summary>
     public readonly static PropertyBagKey PingRoundtripTime = new(nameof(PingRoundtripTime));
-    #endregion
+    #endregion PING
 
     #region HTTP
     /// <summary>
@@ -92,7 +92,6 @@ public static class PropertyBagKeys
     /// </summary>
     public readonly static PropertyBagKey HttpFollowRedirect = new(nameof(HttpFollowRedirect));
 
-
     /// <summary>
     /// Represents the collection of HTTP request headers as IDictionary&lt;string, IEnumerable&lt;string&gt;&gt;. 
     /// </summary>
@@ -109,7 +108,7 @@ public static class PropertyBagKeys
     /// <see href="https://learn.microsoft.com/en-us/dotnet/api/system.net.http.headers.httpresponseheaders"/>.
     /// </summary>
     public readonly static PropertyBagKey HttpResponseTrailingHeaders = new(nameof(HttpResponseTrailingHeaders));
-    #endregion // HTTP
+    #endregion HTTP
 
     #region BROWSER
     /// <summary>
@@ -126,5 +125,12 @@ public static class PropertyBagKeys
     /// Represents the <see cref="BrowserResponseMessage"/>.
     /// </summary>
     public readonly static PropertyBagKey BrowserResponseMessage = new(nameof(BrowserResponseMessage));
-    #endregion
+    #endregion BROWSER
+
+    #region HTML_VALIDATION
+    /// <summary>
+    /// Represents the name of the html validation method invoked.
+    /// </summary>
+    public readonly static PropertyBagKey MethodName = new(nameof(MethodName));
+    #endregion HTML_VALIDATION
 }

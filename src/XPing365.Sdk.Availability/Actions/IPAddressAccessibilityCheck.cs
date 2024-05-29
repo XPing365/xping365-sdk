@@ -131,7 +131,7 @@ public sealed class IPAddressAccessibilityCheck : TestComponent
         Ttl = _configuration.Ttl
     };
 
-    private static ReadOnlyCollection<IPAddress>? GetIPAddresses(ReadOnlyCollection<TestStep> steps)
+    private static ReadOnlyCollection<IPAddress>? GetIPAddresses(IReadOnlyCollection<TestStep> steps)
     {
         PropertyBagValue<string[]>? bag = null;
 
