@@ -66,7 +66,7 @@ public static class TestAgentExtensions
     }
 
     /// <summary>
-    /// Configures the TestAgent with a HttpResponseValidator to validate HTTP response..
+    /// Configures the TestAgent with a http response validator.
     /// </summary>
     /// <param name="testAgent">The instance of TestAgent to configure.</param>
     /// <param name="response">The validation logic to use on the HTTP response.</param>

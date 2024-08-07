@@ -10,18 +10,18 @@ internal class FilterSelector(FilterOptions options) : ISelector
     public HtmlNodeCollection Select(HtmlNode node)
     {
         ArgumentNullException.ThrowIfNull(node, nameof(node));
-        HtmlNodeCollection nodes = node.ChildNodes;
+        HtmlNodeCollection filteredNodes = new(parentnode: node);
 
-        foreach (HtmlNode n in nodes)
+        foreach (HtmlNode n in node.ChildNodes)
         {
             var nodeInnerText = n.InnerText.Trim();
 
             if (TextComparator.IsMatch(nodeInnerText, _options))
             {
-                nodes.Add(n);
+                filteredNodes.Add(n);
             }
         }
 
-        return nodes;
+        return filteredNodes;
     }
 }

@@ -3,7 +3,7 @@ using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Availability.Validations.Content.Html.Internals.Selectors;
 
-internal class NodeRegexSelector(string name, Regex textRegex) : NodeSelector(name)
+internal class NodeRegexSelector(XPath xpath, Regex textRegex) : NodeSelector(xpath)
 {
     private readonly Regex _textRegex = textRegex.RequireNotNull(nameof(textRegex));
 

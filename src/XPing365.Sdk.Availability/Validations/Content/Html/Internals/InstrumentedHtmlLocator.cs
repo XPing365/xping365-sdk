@@ -16,6 +16,8 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
     private readonly IIterator<HtmlNode> _iterator;
     private readonly TestContext _context;
 
+    public TestContext Context => _context;
+
     public InstrumentedHtmlLocator(
         HtmlNodeCollection nodes,
         IIterator<HtmlNode> iterator,
@@ -25,8 +27,9 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
         _iterator = iterator.RequireNotNull(nameof(iterator));
         _context = context.RequireNotNull(nameof(context));
 
-        // Advance the iterator to the first item if the collection of nodes contains only one element.
-        if (_nodes.Count == 1)
+        // If the collection of nodes has elements, advance the iterator to the first item. This allows validation
+        // functions like HasInnerText to be called without needing to advance the iterator first.
+        if (_nodes.Count >= 1)
         {
             _iterator.First();
         }
@@ -36,8 +39,8 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
     {
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(First)),
-                new PropertyBagValue<string>(_nodes.FirstOrDefault()?.OriginalName.Trim() ?? "Null"))
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(First)))
             .Build(
                 new PropertyBagKey(key: "Nodes"),
                 new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
@@ -45,7 +48,11 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
         _iterator.First();
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
-        var testStep = _context.SessionBuilder.Build();
+        var testStep = _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(_iterator.Current()?.OriginalName.Trim() ?? "Null"))
+            .Build();
         // Report the progress of this test step.
         _context.Progress?.Report(testStep);
 
@@ -56,8 +63,8 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
     {
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(Last)),
-                new PropertyBagValue<string>(_nodes.LastOrDefault()?.OriginalName.Trim() ?? "Null"))
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(Last)))
             .Build(
                 new PropertyBagKey(key: "Nodes"),
                 new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
@@ -65,7 +72,11 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
         _iterator.Last();
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
-        var testStep = _context.SessionBuilder.Build();
+        var testStep = _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(_iterator.Current()?.OriginalName.Trim() ?? "Null"))
+            .Build();
         // Report the progress of this test step.
         _context.Progress?.Report(testStep);
 
@@ -74,85 +85,148 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
 
     public IHtmlLocator Filter(FilterOptions options)
     {
-        _context.SessionBuilder.Build(
-            new PropertyBagKey(key: nameof(Filter)),
-            new PropertyBagValue<string>(options.ToString()));
-            
-        FilterSelector filterSelector = new(options);
-        var newNodes = filterSelector.Select(_iterator.Current());
+        var currentNode = _iterator.Current();
 
-        _context.SessionBuilder.Build(
-            new PropertyBagKey(key: "Nodes"),
-            new PropertyBagValue<string[]>(newNodes.Select(n => n.OriginalName.Trim()).ToArray()));
+        _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(Filter)))
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(currentNode?.OriginalName.Trim() ?? "Null"))
+            .Build(
+                new PropertyBagKey(key: nameof(FilterOptions)),
+                new PropertyBagValue<string>(options.ToString()));
+
+        HtmlNodeCollection? filteredNodes = null;
+
+        if (currentNode != null)
+        {
+            _context.SessionBuilder.Build(
+                new PropertyBagKey(key: "ChildNodes"),
+                new PropertyBagValue<string[]>(
+                    currentNode.ChildNodes.Select(n => n.OriginalName.Trim()).ToArray()));
+
+            FilterSelector filterSelector = new(options);
+            filteredNodes = filterSelector.Select(currentNode);
+
+            _context.SessionBuilder.Build(
+                new PropertyBagKey(key: "FilteredNodes"),
+                new PropertyBagValue<string[]>(filteredNodes.Select(n => n.OriginalName.Trim()).ToArray()));
+        }
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
         var testStep = _context.SessionBuilder.Build();
         // Report the progress of this test step.
         _context.Progress?.Report(testStep);
 
-        return new InstrumentedHtmlLocator(newNodes, new HtmlNodeIterator(newNodes), _context);
+        if (filteredNodes != null && filteredNodes.Count > 0)
+        {
+            return new InstrumentedHtmlLocator(filteredNodes, new HtmlNodeIterator(filteredNodes), _context);
+        }
+
+        return this;
     }
 
     public IHtmlLocator Locator(XPathExpression selector, FilterOptions? options = null)
     {
+        var currentNode = _iterator.Current();
+
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(Locator)),
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(Locator)))
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(currentNode?.OriginalName.Trim() ?? "Null"))
+            .Build(
+                new PropertyBagKey(key: nameof(selector)),
                 new PropertyBagValue<string>(selector.Expression))
             .Build(
                 new PropertyBagKey(key: nameof(FilterOptions)),
                 new PropertyBagValue<string>(options?.ToString() ?? "Null"));
 
-        XPathSelector xpathSelector = new(selector);
-        var newNodes = xpathSelector.Select(_iterator.Current());
+        HtmlNodeCollection? locatedNodes = null;
 
-        // Create a successful test step with detailed information about the current state of the HTML locator.
-        var testStep = _context.SessionBuilder
-            .Build(
-                new PropertyBagKey(key: "Nodes"),
-                new PropertyBagValue<string[]>(newNodes.Select(n => n.OriginalName.Trim()).ToArray()))
-            .Build();
-        // Report the progress of this test step.
-        _context.Progress?.Report(testStep); 
-
-        return new InstrumentedHtmlLocator(newNodes, new HtmlNodeIterator(newNodes), _context);
-    }
-
-    public IHtmlLocator Nth(int index)
-    {
-        _context.SessionBuilder
-            .Build(
-                new PropertyBagKey(key: nameof(Nth)),
-                new PropertyBagValue<string>(index.ToString(CultureInfo.InvariantCulture)))
-            .Build(
-                new PropertyBagKey(key: "Nodes"),
-                new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
-
-        if (index < 0 || index >= _nodes.Count)
+        if (currentNode != null)
         {
-            throw new ValidationException(
-                $"Expected to access the {index}th index, but only {_nodes.Count} elements exist. This exception " +
-                $"occurred as part of validating HTML data.");
-        }
+            _context.SessionBuilder.Build(
+                new PropertyBagKey(key: "ChildNodes"),
+                new PropertyBagValue<string[]>(
+                    currentNode.ChildNodes.Select(n => n.OriginalName.Trim()).ToArray()));
 
-        _iterator.Nth(index);
+            XPathSelector xpathSelector = new(selector);
+            locatedNodes = xpathSelector.Select(currentNode);
+
+            _context.SessionBuilder
+                .Build(
+                    new PropertyBagKey(key: "LocatedNodes"),
+                    new PropertyBagValue<string[]>(locatedNodes?.Select(n => n.OriginalName.Trim()).ToArray() ?? 
+                        ["Null"]));
+        }
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
         var testStep = _context.SessionBuilder.Build();
         // Report the progress of this test step.
         _context.Progress?.Report(testStep);
 
+        if (locatedNodes != null)
+        {
+            return new InstrumentedHtmlLocator(locatedNodes, new HtmlNodeIterator(locatedNodes), _context);
+        }
+
         return this;
     }
 
-    public void Check()
+    public IHtmlLocator Nth(int index)
     {
-        throw new NotImplementedException();
-    }
+        if (index < 0)
+        {
+            throw new ArgumentException("Index must be a positive integer.");
+        }
 
-    public void Disabled()
-    {
-        throw new NotImplementedException();
+        static string FormatIndex(int index)
+        {
+            string suffix = (index % 10) switch
+            {
+                1 when index % 100 != 11 => "st",
+                2 when index % 100 != 12 => "nd",
+                3 when index % 100 != 13 => "rd",
+                _ => "th",
+            };
+            return $"{index}{suffix}";
+        }
+
+        _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(Nth)))
+            .Build(
+                new PropertyBagKey(key: nameof(index)),
+                new PropertyBagValue<string>(index.ToString(CultureInfo.InvariantCulture)))
+            .Build(
+                new PropertyBagKey(key: "Nodes"),
+                new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
+
+        if (index >= _nodes.Count)
+        {
+            throw new ValidationException(
+                $"Expected to access the {FormatIndex(index)} index, but only {_nodes.Count} elements exist." +
+                $" This error occurred as part of validating HTML data.");
+        }
+
+        _iterator.Nth(index);
+
+        // Create a successful test step with detailed information about the current state of the HTML locator.
+        var testStep = _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(_iterator.Current()?.OriginalName.Trim() ?? "Null"))
+            .Build();
+        // Report the progress of this test step.
+        _context.Progress?.Report(testStep);
+
+        return this;
     }
 
     public void HasCount(int count)
@@ -162,8 +236,11 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
 
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(HasCount)),
-                new PropertyBagValue<string>(count.ToString(CultureInfo.InvariantCulture)))
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(HasCount)))
+            .Build(
+                new PropertyBagKey(key: nameof(count)),
+                new PropertyBagValue<string>($"{count}"))
             .Build(
                 new PropertyBagKey(key: "Nodes"),
                 new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
@@ -171,9 +248,9 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
         if (actualCount != expectedCount)
         {
             throw new ValidationException(
-                $"Expected to find {expectedCount} elements, but found {actualCount} instead. This exception " +
+                $"Expected to find {expectedCount} elements, but found {actualCount} instead. This error " +
                 $"occurred as part of validating HTML data.");
-        }
+        } 
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
         var testStep = _context.SessionBuilder.Build();
@@ -183,39 +260,36 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
 
     public void HasInnerText(string innerText, TextOptions? options = default)
     {
+        var currentNode = _iterator.Current();
+
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(HasInnerText)),
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(HasInnerText)))
+            .Build(
+                new PropertyBagKey(key: nameof(innerText)),
                 new PropertyBagValue<string>(innerText))
             .Build(
                 new PropertyBagKey(key: nameof(TextOptions)),
-                new PropertyBagValue<string>(options?.ToString() ?? "Default"))
+                new PropertyBagValue<string>(options?.ToString() ?? "Null"))
             .Build(
-                new PropertyBagKey(key: "Nodes"),
-                new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(currentNode?.OriginalName.Trim() ?? "Null"));
 
-        if (_nodes.Count == 0)
+        if (currentNode == null || _nodes.Count == 0)
         {
             throw new ValidationException(
                 "No HTML nodes available. Ensure that the locator has selected at least one node before attempting " +
-                "to validate inner text. This exception occurred as part of validating HTML data.");
+                "to validate inner text. This error occurred as part of validating HTML data.");
         }
 
-        if (!_iterator.IsAdvanced)
-        {
-            throw new ValidationException(
-                "Multiple HTML nodes found. Please narrow down the results by calling 'First', 'Last', or 'Nth(int)' " +
-                "properties or method on the HtmlLocator class before validating inner text. This exception occurred " +
-                "as part of validating HTML data.");
-        }
-
-        var actualText = _iterator.Current().InnerText.Trim();
+        var actualText = currentNode.InnerText.Trim();
 
         if (!TextComparator.AreEqual(actualText, innerText, options))
         {
             throw new ValidationException(
                 $"Expected the HTML node's inner text to be \"{innerText}\", but the actual inner text was " +
-                $"\"{actualText}\". This exception occurred as part of validating HTML data.");
+                $"\"{actualText}\". This error occurred as part of validating HTML data.");
         }
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
@@ -226,36 +300,33 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
 
     public void HasInnerText(Regex innerText)
     {
+        var currentNode = _iterator.Current();
+
         _context.SessionBuilder
             .Build(
-                new PropertyBagKey(key: nameof(HasInnerText)),
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(HasInnerText)))
+            .Build(
+                new PropertyBagKey(key: nameof(innerText)),
                 new PropertyBagValue<string>(innerText.ToString()))
             .Build(
-                new PropertyBagKey(key: "Nodes"),
-                new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(currentNode?.OriginalName.Trim() ?? "Null"));
 
-        if (_nodes.Count == 0)
+        if (currentNode == null || _nodes.Count == 0)
         {
             throw new ValidationException(
                 "No HTML nodes available. Ensure that the locator has selected at least one node before attempting " +
-                "to validate inner text. This exception occurred as part of validating HTML data.");
+                "to validate inner text. This error occurred as part of validating HTML data.");
         }
 
-        if (!_iterator.IsAdvanced)
-        {
-            throw new ValidationException(
-                "Multiple HTML nodes found. Please narrow down the results by calling 'First', 'Last', or 'Nth(int)' " +
-                "methods on the IHtmlLocator interface before validating inner text. This exception occurred as part " +
-                "of validating HTML data.");
-        }
-
-        var actualText = _iterator.Current().InnerText.Trim();
+        var actualText = currentNode.InnerText.Trim();
 
         if (!innerText.IsMatch(actualText))
         {
             throw new ValidationException(
                 $"Expected the HTML node's inner text to match \"{innerText}\" regex, but the actual inner text was " +
-                $"\"{actualText}\". This exception occurred as part of validating HTML data.");
+                $"\"{actualText}\". This error occurred as part of validating HTML data.");
         }
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
@@ -266,39 +337,36 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
 
     public void HasInnerHtml(string innerHtml, TextOptions? options = null)
     {
-        _context.SessionBuilder
-           .Build(
-               new PropertyBagKey(key: nameof(HasInnerHtml)),
-               new PropertyBagValue<string>(innerHtml))
-           .Build(
-               new PropertyBagKey(key: nameof(TextOptions)),
-               new PropertyBagValue<string>(options?.ToString() ?? "Default"))
-           .Build(
-               new PropertyBagKey(key: "Nodes"),
-               new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
+        var currentNode = _iterator.Current();
 
-        if (_nodes.Count == 0)
+        _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(HasInnerHtml)))
+            .Build(
+                new PropertyBagKey(key: nameof(innerHtml)),
+                new PropertyBagValue<string>(innerHtml))
+            .Build(
+                new PropertyBagKey(key: nameof(TextOptions)),
+                new PropertyBagValue<string>(options?.ToString() ?? "Default"))
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(currentNode?.OriginalName.Trim() ?? "Null"));
+
+        if (currentNode == null || _nodes.Count == 0)
         {
             throw new ValidationException(
                 "No HTML nodes available. Ensure that the locator has selected at least one node before attempting " +
-                "to validate inner text. This exception occurred as part of validating HTML data.");
+                "to validate inner text.  This error occurred as part of validating HTML data.");
         }
 
-        if (!_iterator.IsAdvanced)
-        {
-            throw new ValidationException(
-                "Multiple HTML nodes found. Please narrow down the results by calling 'First', 'Last', or 'Nth(int)' " +
-                "properties or method on the HtmlLocator class before validating inner text. This exception occurred " +
-                "as part of validating HTML data.");
-        }
-
-        var actualHtml = _iterator.Current().InnerHtml.Trim();
+        var actualHtml = currentNode.InnerHtml.Trim();
 
         if (!TextComparator.AreEqual(actualHtml, innerHtml, options))
         {
             throw new ValidationException(
                 $"Expected the HTML node's inner html to be \"{innerHtml}\", but the actual inner html was " +
-                $"\"{actualHtml}\". This exception occurred as part of validating HTML data.");
+                $"\"{actualHtml}\".  This error occurred as part of validating HTML data.");
         }
 
         // Create a successful test step with detailed information about the current state of the HTML locator.
@@ -309,36 +377,33 @@ internal class InstrumentedHtmlLocator : IHtmlLocator
 
     public void HasInnerHtml(Regex innerHtml)
     {
-        _context.SessionBuilder
-           .Build(
-               new PropertyBagKey(key: nameof(HasInnerHtml)),
-               new PropertyBagValue<string>(innerHtml.ToString()))
-           .Build(
-               new PropertyBagKey(key: "Nodes"),
-               new PropertyBagValue<string[]>(_nodes.Select(n => n.OriginalName.Trim()).ToArray()));
+        var currentNode = _iterator.Current();
 
-        if (_nodes.Count == 0)
+        _context.SessionBuilder
+            .Build(
+                new PropertyBagKey(key: "MethodName"),
+                new PropertyBagValue<string>(nameof(HasInnerHtml)))
+            .Build(
+                new PropertyBagKey(key: nameof(innerHtml)),
+                new PropertyBagValue<string>(innerHtml.ToString()))
+            .Build(
+                new PropertyBagKey(key: "CurrentNode"),
+                new PropertyBagValue<string>(currentNode?.OriginalName.Trim() ?? "Null"));
+
+        if (currentNode == null || _nodes.Count == 0)
         {
             throw new ValidationException(
                 "No HTML nodes available. Ensure that the locator has selected at least one node before attempting " +
-                "to validate inner text. This exception occurred as part of validating HTML data.");
+                "to validate inner text.  This error occurred as part of validating HTML data.");
         }
 
-        if (!_iterator.IsAdvanced)
-        {
-            throw new ValidationException(
-                "Multiple HTML nodes found. Please narrow down the results by calling 'First', 'Last', or 'Nth(int)' " +
-                "properties or method on the HtmlLocator class before validating inner text. This exception occurred " +
-                "as part of validating HTML data.");
-        }
-
-        var actualHtml = _iterator.Current().InnerHtml.Trim();
+        var actualHtml = currentNode.InnerHtml.Trim();
 
         if (!innerHtml.IsMatch(actualHtml))
         {
             throw new ValidationException(
                 $"Expected the HTML node's inner html to match \"{innerHtml}\" regex, but the actual inner html was " +
-                $"\"{actualHtml}\". This exception occurred as part of validating HTML data.");
+                $"\"{actualHtml}\".  This error occurred as part of validating HTML data.");
         }
 
         // Create a successful test step with detailed information about the current state of the HTML locator.

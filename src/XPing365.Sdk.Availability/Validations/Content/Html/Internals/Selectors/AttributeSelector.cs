@@ -3,22 +3,22 @@ using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Availability.Validations.Content.Html.Internals.Selectors;
 
-internal abstract class AttributeSelector(string attribute) : ISelector
+internal abstract class AttributeSelector(XPath expression) : ISelector
 {
-    private readonly string _name = attribute.RequireNotNullOrEmpty(nameof(attribute));
+    private readonly XPath _xpath = expression.RequireNotNull(nameof(expression));
 
     public HtmlNodeCollection Select(HtmlNode node)
     {
         ArgumentNullException.ThrowIfNull(node, nameof(node));
         HtmlNodeCollection nodes = new(parentnode: node);
 
-        foreach (HtmlNode n in node.SelectNodes(XPathExpressions.XPath(_name)))
+        foreach (HtmlNode n in node.SelectNodes(_xpath.Expression))
         {
-            var attrValue = n.Attributes[_name].Value.Trim();
+            var attrValue = n.Attributes[_xpath.Name].Value.Trim();
 
             if (IsMatch(attrValue))
             {
-                nodes.Add(node);
+                nodes.Add(n);
             }
         }
 
