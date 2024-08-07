@@ -1,18 +1,11 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
-using System.Xml.Linq;
-using Microsoft.Extensions.Options;
 using Microsoft.Playwright;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
 using XPing365.Sdk.Shared;
-using static System.Collections.Specialized.BitVector32;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace XPing365.Sdk.Availability.Validations.Content.Page.Internals;
 

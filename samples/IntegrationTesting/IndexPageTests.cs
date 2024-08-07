@@ -1,12 +1,8 @@
-using System.Net;
-using System.Net.Http.Json;
 using Microsoft.AspNetCore.Mvc.Testing;
 using NUnitTestProject.TestSuite;
 using XPing365.Sdk.Availability;
 using XPing365.Sdk.Availability.Extensions;
 using XPing365.Sdk.Core;
-using XPing365.Sdk.Core.Components;
-using XPing365.Sdk.Core.Session;
 
 namespace NUnitTestProject;
 

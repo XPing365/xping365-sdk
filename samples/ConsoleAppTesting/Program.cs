@@ -68,11 +68,8 @@ public sealed class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((services) =>
             {
-                // Register the Progress class as a singleton service
                 services.AddSingleton<IProgress<TestStep>, Progress>();
-                // Adds IHttpClientFactory using the IHttpClientFactory
                 services.AddHttpClientFactory();
-                // Adds a TestAgent service to the service collection and configures its pipeline
                 services.AddTestAgent();
             })
             .ConfigureLogging(logging =>

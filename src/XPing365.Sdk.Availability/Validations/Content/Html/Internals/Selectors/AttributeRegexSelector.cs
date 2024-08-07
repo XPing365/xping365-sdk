@@ -3,8 +3,8 @@ using XPing365.Sdk.Shared;
 
 namespace XPing365.Sdk.Availability.Validations.Content.Html.Internals.Selectors;
 
-internal class AttributeRegexSelector(string attribute, Regex textRegex) :
-    AttributeSelector(attribute)
+internal class AttributeRegexSelector(XPath xpath, Regex textRegex) :
+    AttributeSelector(xpath)
 {
     private readonly Regex _textRegex = textRegex.RequireNotNull(nameof(textRegex));
 

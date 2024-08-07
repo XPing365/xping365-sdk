@@ -56,9 +56,9 @@ public class TestAgent : IDisposable
     private bool disposedValue;
     private readonly IServiceProvider _serviceProvider;
 
-    // Lazy initialization of a shared Pipeline instance that is thread-safe. This ensures that only a single instance
+    // Lazy initialization of a shared pipeline container that is thread-safe. This ensures that only a single instance
     // of Pipeline is created and shared across all threads, and it is only created when it is first accessed and
-    // property InstantiatePerThread is enabled.
+    // property InstantiatePerThread is disabled.
     private readonly Lazy<Pipeline> _sharedContainer = new(valueFactory: () =>
     {
         return new Pipeline($"Pipeline#Shared");

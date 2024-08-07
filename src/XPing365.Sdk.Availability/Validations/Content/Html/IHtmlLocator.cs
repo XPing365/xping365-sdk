@@ -21,7 +21,7 @@ public interface IHtmlLocator
     ///     .Visible();
     /// </code>
     /// </summary>
-    /// <param name="options">Call options</param>
+    /// <param name="options">Filter options</param>
     IHtmlLocator Filter(FilterOptions options);
 
     /// <summary>
@@ -53,7 +53,7 @@ public interface IHtmlLocator
     /// The method finds an element matching the specified selector in the locator's subtree.
     /// It also accepts filter options, similar to <see cref="Filter"/> method.
     /// </summary>
-    /// <param name="selector">A selector or locator to use when resolving DOM element.</param>
+    /// <param name="selector">An xpath selector to use when resolving DOM element.</param>
     /// <param name="options">Optional parameter for customizing the locator behavior.</param>
     IHtmlLocator Locator(XPathExpression selector, FilterOptions? options = default);
 

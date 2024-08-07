@@ -1,10 +1,7 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Globalization;
 using System.Text.Json;
 using System.Text.RegularExpressions;
-using System.Threading;
-using Microsoft.Extensions.Options;
 using Microsoft.Playwright;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
@@ -20,9 +17,6 @@ internal class InstrumentedPage(TestContext context, IPage page) : IPage
     private readonly TestContext _context = context.RequireNotNull(nameof(context));
     private readonly IPage _page = page.RequireNotNull(nameof(page));
 
-    /// <summary>
-    /// This property is 
-    /// </summary>
     [Obsolete($"{nameof(IAccessibility)} class is deprecated.")]
     public IAccessibility Accessibility => _page.Accessibility;
 

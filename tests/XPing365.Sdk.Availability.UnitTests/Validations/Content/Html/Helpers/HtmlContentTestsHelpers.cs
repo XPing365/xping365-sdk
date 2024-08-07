@@ -1,4 +1,6 @@
-﻿using Moq;
+﻿using HtmlAgilityPack;
+using Moq;
+using XPing365.Sdk.Availability.Validations.Content.Html.Internals;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Session;
 using TestContext = XPing365.Sdk.Core.Components.TestContext;
@@ -10,7 +12,7 @@ internal static class HtmlContentTestsHelpers
     public static TestStep CreateTestStep(PropertyBagKey key, IPropertyBagValue value) =>
         CreateTestStep(new Dictionary<PropertyBagKey, IPropertyBagValue>()
         {
-        { key, value }
+            { key, value }
         });
 
     public static TestStep CreateTestStep(IDictionary<PropertyBagKey, IPropertyBagValue> properties)
@@ -44,6 +46,18 @@ internal static class HtmlContentTestsHelpers
         return context;
     }
 
+    public static HtmlNodeCollection CreateHtmlNodeCollection(int count)
+    {
+        var nodes = new HtmlNodeCollection(parentnode: HtmlNode.CreateNode(GetLabelHtml()));
+
+        for (int i = 0; i < count; i++)
+        {
+            nodes.Add(HtmlNode.CreateNode("<label>Password <input type=\"password\" /></label>"));
+        };
+
+        return nodes;
+    }
+
     public static string GetTitleHtml(string? title = null)
     {
         return
@@ -67,6 +81,71 @@ internal static class HtmlContentTestsHelpers
             $"</html>";
     }
 
+    public static string GetLabelHtml()
+    {
+        return
+            $"<html>" +
+            $"  <head>" +
+            $"    <title>Title</title>" +
+            $"  </head>" +
+            $"  <body>" +
+            $"    <label>Password <input type=\"password\" /></label>" +
+            $"  </body>" +
+            $"</html>";
+    }
+
+    public static string GetPlaceholderHtml()
+    {
+        return
+            $"<html>" +
+            $"  <head>" +
+            $"    <title>Title</title>" +
+            $"  </head>" +
+            $"  <body>" +
+            $"    <input type=\"email\" placeholder=\"name@example.com\" />" +
+            $"  </body>" +
+            $"</html>";
+    }
+
+    public static string GetTestIdHtml()
+    {
+        return
+            $"<html>" +
+            $"  <head>" +
+            $"    <title>Title</title>" +
+            $"  </head>" +
+            $"  <body>" +
+            $"    <button data-testid=\"directions\">Itinéraire</button>" +
+            $"  </body>" +
+            $"</html>";
+    }
+
+    public static string GetTitleAttirbuteHtml()
+    {
+        return
+            $"<html>" +
+            $"  <head>" +
+            $"    <title>Title</title>" +
+            $"  </head>" +
+            $"  <body>" +
+            $"    <span title=\"Issues count\">25 issues</span>" +
+            $"  </body>" +
+            $"</html>";
+    }
+
+    public static string GetLocatorHtml()
+    {
+        return
+            $"<html>" +
+            $"  <head>" +
+            $"    <title>Title</title>" +
+            $"  </head>" +
+            $"  <body>" +
+            $"    <button data-pw=\"directions\">Itinéraire</button>" +
+            $"  </body>" +
+            $"</html>";
+    }
+    
     /// <summary>
     /// Configures a mocked <see cref="ITestSessionBuilder"/> instance to return itself when the <c>Build</c> or 
     /// <c>Initiate</c> method is called. This validates the builder pattern where methods are invoked on the same 
