@@ -95,7 +95,6 @@ Host.CreateDefaultBuilder()
 using XPing365.Availability
 
 var testAgent = _serviceProvider.GetRequiredService<TestAgent>();
-
 TestSession session = await testAgent.RunAsync(new Uri("www.demoblaze.com"));
 ```
 
@@ -108,7 +107,7 @@ public async Task IndexPageHasCorrectTitle()
     // Arrange
     TestAgent.UseHtmlValidation(html =>
     {
-        html.HasTitle("Home page - WebApp");
+        html.HasTitle("Listing - WebApp");
     });
 
     // Act
