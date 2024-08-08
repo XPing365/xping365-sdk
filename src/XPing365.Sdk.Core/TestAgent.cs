@@ -18,7 +18,7 @@ namespace XPing365.Sdk.Core;
 /// test components are properly configured and do not cause any errors. The TestAgent class collects various data 
 /// related to the test execution. It constructs a <see cref="TestSession"/> object that represents the outcome of the 
 /// test operations, which can be serialized, analyzed, or compared. The TestAgent class can be configured with various 
-/// settings, such as the timeout, the retry, and the http headers, using the <see cref="TestSettings"/> class.
+/// settings, such as the timeout, using the <see cref="TestSettings"/> class.
 /// <para>
 /// <note type="important">
 /// Please note that the TestAgent class is designed to be used with a dependency injection system and should not be 
@@ -34,18 +34,10 @@ namespace XPing365.Sdk.Core;
 ///     .ConfigureServices((services) =>
 ///     {
 ///         services.AddHttpClientFactory();
-///         services.AddTestAgent(
-///             name: "TestAgent", builder: (TestAgent agent) =>
-///             {
-///                 agent.Container = new Pipeline(
-///                    name: "Availability pipeline",
-///                    components: [
-///                        new DnsLookup(),
-///                        new IPAddressAccessibilityCheck(),
-///                        new HttpClientRequestSender()]
-///                 );
-///                 return agent;
-///             });
+///         services.AddTestAgent(agent =>
+///         {
+///             agent.UploadToken = "--- Your Upload Token ---";
+///         });
 ///     });
 /// </code>
 /// </example>
@@ -72,9 +64,17 @@ public class TestAgent : IDisposable
     });
 
     /// <summary>
-    /// Controls whether the pipeline container object should be instantiated for each thread separately.
+    /// Controls whether the TestAgent's pipeline container object should be instantiated for each thread separately.
+    /// When set to true, each thread will have its own instance of the pipeline container. Default is <c>true</c>.
     /// </summary>
     public bool InstantiatePerThread { get; set; } = true;
+
+    /// <summary>
+    /// Gets or sets the upload token that links the TestAgent's results to the project configured on the server.
+    /// This token facilitates the upload of testing sessions to the server for further analysis. If set to <c>null</c>,
+    /// no uploads will occur. Default is <c>null</c>.
+    /// </summary>
+    public string? UploadToken { get; set; }
 
     /// <summary>
     /// Retrieves the <see cref="Pipeline"/> instance that serves as the execution container.
@@ -192,7 +192,7 @@ public class TestAgent : IDisposable
     /// This method is called to clean up the test components. It ensures that the components collection is emptied, 
     /// preventing cross-contamination of state between tests.
     /// </remarks>
-    public void TearDown()
+    public void Clear()
     {
         Container.Clear();
     }
@@ -217,7 +217,7 @@ public class TestAgent : IDisposable
         {
             if (disposing)
             {
-                TearDown();
+                Clear();
                 _container.Dispose();
             }
 

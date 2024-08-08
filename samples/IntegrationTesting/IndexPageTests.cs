@@ -23,7 +23,7 @@ public partial class IndexPageTests : IntegrationTest<WebApp.Program>
     [TearDown]
     public void TearDown()
     {
-        TestAgent.TearDown();
+        TestAgent.Clear();
     }
 
     [Test]
@@ -52,12 +52,9 @@ public partial class IndexPageTests : IntegrationTest<WebApp.Program>
         });
 
         // Act
-        var session = await TestAgent.RunAsync(new Uri("http://localhost/privacy"));
+        await using var session = await TestAgent.RunAsync(new Uri("http://localhost/privacy"));
 
-        await using (session.ConfigureAwait(false))
-        {
-            // Assert
-            Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);
-        }
+        // Assert
+        Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);
     }
 }

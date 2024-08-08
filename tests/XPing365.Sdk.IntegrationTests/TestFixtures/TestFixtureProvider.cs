@@ -28,16 +28,16 @@ public static class TestFixtureProvider
             services.AddTestAgent(
                 name: "HttpClient", builder: (TestAgent agent) =>
                 {
-                    agent.UseDnsLookup();
-                    agent.UseIPAddressAccessibilityCheck();
-                    agent.UseHttpClient();
+                    agent.UseDnsLookup()
+                         .UseIPAddressAccessibilityCheck()
+                         .UseHttpClient();
                 });
             services.AddTestAgent(
                 name: "BrowserClient", builder: (TestAgent agent) =>
                 {
-                    agent.UseDnsLookup();
-                    agent.UseIPAddressAccessibilityCheck();
-                    agent.UseBrowserClient();
+                    agent.UseDnsLookup()
+                         .UseIPAddressAccessibilityCheck()
+                         .UseBrowserClient();
                 });
         });
         builder.ConfigureLogging(logging =>

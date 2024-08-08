@@ -8,7 +8,6 @@ using XPing365.Sdk.Availability.Extensions;
 using XPing365.Sdk.Core;
 using XPing365.Sdk.Core.DependencyInjection;
 using XPing365.Sdk.Core.Session;
-using XPing365.Sdk.Core.Session.Serialization;
 
 namespace ConsoleAppTesting;
 
@@ -26,7 +25,7 @@ public sealed class Program
         var urlOption = new Option<Uri?>(
             name: "--url",
             description: "A URL address of the page being validated.")
-        { 
+        {
             IsRequired = true,
         };
 
@@ -51,14 +50,11 @@ public sealed class Program
                     html.HasMaxDocumentSize(MAX_SIZE_IN_BYTES);
                 });
 
-            var session = await testAgent.RunAsync(url).ConfigureAwait(false);
+            await using var session = await testAgent.RunAsync(url);
 
-            await using (session.ConfigureAwait(false))
-            {
-                context.Console.WriteLine("\nSummary:");
-                context.Console.WriteLine($"{session}");
-                context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
-            }
+            context.Console.WriteLine("\nSummary:");
+            context.Console.WriteLine($"{session}");
+            context.ExitCode = session.IsValid ? EXIT_SUCCESS : EXIT_FAILURE;
         });
 
         return await command.InvokeAsync(args).ConfigureAwait(false);
@@ -68,9 +64,12 @@ public sealed class Program
         Host.CreateDefaultBuilder(args)
             .ConfigureServices((services) =>
             {
-                services.AddSingleton<IProgress<TestStep>, Progress>();
-                services.AddHttpClientFactory();
-                services.AddTestAgent();
+                services.AddSingleton<IProgress<TestStep>, Progress>()
+                        .AddHttpClientFactory()
+                        .AddTestAgent(agent =>
+                        {
+                            agent.UploadToken = "--- Your Upload Token ---";
+                        });
             })
             .ConfigureLogging(logging =>
             {

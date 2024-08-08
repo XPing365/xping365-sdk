@@ -22,7 +22,6 @@ public sealed class ArgumentValidationTests
         Assert.Throws<ArgumentNullException>(() => _ = value.RequireNotNull(parameterName: null!));
     }
 
-
     [Test]
     public void RequireNotNullDoesNotThrowWhenArgumentIsNotNull()
     {
