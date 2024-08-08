@@ -11,7 +11,8 @@ namespace XPing365.Sdk.Availability.TestActions;
 /// </summary>
 /// <remarks>
 /// <note>
-/// This component operates without any dependency on other components.
+/// This component operates without any dependency on other components. Please also note, the DNS lookup method may use 
+/// cached data from the local machine if the DNS information for the host has been cached previously.
 /// </note>
 /// The DnsLookup mechanism works by sending a query to a DNS server and receiving a response that contains the IP 
 /// address of the requested domain name. The query can be either recursive or iterative, depending on the configuration 

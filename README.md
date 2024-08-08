@@ -75,32 +75,48 @@ using XPing365.Availability.DependencyInjection;
 Host.CreateDefaultBuilder()
     .ConfigureServices(services =>
     {
-        services.AddHttpClients();
-        services.AddTestAgent(
-            name: "TestAgent", builder: (TestAgent agent) =>
-            {
-                agent.Container = new Pipeline(
-                    name: "Availability pipeline",
-                    components: [
-                        new DnsLookup(),
-                        new IPAddressAccessibilityCheck(),
-                        new HttpRequestSender()
-                    ]);
-                return agent;
-            });
+        .AddHttpClientFactory()
+        .AddTestAgent(agent =>
+        {
+            agent.UploadToken = "--- Your Upload Token ---";
+            agent.UseDnsLookup()
+                .UseIPAddressAccessibilityCheck()
+                .UseHttpClient()
+                .UseHttpValidation(response => 
+                {
+                    response.EnsureSuccessStatusCode();
+                    response.Header(HeaderNames.Server).HasValue("ServerName");
+                });
+        });
     });
 ```
 
 ```c#
 using XPing365.Availability
 
-var testAgent = _serviceProvider.GetRequiredKeyedService<TestAgent>(serviceKey: "TestAgent");
+var testAgent = _serviceProvider.GetRequiredService<TestAgent>();
 
-TestSession session = await testAgent
-    .RunAsync(
-        new Uri("www.demoblaze.com"),
-        TestSettings.Default)
-    .ConfigureAwait(false);
+TestSession session = await testAgent.RunAsync(new Uri("www.demoblaze.com"));
+```
+
+You can also integrate it with your preferred testing framework, such as NUnit, as shown below:
+
+```c#
+[Test]
+public async Task IndexPageHasCorrectTitle()
+{
+    // Arrange
+    TestAgent.UseHtmlValidation(html =>
+    {
+        html.HasTitle("Home page - WebApp");
+    });
+
+    // Act
+    await using var session = await TestAgent.RunAsync(new Uri("http://localhost/"));
+
+    // Assert
+    Assert.That(session.IsValid, Is.True, session.Failures.FirstOrDefault()?.ErrorMessage);
+}
 ```
 
 That’s it! You’re now ready to start automating your web application tests and monitoring your server’s content using <b>XPing365</b>.

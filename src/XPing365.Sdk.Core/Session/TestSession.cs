@@ -2,8 +2,6 @@
 using System.Globalization;
 using System.Runtime.Serialization;
 using System.Text;
-using Microsoft.Playwright;
-using Polly;
 using XPing365.Sdk.Core.Clients.Browser;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Extensions;

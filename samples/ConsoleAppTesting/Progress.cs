@@ -5,6 +5,11 @@ namespace ConsoleAppTesting;
 
 public sealed class Progress(ILogger<Program> logger) : IProgress<TestStep>
 {
+    private static readonly Action<ILogger, string, Exception?> LogSuccessMessage = LoggerMessage.Define<string>(
+        logLevel: LogLevel.Information, eventId: 1, formatString: "{Value}");
+    private static readonly Action<ILogger, string, Exception?> LogErrorMessage = LoggerMessage.Define<string>(
+        logLevel: LogLevel.Error, eventId: 2, formatString: "{Value}");
+
     private readonly ILogger<Program> _logger = logger;
 
     public void Report(TestStep value)
@@ -14,10 +19,10 @@ public sealed class Progress(ILogger<Program> logger) : IProgress<TestStep>
         switch (value.Result)
         {
             case TestStepResult.Succeeded:
-                _logger.LogInformation("{Value}", value.ToString());
+                LogSuccessMessage(_logger, value.ToString(), null);
                 break;
             case TestStepResult.Failed:
-                _logger.LogError("{Value}", value.ToString());
+                LogErrorMessage(_logger, value.ToString(), null);
                 break;
         }
     }
