@@ -2,7 +2,7 @@
 using HtmlAgilityPack;
 using Microsoft.Extensions.Options;
 using Moq;
-using XPing365.Sdk.Availability.UnitTests.Validations.Content.Html.Helpers;
+using XPing365.Sdk.Availability.UnitTests.Helpers;
 using XPing365.Sdk.Availability.Validations;
 using XPing365.Sdk.Availability.Validations.Content.Html;
 using XPing365.Sdk.Availability.Validations.Content.Html.Internals;

@@ -496,7 +496,7 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
     }
 
     [Test]
-    [Ignore("[Needs investigation] This test hangs when run with others but passes when executed alone.")]
+    //[Ignore("[Needs investigation] This test hangs when run with others but passes when executed alone.")]
     public async Task HeadlessBrowserRequestSenderComponentDetectsCircularDependency()
     {
         // Arrange
@@ -534,8 +534,9 @@ public class BrowserTestAgentTests(IServiceProvider serviceProvider)
             Assert.That(redirectionStep, Is.Not.Null);
             Assert.That(redirectionStep.Result, Is.EqualTo(TestStepResult.Succeeded));
             Assert.That(destinationStep.Result, Is.EqualTo(TestStepResult.Failed));
-            Assert.That(destinationStep.ErrorMessage, Does.Contain("A circular dependency was detected for the " +
-                "URL http://localhost:8080/. The redirection chain is: http://localhost:8080/"));
+            Assert.That(destinationStep.ErrorMessage, Is.EqualTo("Error 1000: Message: A circular dependency was " +
+                "detected for the URL http://localhost:8080/. The redirection chain is: " +
+                "http://localhost:8080/ -> http://localhost:8080/."));
         });
     }
 

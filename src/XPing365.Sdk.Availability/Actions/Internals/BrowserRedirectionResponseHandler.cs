@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using Microsoft.Net.Http.Headers;
 using Microsoft.Playwright;
-using XPing365.Sdk.Availability.TestActions;
 using XPing365.Sdk.Availability.TestActions.Internals;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
@@ -9,25 +8,26 @@ using XPing365.Sdk.Core.Session;
 
 namespace XPing365.Sdk.Core.Clients.Browser;
 
+/// <summary>
+/// This handler is designed to be used with the Playwright library and various browsers to handle only HTTP redirect 
+/// responses. It can detect circular dependencies in redirects.
+/// </summary>
 internal class BrowserRedirectionResponseHandler : IHttpResponseHandler
 {
     private readonly Uri _url;
     private readonly TestContext _context;
     private readonly OrderedUrlRedirections _urlRedirections;
-    private readonly BrowserRequestSender _requestSender;
     private readonly int _maxRedirections;
 
     public BrowserRedirectionResponseHandler(
         Uri url,
         TestContext context,
         OrderedUrlRedirections urlRedirections,
-        BrowserRequestSender requestSender,
         int maxRedirections)
     {
         _url = url;
         _context = context;
         _urlRedirections = urlRedirections;
-        _requestSender = requestSender;
         _maxRedirections = maxRedirections;
     }
 
@@ -49,7 +49,7 @@ internal class BrowserRedirectionResponseHandler : IHttpResponseHandler
                 // Circular dependency detected
                 throw new InvalidOperationException(
                     $"A circular dependency was detected for the URL {redirectUrl}. " +
-                    $"The redirection chain is: {string.Join(" -> ", _urlRedirections)}");
+                    $"The redirection chain is: {_url} -> {string.Join(" -> ", _urlRedirections)}.");
             }
             else
             {

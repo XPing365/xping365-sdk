@@ -21,6 +21,8 @@ internal class OrderedUrlRedirections : IEnumerable<string>
         return false;
     }
 
+    public bool Contains(string? value) => value != null && _hashSet.Contains(value);
+
     // Find first item matching a condition starting from the end
     public string? FindLastMatchingItem(Func<string, bool> matchCondition)
     {

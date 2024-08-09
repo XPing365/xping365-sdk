@@ -1,5 +1,5 @@
 ﻿using HtmlAgilityPack;
-using XPing365.Sdk.Availability.UnitTests.Validations.Content.Html.Helpers;
+using XPing365.Sdk.Availability.UnitTests.Helpers;
 using XPing365.Sdk.Availability.Validations.Content.Html.Internals;
 
 namespace XPing365.Sdk.Availability.UnitTests.Validations.Content.Html.Internals;
