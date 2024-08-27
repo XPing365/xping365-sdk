@@ -46,7 +46,7 @@ public static class Errors
     /// </summary>
     /// <param name="component">The test component that requires data</param>
     /// <returns>An error with code 1100 and a message indicating the test component name</returns>
-    public static Error InsufficientData(TestComponent component) =>
+    public static Error InsufficientData(ITestComponent component) =>
         new("1100", $"Insufficient data to perform \"{component.RequireNotNull(nameof(component)).Name}\" test step.");
 
     /// <summary>
@@ -54,7 +54,7 @@ public static class Errors
     /// </summary>
     /// <param name="component">The test component that failed validation</param>
     /// <returns>An error with code 1101 and a message indicating the test component name</returns>
-    public static Error ValidationFailed(TestComponent component) =>
+    public static Error ValidationFailed(ITestComponent component) =>
         new("1101", $"Validation failed to perform \"{component.RequireNotNull(nameof(component)).Name}\" test step.");
 
     /// <summary>
@@ -63,9 +63,17 @@ public static class Errors
     /// <param name="component">The test component that failed validation</param>
     /// <param name="errorMessage">The optional error message to include</param>
     /// <returns>An error with code 1101 and a message indicating the test component name and the error message</returns>
-    public static Error ValidationFailed(TestComponent component, string? errorMessage) =>
-        new("1101", $"Validation failed to perform \"{component.RequireNotNull(nameof(component)).Name}\" test step." +
-                    $" {errorMessage}");
+    public static Error ValidationFailed(ITestComponent component, string? errorMessage)
+    {
+        var errMsg = $"Validation failed to perform \"{component.RequireNotNull(nameof(component)).Name}\" test step.";
+
+        if (errorMessage != null) {
+            errMsg += $" {errorMessage}";
+        }
+
+        Error error = new("1101", errMsg);
+        return error;
+    }
 
     /// <summary>
     /// Creates an error representing a timeout failure for a test component.
@@ -114,14 +122,14 @@ public static class Errors
     /// </summary>
     /// <returns>An error with code 1201 and a message indicating the missing URL</returns>
     public static Error MissingUrlInTestSession =>
-        new("1201", $"Missing URL in test session");
+        new("1201", $"Missing URL in test session.");
 
     /// <summary>
     /// Creates an error when the start time is missing in the test session
     /// </summary>
     /// <returns>An error with code 1202 and a message indicating the missing start time</returns>
     public static Error MissingStartTimeInTestSession =>
-        new("1202", $"Missing start time in test session");
+        new("1202", $"Missing start time in test session.");
 
     /// <summary>
     /// Creates an error when the start date is in the past

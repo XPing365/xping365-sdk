@@ -5,7 +5,7 @@ using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Session;
 using TestContext = XPing365.Sdk.Core.Components.TestContext;
 
-namespace XPing365.Sdk.Availability.UnitTests.Validations.Content.Html.Helpers;
+namespace XPing365.Sdk.Availability.UnitTests.Helpers;
 
 internal static class HtmlContentTestsHelpers
 {
@@ -145,7 +145,7 @@ internal static class HtmlContentTestsHelpers
             $"  </body>" +
             $"</html>";
     }
-    
+
     /// <summary>
     /// Configures a mocked <see cref="ITestSessionBuilder"/> instance to return itself when the <c>Build</c> or 
     /// <c>Initiate</c> method is called. This validates the builder pattern where methods are invoked on the same 

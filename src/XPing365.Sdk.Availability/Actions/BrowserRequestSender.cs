@@ -125,7 +125,6 @@ internal sealed class BrowserRequestSender : TestComponent
             url,
             context,
             urlRedirections,
-            requestSender: this,
             _configuration.MaxRedirections);
 
     private BrowserHttpRequestInterceptor CreateHttpRequestInterceptor() => new(_configuration);

@@ -1,6 +1,6 @@
 ﻿using System.Text;
 using Moq;
-using XPing365.Sdk.Availability.UnitTests.Validations.Content.Html.Helpers;
+using XPing365.Sdk.Availability.UnitTests.Helpers;
 using XPing365.Sdk.Availability.Validations.Content.Html;
 using XPing365.Sdk.Core.Common;
 using XPing365.Sdk.Core.Components;
